@@ -35,11 +35,13 @@ export default function PasswordReset() {
               <CustomBackHeader menuIcon={imageIndex.back} label={""} /> 
             <View style={styles.headerContainer}>
               <View style={styles.titleContainer}>
-                <Text style={styles.titleText}>Password Reset</Text>
-                <Text style={styles.descriptionText}>Please put your mobile number to reset your password</Text>
+                <Text  allowFontScaling={false} style={styles.titleText}>Password Reset</Text>
+                <Text allowFontScaling={false}  style={styles.descriptionText}>Please put your mobile number to reset your password</Text>
               </View>
             </View>
-             
+             <View style={{
+              marginTop:20
+             }}> 
             <CustomInput
               placeholder={"Email Address"}
               leftIcon={<Icon source={imageIndex.email} size={20} />}
@@ -48,6 +50,7 @@ export default function PasswordReset() {
               keyboardType='email-address'
 
             />
+            </View>
   <Image source={imageIndex.smsImg} style={{width:'80%', height:hp(28), alignSelf:'center', marginTop:30}}/>
 
           </ScrollView>

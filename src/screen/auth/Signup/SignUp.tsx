@@ -70,8 +70,8 @@ export default function Signup() {
             </View> 
             <View style={styles.mainContainer}>
             <Image source={imageIndex.logo} style={styles.logo} resizeMode='contain' />
-          <Text style={styles.txtHeading}>Start Your 14-Day Free {`\n`}Trial Today</Text>
-          <Text style={styles.txtDes}>NO CREDIT CARD REQUIRED!</Text>
+          <Text  allowFontScaling={false} style={styles.txtHeading}>Start Your 14-Day Free {`\n`}Trial Today</Text>
+          <Text allowFontScaling={false}  style={styles.txtDes}>NO CREDIT CARD REQUIRED!</Text>
               <View style={styles.inputContainer}>
 
                 <CustomInput
@@ -113,7 +113,7 @@ export default function Signup() {
   color:"#909090",
   fontSize:14,
   marginTop:15
-}}>Password Strength</Text>
+}} allowFontScaling={false}>Password Strength</Text>
               </View>
               
 
@@ -125,12 +125,12 @@ export default function Signup() {
 
 <View style={{ width: '100%',marginTop:20, marginBottom: 20, flexDirection: 'row', }}>
                 <Image source={imageIndex.Check1} style={{ height: 22, width: 22, }} />
-                <Text style={[styles.signupText, { textAlignVertical: 'center', lineHeight: 30 }]}>
+                <Text allowFontScaling={false}  style={[styles.signupText, { textAlignVertical: 'center', lineHeight: 30 }]}>
                   {" "} By Creating an Account, you agree to our  <Text style={{ color: color.primary }}>Terms of Service</Text> and
-                  <Text style={{ color: color.primary }}> Privacy Policy </Text> </Text>
+                  <Text allowFontScaling={false} style={{ color: color.primary }}> Privacy Policy </Text> </Text>
               </View>
               <TouchableOpacity style={{ alignItems: 'center', marginTop:15 }} onPress={() => navigation.navigate(ScreenNameEnum.LoginScreen)}>
-                <Text style={styles.signupText}>Alrady have an account? <Text style={{ color: color.primary }}> Login</Text> </Text>
+                <Text allowFontScaling={false}  style={styles.signupText}>Alrady have an account? <Text style={{ color: color.primary }}> Login</Text> </Text>
               </TouchableOpacity>
 
             </View>

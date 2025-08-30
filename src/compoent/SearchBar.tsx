@@ -10,7 +10,7 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search", onSearchChange ,value, bgColor, icon}) => {
   return (
-    <View style={[styles.searchBar,{backgroundColor:"white"}]}>
+    <View style={[styles.searchBar, ]}>
       <Image source={icon? icon: imageIndex.search} style={styles.icon} resizeMode="cover" />
       <TextInput
         style={styles.input}
@@ -26,7 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search", onSearchC
 
 const styles = StyleSheet.create({
   searchBar: {
-    backgroundColor: "#F3F4F5",
+    backgroundColor: "white",
     borderRadius: 15,
     flexDirection: "row",
     alignItems: "center",
@@ -34,10 +34,16 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginVertical: 10,
     marginBottom: 20,
-     borderWidth: 1,
-    elevation: 1,
-    height: 60,
-    borderColor: "#E0E0E0", // ✅ proper color code
+    height: 54,
+    borderColor: "#E0E0E0", // proper color
+     // iOS shadow
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 }, // shadow direction
+    shadowOpacity: 0.1,    // subtle shadow
+    shadowRadius: 4,        // blur
+    // Android shadow
+    elevation: 3,
+  justifyContent:"center"
   
   },
   icon: {
@@ -48,7 +54,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: "#AAAAAA",
+    color: "black",
     marginLeft: 15,
   },
 });

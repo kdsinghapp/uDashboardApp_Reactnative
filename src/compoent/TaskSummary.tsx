@@ -8,37 +8,38 @@ export default function TaskItem({ task, onToggleStatus }:any) {
       {/* Row 1 */}
       <View style={styles.row}>
         <View style={styles.col}>
-          <Text style={styles.label}>TASK</Text>
-          <Text style={styles.value}>{task.title}</Text>
+          <Text  allowFontScaling={false} style={styles.label}>TASK</Text>
+          <Text  allowFontScaling={false} style={styles.value}>{task.title}</Text>
         </View>
         <View style={styles.col}>
-          <Text style={styles.label}>TASK MANAGER</Text>
-          <Text style={styles.value}>{task.manager}</Text>
+          <Text allowFontScaling={false}  style={styles.label}>TASK MANAGER</Text>
+          <Text  allowFontScaling={false}style={styles.value}>{task.manager}</Text>
         </View>
       </View>
 
       {/* Row 2 */}
       <View style={styles.row}>
         <View style={styles.col}>
-          <Text style={styles.label}>DUE DATE</Text>
-          <Text style={styles.value}>{task.dueDate}</Text>
+          <Text  allowFontScaling={false} style={styles.label}>DUE DATE</Text>
+          <Text  allowFontScaling={false} style={styles.value}>{task.dueDate}</Text>
         </View>
         <View style={styles.col}>
-          <Text style={styles.label}>ASSIGNED TO</Text>
-          <Text style={styles.value}>{task.team}</Text>
+          <Text allowFontScaling={false}  style={styles.label}>ASSIGNED TO</Text>
+          <Text  allowFontScaling={false} style={styles.value}>{task.team}</Text>
         </View>
       </View>
 
       {/* Row 3 */}
       <View style={styles.row}>
         <View style={styles.col}>
-          <Text style={styles.label}>PROGRESS</Text>
+          <Text  allowFontScaling={false} style={styles.label}>PROGRESS</Text>
           <View style={styles.progressCircle} />
         </View>
         <View style={styles.col}>
-          <Text style={styles.label}>STATUS</Text>
+          <Text  allowFontScaling={false} style={styles.label}>STATUS</Text>
           <TouchableOpacity onPress={() => onToggleStatus(task.id)}>
             <Text
+            allowFontScaling={false}
               style={[
                 styles.status,
                 task.status === "Completed" ? styles.completed : styles.pending,

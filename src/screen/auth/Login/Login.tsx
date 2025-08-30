@@ -46,8 +46,8 @@ export default function Login() {
         {loading && <Loading />}
         <View style={styles.mainContainer}>
           <Image source={imageIndex.logo} style={styles.logo} resizeMode='contain' />
-          <Text style={styles.txtHeading}>Account Log In</Text>
-          <Text style={styles.txtDes}>PLEASE LOGIN TO CONTINUE TO YOUR ACCOUNT</Text>
+          <Text allowFontScaling={false} style={styles.txtHeading}>Account Log In</Text>
+          <Text  allowFontScaling={false} style={styles.txtDes}>PLEASE LOGIN TO CONTINUE TO YOUR ACCOUNT</Text>
           <View style={styles.inputContainer}>
             <CustomInput
               placeholder={"Email Address"}
@@ -90,12 +90,15 @@ source={imageIndex.Check1}/>
     marginLeft:10 ,
     fontSize:15,
     color:"#909090"
-  }}> Remember me</Text>
+  }} 
+  
+  allowFontScaling={false}
+  > Remember me</Text>
   </View>
             <TouchableOpacity
               onPress={() => navigation.navigate(ScreenNameEnum.PasswordReset)}
               style={styles.forgotContainer}>
-              <Text style={styles.forgotText}>Forgot your password?</Text>
+              <Text allowFontScaling={false} style={styles.forgotText}>Forgot your password?</Text>
             </TouchableOpacity>
           </View>
           </View>
@@ -110,11 +113,11 @@ source={imageIndex.Check1}/>
           // onPress={handleLogin}
           />
            <View style={styles.signupContainer}>
-            <Text style={styles.signUpPrompt}></Text>
+            <Text allowFontScaling={false}  style={styles.signUpPrompt}></Text>
             <TouchableOpacity  
             onPress={() => navigation.navigate(ScreenNameEnum.SignUpScreen)}
             >
-              <Text style={styles.signupText}>Dont have an account?<Text style={{ color: color.primary }}> Sign Up</Text> </Text>
+              <Text allowFontScaling={false} style={styles.signupText}>Dont have an account?<Text style={{ color: color.primary }}> Sign Up</Text> </Text>
             </TouchableOpacity>
           </View>
 

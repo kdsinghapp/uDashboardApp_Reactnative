@@ -2,55 +2,54 @@ import React from 'react';
 import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
 import imageIndex from '../assets/imageIndex';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
-import { color } from '../constant';
 import ScreenNameEnum from '../routes/screenName.enum';
 
 interface RightIcon {
-  icon: any;           // Icon image source
-  onPress: () => void; // Press handler for the icon
-  type?:string;
+  icon: any;
+  onPress: () => void;
+  type?: string;
 }
 
 interface Props {
   navigation?: any;
   rightIcons?: RightIcon[];
   menuIcon?: any;
-  label?: any;
-  leftPress? :any
+  label?: string;
+  leftPress?: () => void;
+  isSearch:any
 }
 
-const CustomHeader: React.FC<Props> = ({ rightIcons = [], menuIcon, label , leftPress }) => {
-  const navigation = useNavigation()
+const CustomHeader: React.FC<Props> = ({ isSearch,rightIcons = [], menuIcon, label, leftPress }) => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.header}>
-      {/* Left Menu Icon */}
-      <TouchableOpacity        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-      >
-        <Image source={imageIndex.Menu} style={styles.icon} resizeMode="contain" />
+      {/* Left Menu */}
+      <TouchableOpacity onPress={leftPress || (() => navigation.dispatch(DrawerActions.openDrawer()))}>
+        <Image source={menuIcon || imageIndex.Menu} style={styles.leftIcon} resizeMode="contain" />
       </TouchableOpacity>
- <View style={{
-  flexDirection:"row" ,
-  justifyContent:"flex-end" ,
-  alignItems:"center",
-    }}>
-      <TouchableOpacity onPress={() =>{navigation.goBack()}}>
-        <Image source={imageIndex.search} style={[styles.icon,{
-          right:25,
-        }]} resizeMode="contain" />
-      </TouchableOpacity>
-      <TouchableOpacity
-       onPress={() =>{navigation.navigate(ScreenNameEnum.Notification)}}
-      
-     >
-        <Image source={imageIndex.notification} style={[styles.icon,{
-          right:12,
-        }]} resizeMode="contain" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() =>{navigation.navigate(ScreenNameEnum.EditProfile)}}>
-        <Image source={imageIndex.Avatar}  style={[styles.icon,{
-          right:1,
-        }]} resizeMode="contain" />
-      </TouchableOpacity>
+
+      {/* Label / Title */}
+      {label && <Text style={styles.txtHeading}>{label}</Text>}
+
+      {/* Right Icons */}
+      <View style={styles.rightIconsContainer}>
+        {
+          isSearch && (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={imageIndex.search} style={styles.rightIcon} resizeMode="contain" />
+          </TouchableOpacity>
+          )
+        }
+    
+
+        <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.Notification)}>
+          <Image source={imageIndex.notification} style={styles.rightIcon} resizeMode="contain" />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.EditProfile)}>
+          <Image source={imageIndex.Avatar} style={styles.rightIconAvatar} resizeMode="contain" />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -61,35 +60,34 @@ export default CustomHeader;
 const styles = StyleSheet.create({
   header: {
     height: 60,
-    // paddingHorizontal: 5,
-    flexDirection: 'row',
+     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  icon: {
+   },
+  leftIcon: {
     height: 25,
     width: 25,
   },
-  iconR: {
-    height: 25,
-    width: 25,
-    marginLeft: 12,
-  },
-   iconR1: {
-    height: 35,
-    width: 35,
-    marginLeft: 8,
+  txtHeading: {
+    fontWeight: '700',
+    fontSize: 20,
+    color: '#000',
+    textAlign: 'center',
+    flex: 1,
   },
   rightIconsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    minWidth:65
   },
-  txtHeading: {
-    fontWeight: '700',
-    fontSize: 24,
-    lineHeight: 36,
-    color: '#000000',
-    marginTop: 7,
+  rightIcon: {
+    height: 25,
+    width: 25,
+    marginLeft: 15,
+  },
+  rightIconAvatar: {
+    height: 30,
+    width: 30,
+    marginLeft: 15,
+    borderRadius: 15, // circular avatar
   },
 });

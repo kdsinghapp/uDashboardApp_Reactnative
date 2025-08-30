@@ -48,8 +48,8 @@ export default function CreatePassword() {
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.headerContainer}>
-            <Text style={styles.title}>Create New Password</Text>
-            <Text style={styles.description}>Your new password must be different from previous used passwords.</Text>
+            <Text allowFontScaling={false} style={styles.title}>Create New Password</Text>
+            <Text allowFontScaling={false} style={styles.description}>Your new password must be different from previous used passwords.</Text>
           </View>
 
           <View style={styles.formContainer}>

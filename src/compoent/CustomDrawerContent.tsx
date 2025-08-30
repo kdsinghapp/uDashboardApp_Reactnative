@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -13,30 +13,34 @@ import imageIndex from "../assets/imageIndex"; // apne icons yaha rakho
 import ScreenNameEnum from "../routes/screenName.enum";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StatusBarComponent from "./StatusBarCompoent";
+import LogoutModal from "./LogoutModal";
 
 // -------- Menu Data (sab ek jagah manage karna easy hoga) --------
 const menuItems = [
-  { id: "1", title: "Dashboard", icon: imageIndex.dasboard, screen: "Dashboard" },
-  { id: "2", title: "Profile", icon: imageIndex.dasboard, screen: ScreenNameEnum.EditProfile },
-  { id: "3", title: "Backburner Task", icon: imageIndex.dasboard, screen:ScreenNameEnum.DashBoardScreen},
-  { id: "4", title: "Assigned Task", icon: imageIndex.dasboard, screen: ScreenNameEnum.ActiveScreen },
-   { id: "5", title: "Callbacks", icon: imageIndex.dasboard, screen: ScreenNameEnum.CallbackDetailScreen },
-  { id: "6", title: "Employees", icon: imageIndex.dasboard, screen: "Language" },
-  { id: "7", title: "Teams", icon: imageIndex.dasboard, screen: "Language" },
-  { id: "8", title: "Replies", icon: imageIndex.dasboard, screen: "Language" },
-  { id: "9", title: "Notes", icon: imageIndex.dasboard, screen: "Language" },
+  { id: "1", title: "Dashboard", icon: imageIndex.dasboard, screen:"Dashboard" },
+  { id: "2", title: "Profile", icon: imageIndex.ProfielPng, screen: ScreenNameEnum.EditProfile },
+  { id: "3", title: "Backburner Task", icon: imageIndex.Bacxkbuer, screen:ScreenNameEnum.Backburner},
+  { id: "4", title: "Callbacks", icon: imageIndex.MyAddress, screen: ScreenNameEnum.CallBack },
+  { id: "5", title: "Employees", icon: imageIndex.dasboard, screen:  ScreenNameEnum.EmployeeScreen },
+  
+  { id: "7", title: "Notes", icon: imageIndex.Note, screen: ScreenNameEnum.Note},
 
-  { id: "10", title: "Calendar", icon: imageIndex.dasboard, screen: "Language" },
-  { id: "11", title: "Financial", icon: imageIndex.dasboard, screen: "Language" },
-  { id: "12", title: "Clients", icon: imageIndex.dasboard, screen: "Language" },
-  { id: "13", title: "Reference", icon: imageIndex.dasboard, screen: "Language" },
-  { id: "15", title: "Logout", icon: imageIndex.dasboard, screen: "Language" },
+  { id: "8", title: "Teams", icon: imageIndex.dasboard, screen: ScreenNameEnum.TeamScreen },
+  { id: "9", title: "Assigned Task", icon: imageIndex.Calendar, screen: ScreenNameEnum.AssingnedScreen },
+
+  { id: "10", title: "Replies", icon: imageIndex.Replies, screen: "Language" },
+
+  { id: "11", title: "Calendar", icon: imageIndex.Calendar, screen: ScreenNameEnum.CalendarScreen },
+  { id: "12", title: "Financial", icon: imageIndex.dasboard, screen: "Language" },
+  { id: "13", title: "Clients", icon: imageIndex.Calendar, screen: ScreenNameEnum.AddclientsScreen },
+  { id: "14", title: "Reference", icon: imageIndex.Reference, screen: "Language" },
+  { id: "15", title: "Logout", icon: imageIndex.Logout, screen: "Language" },
 
 ];
 
 export default function CustomDrawerContent(props: DrawerContentComponentProps) {
   const { navigation } = props;
-
+const [LogoutModal1,setLogoutModal]= useState(false)
   // -------- Render Item Function --------
   const renderMenuItem = ({ item }: any) => (
     <View style={{
@@ -46,10 +50,17 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
      }}>
     <TouchableOpacity
       style={styles.menuItem}
-      onPress={() => navigation.navigate(item.screen)}
+      onPress={() => {
+        if (item.title == "Logout") {
+          setLogoutModal(true);
+        } else {
+          navigation.navigate(item.screen);
+        }
+      }}
+      
     >
       <Image source={item.icon} style={styles.icon} />
-      <Text style={styles.menuText}>{item.title}</Text>
+      <Text  allowFontScaling={false} style={styles.menuText}>{item.title}</Text>
      
 
     </TouchableOpacity>
@@ -79,7 +90,14 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
       />
 
       {/* ---------- Logout Button ---------- */}
-      
+      <LogoutModal visible={LogoutModal1} 
+      onClose={()=>{
+        setLogoutModal(false)
+      }}
+      onConfirm={()=>{
+        setLogoutModal(false)
+      }}
+      />
     </SafeAreaView>
   );
 }

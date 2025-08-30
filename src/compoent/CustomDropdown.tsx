@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from "react-native";
+ import imageIndex from "../assets/imageIndex";
  
 const CustomDropdown = ({ label, options, value, onSelect }) => {
   const [open, setOpen] = useState(false);
@@ -18,6 +19,13 @@ const CustomDropdown = ({ label, options, value, onSelect }) => {
           size={16}
           color="#333"
         /> */}
+        <Image source={imageIndex.downRed} 
+        style={{
+          height:22,
+          width:22,
+          tintColor:"#333"
+        }}
+        />
       </TouchableOpacity>
 
       {open && (
@@ -49,11 +57,11 @@ const styles = StyleSheet.create({
   },
   dropdownHeader: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#EAEAEA",
+
     borderRadius: 8,
     padding: 14,
-    backgroundColor: "#fafafa",
-    flexDirection: "row",
+     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },

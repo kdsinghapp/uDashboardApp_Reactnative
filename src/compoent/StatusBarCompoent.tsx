@@ -1,5 +1,6 @@
 import React from 'react';
-import { StatusBar, View, Platform } from 'react-native';
+import { StatusBar, SafeAreaView, View } from 'react-native';
+import { color } from '../constant';
 
 type StatusBarComponentProps = {
   barStyle?: 'default' | 'light-content' | 'dark-content';
@@ -9,17 +10,18 @@ type StatusBarComponentProps = {
 
 const StatusBarComponent: React.FC<StatusBarComponentProps> = ({
   barStyle = 'dark-content',
-  backgroundColor = 'black',
+  backgroundColor = color.baground,
   translucent = false,
 }) => {
   return (
-    <View style={{ height: Platform.OS === 'android' ? StatusBar.currentHeight : 0, backgroundColor }}>
+    <>
       <StatusBar
         barStyle={barStyle}
         backgroundColor={backgroundColor}
         translucent={translucent}
       />
-    </View>
+      <SafeAreaView style={{ backgroundColor }} />
+    </>
   );
 };
 

@@ -1263,16 +1263,6 @@ PODS:
     - React-jsiexecutor
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
-  - react-native-biometrics (3.0.1):
-    - React-Core
-  - react-native-camera (4.2.1):
-    - React-Core
-    - react-native-camera/RCT (= 4.2.1)
-    - react-native-camera/RN (= 4.2.1)
-  - react-native-camera/RCT (4.2.1):
-    - React-Core
-  - react-native-camera/RN (4.2.1):
-    - React-Core
   - react-native-date-picker (5.0.13):
     - DoubleConversion
     - glog
@@ -1398,71 +1388,6 @@ PODS:
     - React-graphics
     - React-ImageManager
     - react-native-safe-area-context/common
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
-  - react-native-video (6.16.1):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - react-native-video/Video (= 6.16.1)
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
-  - react-native-video/Fabric (6.16.1):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
-  - react-native-video/Video (6.16.1):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - react-native-video/Fabric
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -1784,6 +1709,27 @@ PODS:
   - rn-fetch-blob (0.12.0):
     - React-Core
   - RNCAsyncStorage (2.2.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - RNDateTimePicker (8.4.4):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2133,15 +2079,12 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
-  - react-native-biometrics (from `../node_modules/react-native-biometrics`)
-  - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - "react-native-document-picker (from `../node_modules/@react-native-documents/picker`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-render-html (from `../node_modules/react-native-render-html`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -2174,6 +2117,7 @@ DEPENDENCIES:
   - ReactNativeLocalization (from `../node_modules/react-native-localization`)
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -2271,10 +2215,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
-  react-native-biometrics:
-    :path: "../node_modules/react-native-biometrics"
-  react-native-camera:
-    :path: "../node_modules/react-native-camera"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
   react-native-document-picker:
@@ -2287,8 +2227,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-render-html"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
-  react-native-video:
-    :path: "../node_modules/react-native-video"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-NativeModulesApple:
@@ -2353,6 +2291,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/rn-fetch-blob"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
@@ -2385,7 +2325,7 @@ SPEC CHECKSUMS:
   hermes-engine: b417d2b2aee3b89b58e63e23a51e02be91dc876d
   lottie-ios: a881093fab623c467d3bce374367755c272bdd59
   lottie-react-native: 385f08c1cb93d4ffa75c01e6dcacf4c828cc739a
-  RCT-Folly: 36fe2295e44b10d831836cc0d1daec5f8abcf809
+  RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
   RCTDeprecation: b2eecf2d60216df56bc5e6be5f063826d3c1ee35
   RCTRequired: 78522de7dc73b81f3ed7890d145fa341f5bb32ea
   RCTTypeSafety: c135dd2bf50402d87fd12884cbad5d5e64850edd
@@ -2415,15 +2355,12 @@ SPEC CHECKSUMS:
   React-logger: 018826bfd51b9f18e87f67db1590bc510ad20664
   React-Mapbuffer: 3c11cee7737609275c7b66bd0b1de475f094cedf
   React-microtasksnativemodule: 843f352b32aacbe13a9c750190d34df44c3e6c2c
-  react-native-biometrics: 43ed5b828646a7862dbc7945556446be00798e7d
-  react-native-camera: 079d80421f0572d6b4e836908114d614d0adb553
   react-native-date-picker: 729d0384b49f516c6712625aa571d55af5cdb1e0
   react-native-document-picker: d805f97b7c8b884398956920d9ee783ea09f12b3
   react-native-image-picker: 84b261e109faa7312bca59f1f65c8f2b22865496
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safe-area-context: 143faa2b60b6cc3e06e966d5fa23af6b31326814
-  react-native-video: bb03ea28ed6554fd615a71bb6e8c9bddab201555
   react-native-webview: 80ef603d1df42e24fdde765686fbb9b8a6ecd554
   React-NativeModulesApple: 88433b6946778bea9c153e27b671de15411bf225
   React-perflogger: 9e8d3c0dc0194eb932162812a168aa5dc662f418
@@ -2456,6 +2393,7 @@ SPEC CHECKSUMS:
   ReactNativeLocalization: 79b100588f6d7a68852b982ccbe57e329e8bb5a7
   rn-fetch-blob: 25612b6d6f6e980c6f17ed98ba2f58f5696a51ca
   RNCAsyncStorage: 79cfba789fca205b204f3ce7948b874500129eb4
+  RNDateTimePicker: db1c5f01cfc5681ef8d776cbaf070b415ba19c47
   RNGestureHandler: 3ab8e53e9d405a340ea6612d5c2ef42e6e8477e3
   RNImageCropPicker: 2c53b596a1af85eacba1048e996f916933021bbb
   RNPermissions: cf274625da2c813b8614faa1702aa1779c36057e

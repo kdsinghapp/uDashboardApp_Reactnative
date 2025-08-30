@@ -8,18 +8,8 @@ import StatusBarComponent from '../../../compoent/StatusBarCompoent';
 import imageIndex from '../../../assets/imageIndex';
 import TaskCard from '../../../compoent/TaskSummary';
 
-const screenWidth = Dimensions.get('window').width;
-
-const dataLineChart = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  datasets: [{ data: [20, 45, 28, 80, 99, 43] }],
-};
-
-const dataPieChart = [
-  { name: 'Category A', population: 11, color: '#F79494', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-  { name: 'Category B', population: 30, color: '#D2F8D2', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-  { name: 'Category C', population: 30, color: '#C6E2FF', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-];
+ 
+ 
 const stats = [
   { id: 1, title: "Total Project", value: "89.9K", icon: "briefcase-outline",im:imageIndex.rating, active: true },
   { id: 2, title: "Completed Projects", value: "78.5K",im:imageIndex.rating, icon: "checkmark-circle-outline", active: false },
@@ -66,7 +56,7 @@ export default function DashboardScreen() {
       }}>
 
 
-      <CustomHeader/>
+      <CustomHeader isSearch={true}/>
       </View>
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
     <View style={styles.container1}>
@@ -93,10 +83,10 @@ export default function DashboardScreen() {
             color={item.active ? "#fff" : "#444"}
             style={styles.icon}
           /> */}
-            <Text style={[styles.value, isActive && { color: "#fff", marginTop: 20 }]}>
+            <Text  allowFontScaling={false} style={[styles.value, isActive && { color: "#fff", marginTop: 20 }]}>
             {item.value}
           </Text>
-            <Text style={[styles.label, isActive && { color: "#fff" }]}>
+            <Text allowFontScaling={false}  style={[styles.label, isActive && { color: "#fff" }]}>
             {item.title}
           </Text>
         </TouchableOpacity>
@@ -104,18 +94,18 @@ export default function DashboardScreen() {
       })}
     </View>
       {/* Line Chart */}
-      <Text style={styles.chartTitle}>Stats Over Time</Text>
+      <Text allowFontScaling={false} style={styles.chartTitle}>Stats Over Time</Text>
       <View style={{
   flex:1,
   borderWidth:1,
   borderColor:"#E3E3E3" ,
   borderRadius:10 ,
-  marginBottom:11
- }}>
+  marginBottom:12
+  }}>
       <Image source={imageIndex.grap} 
         style={{
-          height: 400,
-          marginTop:11,
+          height: 430,
+          marginTop:20,
           width: "100%",
           resizeMode: "cover",
       }}
@@ -175,9 +165,9 @@ export default function DashboardScreen() {
           marginTop:11
         }}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Task Summary</Text>
+        <Text allowFontScaling={false} style={styles.headerTitle}>Task Summary</Text>
         <TouchableOpacity onPress={() => setYear(year === 2025 ? 2024 : 2025)}>
-          <Text style={styles.year}>{year} ▼</Text>
+          <Text allowFontScaling={false} style={styles.year}>{year} ▼</Text>
         </TouchableOpacity>
       </View>
 

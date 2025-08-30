@@ -6,13 +6,25 @@ import SignUp from "../screen/auth/Signup/SignUp";
 import Splash from "../screen/auth/Splash";
  import ScreenNameEnum from "./screenName.enum";
  
- 
-// import DrawerNavigation from "../compoent/DrawerParamList";
 import EditProfile from "../screen/Profile/EditProfile";
-import DashboardScreen from "../screen/BottomTab/Dashboard/DashboardScreen";
-import Notification from "../screen/Profile/Notification";
+ import Notification from "../screen/Profile/Notification";
 import DrawerNavigation from "../navigators/DrawerNavigation";
-
+import LossDetailScren from "../screen/Active/LossDetail/LossDetailScren";
+import AddEmployeeScreen from "../screen/Employee/AddEmployee";
+import EmployeeDetail from "../screen/Employee/EmployeeDetail";
+import NoteDetail from "../screen/Note/NoteDetail";
+import AddNoteScreen from "../screen/Note/AddNote";
+import CallbackDetailScreen from "../screen/Callback/CallbackDetailScreen";
+import AddCallback from "../screen/Callback/AddCallback";
+import BackburnerDetail from "../screen/Backburner/BackburnerDetail";
+import AddBackburner from "../screen/Backburner/AddBackburner";
+import AddTeams from "../screen/Teams/AddTeams";
+import TeamsDetail from "../screen/Teams/TeamsDetail";
+import AssignedDetail from "../screen/AssignedTask/AssignedDetail";
+import AddAssignedTask from "../screen/AssignedTask/AddAssignedTask";
+import AddclientsDetail from "../screen/Addclients/AddclientsDetail";
+import Addclients from "../screen/Addclients/Addclients";
+   
 const _routes: any = {
   REGISTRATION_ROUTE: [
     {
@@ -28,6 +40,66 @@ const _routes: any = {
     {
       name: ScreenNameEnum.LoginScreen,
       Component: Login,
+    },  
+    {
+      name: ScreenNameEnum.NoteDetail,
+      Component: NoteDetail,
+    },  
+    {
+      name: ScreenNameEnum.CallbackDetailScreen,
+      Component: CallbackDetailScreen,
+    },  
+    {
+      name: ScreenNameEnum.AddNoteScreen,
+      Component: AddNoteScreen,
+    },  
+    {
+      name: ScreenNameEnum.LossDetailScren,
+      Component: LossDetailScren,
+    },  
+    {
+      name: ScreenNameEnum.AddBackburner,
+      Component: AddBackburner,
+    },  
+    {
+      name: ScreenNameEnum.AddclientsDetail,
+      Component: AddclientsDetail,
+    },  
+    {
+      name: ScreenNameEnum.Addclients,
+      Component: Addclients,
+    },  
+    {
+      name: ScreenNameEnum.AddAssignedTask,
+      Component: AddAssignedTask,
+    },  
+    {
+      name: ScreenNameEnum.AssignedDetail,
+      Component: AssignedDetail,
+    },  
+    {
+      name: ScreenNameEnum.TeamsDetail,
+      Component: TeamsDetail,
+    },  
+    {
+      name: ScreenNameEnum.AddTeams,
+      Component: AddTeams,
+    },  
+    {
+      name: ScreenNameEnum.AddCallback,
+      Component: AddCallback,
+    },  
+    {
+      name: ScreenNameEnum.BackburnerDetail,
+      Component: BackburnerDetail,
+    },  
+    {
+      name: ScreenNameEnum.EmployeeDetail,
+      Component: EmployeeDetail,
+    },  
+    {
+      name: ScreenNameEnum.AddEmployeeScreen,
+      Component: AddEmployeeScreen,
     },  
     // {
     //   name: ScreenNameEnum.DashboardScreen,

@@ -56,7 +56,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
     >
       <View style={[styles.content, { justifyContent: alignment[alignItm] }]}>
         {leftIcon && <View style={styles.icon}>{leftIcon}</View>}
-        <Text style={[styles.text, { color: txtcolor }, textStyle]}>{title}</Text>
+        <Text allowFontScaling={false}  style={[styles.text, { color: txtcolor }, textStyle]}>{title}</Text>
       </View>
     </TouchableOpacity>
   );

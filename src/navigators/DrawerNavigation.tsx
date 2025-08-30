@@ -6,8 +6,16 @@ import DashboardScreen from '../screen/BottomTab/Dashboard/DashboardScreen';
 import CustomDrawerContent from '../compoent/CustomDrawerContent';
 import EditProfile from '../screen/Profile/EditProfile';
 import ScreenNameEnum from '../routes/screenName.enum';
-import CallbackDetailScreen from '../screen/CallbackDetail/CallbackDetailScreen';
+import CallbackDetailScreen from '../screen/Callback/CallbackDetailScreen';
 import ActiveScreen from '../screen/Active/ActiveScreen';
+import EmployeeScreen from '../screen/Employee/EmployeeScreen';
+import Note from '../screen/Note/Note';
+import CallBack from '../screen/Callback/CallBack';
+import Backburner from '../screen/Backburner/BackburnerScreen';
+import TeamScreen from '../screen/Teams/TeamScreen';
+import AssingnedScreen from '../screen/AssignedTask/AssingnedScreen';
+import CalendarScreen from '../screen/Calendar/CalendarScreen';
+import AddclientsScreen from '../screen/Addclients/AddclientsScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -21,8 +29,15 @@ export default function DrawerNavigation() {
     >
       <Drawer.Screen name="Dashboard" component={DashboardScreen} />
       <Drawer.Screen name= {ScreenNameEnum.EditProfile} component={EditProfile} />
-      <Drawer.Screen name= {ScreenNameEnum.CallbackDetailScreen} component={CallbackDetailScreen} />
-      <Drawer.Screen name= {ScreenNameEnum.ActiveScreen} component={ActiveScreen} />
+       <Drawer.Screen name= {ScreenNameEnum.ActiveScreen} component={ActiveScreen} />
+      <Drawer.Screen name= {ScreenNameEnum.CallBack} component={CallBack} />
+      <Drawer.Screen name= {ScreenNameEnum.Note} component={Note} />
+      <Drawer.Screen name= {ScreenNameEnum.EmployeeScreen} component={EmployeeScreen} />
+      <Drawer.Screen name= {ScreenNameEnum.AddclientsScreen} component={AddclientsScreen} />
+      <Drawer.Screen name= {ScreenNameEnum.Backburner} component={Backburner} />
+      <Drawer.Screen name= {ScreenNameEnum.TeamScreen} component={TeamScreen} />
+      <Drawer.Screen name= {ScreenNameEnum.AssingnedScreen} component={AssingnedScreen} />
+      <Drawer.Screen name= {ScreenNameEnum.CalendarScreen} component={CalendarScreen} />
     </Drawer.Navigator>
   );
 }

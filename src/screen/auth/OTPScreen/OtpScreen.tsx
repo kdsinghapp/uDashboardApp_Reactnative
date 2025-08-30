@@ -53,13 +53,14 @@ export default function OtpScreen() {
           <CustomBackHeader menuIcon={imageIndex.back} label={""} />
 
           <View style={styles.headerSection}>
-            <Text style={styles.txtHeading}>Check your mail or check your cell phone</Text>
-            <Text style={styles.txtDes}>Please put the 4 digits sent to you
+            <Text allowFontScaling={false} style={styles.txtHeading}>Check your mail or check your cell phone</Text>
+            <Text  allowFontScaling={false} style={styles.txtDes}>Please put the 4 digits sent to you
             </Text>
           </View>
 
           <View style={styles.otpFieldContainer}>
             <CodeField
+            allowFontScaling={false}
               ref={ref}
               {...props}
               value={value}

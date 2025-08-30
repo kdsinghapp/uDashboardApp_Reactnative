@@ -8,7 +8,6 @@ import {
   Dimensions,
 } from "react-native";
 import { color } from "../constant";
-import localizationStrings from "../localization/LocalizationString";
 
 const { width } = Dimensions.get("window");
 
@@ -28,18 +27,18 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onClose, onConfirm }
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          <Text style={styles.title}>{localizationStrings.logout} ?</Text>
-          <Text style={styles.message}>{localizationStrings.logoutdes}</Text>
+          <Text style={styles.title}>Logout?</Text>
+          <Text style={styles.message}>Are you sure you want to log out?</Text>
 
           <View style={styles.buttonContainer}>
             {/* Cancel Button */}
             <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={onClose}>
-              <Text style={[styles.buttonText, styles.cancelText]}>{localizationStrings.cancel}</Text>
+              <Text style={[styles.buttonText, styles.cancelText]}>Cancel</Text>
             </TouchableOpacity>
 
             {/* Log Out Button */}
             <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={onConfirm}>
-              <Text style={[styles.buttonText, styles.logoutText]}>{localizationStrings.logout}</Text>
+              <Text style={[styles.buttonText, styles.logoutText]}>Log Out</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
   },
   logoutButton: {
-    backgroundColor: color.buttonColor,
+    backgroundColor: "#0D6EFD",
   },
   buttonText: {
     fontSize: 16,
