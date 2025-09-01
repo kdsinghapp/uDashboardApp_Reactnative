@@ -114,8 +114,15 @@ export default function DashboardScreen() {
         <Text allowFontScaling={false} style={styles.chartTitle}>Stats Over Time</Text>
 
         <Text style={styles.title}>Sell</Text>
-        <GroupedBarChart />
+        <View style={{
+            borderWidth: 1,
+            borderColor: "#E3E3E3",
+            borderRadius: 10,
+            marginTop:15
 
+        }}>
+        <GroupedBarChart />
+        </View>
         <View style={{
           flex: 1,
           borderWidth: 1,
@@ -123,6 +130,7 @@ export default function DashboardScreen() {
           borderRadius: 10,
           alignItems: 'center',
           justifyContent: 'center',
+          marginTop:15
         }}>
           <View style={styles.legend}>
               {segments.map(item=>
@@ -133,7 +141,7 @@ export default function DashboardScreen() {
                  )}
                 </View>
           <Svg height="300" width={wp(100) - 40} style={{ width: wp(100), alignItems: 'center', justifyContent: 'center' }}>
-            {segments.map((seg, index) => {
+            {segments?.map((seg, index) => {
               const strokeDasharray = `${(circumference * seg.percent) / 100} ${circumference
                 }`;
               const circle = (
@@ -157,8 +165,15 @@ export default function DashboardScreen() {
             
         </View>
      
+        <View style={{
+            borderWidth: 1,
+            borderColor: "#E3E3E3",
+            borderRadius: 10,
+            marginTop:15
 
+        }}>
         <ActivitiesChart />
+        </View>
         <View style={{
           borderWidth: 1,
           borderColor: "#E3E3E3",
@@ -177,6 +192,7 @@ export default function DashboardScreen() {
             </View>
 
             {/* Task List */}
+            
             <FlatList
               data={tasks}
               keyExtractor={(item) => item.id}
@@ -184,6 +200,7 @@ export default function DashboardScreen() {
                 <TaskCard task={item} onToggleStatus={toggleStatus} />
               )}
             />
+          
           </View>
         </View>
       </ScrollView>
@@ -254,12 +271,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     marginTop: 20,
-    // marginBottom:20
+     // marginBottom:20
   },
   legendItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginHorizontal: 10,
+    marginHorizontal: 5,
   },
   dot: {
     width: 15,
