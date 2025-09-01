@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
    ScrollView,
  } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import Loading from '../../../utils/Loader';
 import imageIndex from '../../../assets/imageIndex';
 import CustomButton from '../../../compoent/CustomButton';
@@ -35,6 +35,7 @@ export default function Login() {
     navigation.replace("MainDrawer");
   };
 
+  const [checked, setChecked] = useState(false);
 
  
   return (
@@ -78,14 +79,19 @@ export default function Login() {
     flexDirection:"row",
     alignItems:"center",
 }}>
+  <TouchableOpacity
+          onPress={() => setChecked(!checked)}
+>
 <Image 
 
 style={{
-  height:15,
-  width:15,
+  height:23,
+  width:23,
   resizeMode:"contain"
 }}
-source={imageIndex.Check1}/>
+source={checked ? imageIndex.Check1 : imageIndex.Uncheck} // ✅ toggle between check/uncheck
+/>
+</TouchableOpacity>
   <Text style={{
     marginLeft:10 ,
     fontSize:15,

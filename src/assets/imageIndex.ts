@@ -7,6 +7,7 @@ export default {
     back: require('./images/back.png'),
     dasboard: require('./images/dasboard.png'),
     AddLogo: require('./images/AddLogo.png'),
+    Uncheck: require('./images/Uncheck.png'),
     profile: require('./images/profile.png'),
     sms: require('./images/sms.png'),
     phone: require('./images/phone.png'),
