@@ -10,6 +10,7 @@ import {
   Image,
 } from "react-native";
 import imageIndex from "../assets/imageIndex";
+import { color } from "../constant";
 
 const { width } = Dimensions.get("window");
 
@@ -43,33 +44,34 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
         <View style={styles.container}>
           {/* Icon inside circle */}
           <View style={styles.iconWrapper}>
-            <Image source={imageIndex.delite} style={styles.icon} />
+            <Image source={imageIndex.delete} style={styles.icon} />
           </View>
 
           {/* Title */}
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>Are you sure?</Text>
 
           {/* Message */}
           <Text style={styles.message}>{message}</Text>
 
           {/* Buttons */}
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.button, styles.cancelButton]}
-              onPress={onClose}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.buttonText, styles.cancelText]}>{cancelText}</Text>
-            </TouchableOpacity>
-
+          {/* <View style={styles.buttonContainer}> */}
             <TouchableOpacity
               style={[styles.button, styles.confirmButton]}
               onPress={onConfirm}
               activeOpacity={0.8}
             >
-              <Text style={[styles.buttonText, styles.confirmText]}>{confirmText}</Text>
+              <Text style={[styles.buttonText, styles.confirmText]}>{"Yes, Delete it!"}</Text>
             </TouchableOpacity>
-          </View>
+            <TouchableOpacity
+              style={[styles.button, styles.cancelButton]}
+              onPress={onClose}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.buttonText, styles.cancelText]}>{"Cancel"}</Text>
+            </TouchableOpacity>
+
+          
+          {/* </View> */}
         </View>
       </View>
     </Modal>
@@ -97,18 +99,19 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   iconWrapper: {
-    width: 70,
-    height: 70,
+    width: 200,
+    height: 120,
     borderRadius: 35,
-    backgroundColor: "rgba(255, 59, 48, 0.1)", // soft red bg
+    // backgroundColor: "rgba(255, 59, 48, 0.1)", // soft red bg
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 18,
+    marginTop:30
   },
   icon: {
-    width: 36,
-    height: 36,
-    tintColor: "#FF3B30", // iOS delete red
+    width: 200,
+    height: 120,
+    // tintColor: "#FF3B30", // iOS delete red
   },
   title: {
     fontSize: 20,
@@ -130,8 +133,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   button: {
-    flex: 1,
-    paddingVertical: 14,
+    // flex: 1,
+    // paddingVertical: 14,
     borderRadius: 12,
     alignItems: "center",
     marginHorizontal: 6,
@@ -139,13 +142,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 4,
-    elevation: 3,
+    // elevation: 5,
+    width:'80%',
+    height:50,
+    justifyContent:'center',
+    marginTop:15,
+   
   },
   cancelButton: {
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#fff",
+      borderWidth:1,
+     borderColor:'#f2f2f2'
   },
   confirmButton: {
-    backgroundColor: "#FF3B30",
+    backgroundColor: color.primary,
   },
   buttonText: {
     fontSize: 16,

@@ -11,6 +11,7 @@ import Svg, { Circle } from "react-native-svg";
 import { wp } from '../../../utils/Constant';
 import ActivitiesChart from './ActivityChart';
 import GroupedBarChart from './SaleChart';
+import TaskCompleteProgressBar from './TaskCompleteChart';
 
 
 const stats = [
@@ -31,7 +32,22 @@ export default function DashboardScreen() {
       team: "Mobile Team",
       status: "Completed",
     },
-
+ {
+      id: "2",
+      title: "Android app development",
+      manager: "Rachel Green",
+      dueDate: "Jul 07, 2024",
+      team: "Mobile Team",
+      status: "Completed",
+    },
+     {
+      id: "3",
+      title: "Android app development",
+      manager: "Rachel Green",
+      dueDate: "Jul 07, 2024",
+      team: "Mobile Team",
+      status: "Completed",
+    },
   ];
 
   const [tasks, setTasks] = useState(initialTasks);
@@ -94,12 +110,6 @@ export default function DashboardScreen() {
                     resizeMode: 'contain'
                   }}
                 />
-                {/* <Icon
-            name={item.icon}
-            size={28}
-            color={item.active ? "#fff" : "#444"}
-            style={styles.icon}
-          /> */}
                 <Text allowFontScaling={false} style={[styles.value, isActive && { color: "#fff", marginTop: 20 }]}>
                   {item.value}
                 </Text>
@@ -173,6 +183,15 @@ export default function DashboardScreen() {
 
         }}>
         <ActivitiesChart />
+        </View>
+         <View style={{
+            borderWidth: 1,
+            borderColor: "#E3E3E3",
+            borderRadius: 10,
+            marginTop:15
+
+        }}>
+        <TaskCompleteProgressBar/>
         </View>
         <View style={{
           borderWidth: 1,
