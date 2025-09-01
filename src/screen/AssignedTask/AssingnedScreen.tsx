@@ -1,12 +1,5 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  Image,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchBar from "../../compoent/SearchBar";
 import imageIndex from "../../assets/imageIndex";
@@ -16,92 +9,106 @@ import { useNavigation } from "@react-navigation/native";
 import ScreenNameEnum from "../../routes/screenName.enum";
 
 const allData = [
-  {
-    id: "01",
-    name: "Website Redesign",
-    amount: "₹50,000.00",
-    details: "Client payment for UI project",
-    date: "20 Aug 2025",
-    status: "Active",
-  },
-  {
-    id: "02",
-    name: "Website Redesign",
-    amount: "₹50,000.00",
-    details: "Client payment for UI project",
-    date: "20 Aug 2025",
-    status: "Deleted",
-  },
-  {
-    id: "03",
-    name: "Mobile App",
-    amount: "₹80,000.00",
-    details: "Client payment for App project",
-    date: "22 Aug 2025",
-    status: "Active",
-  },
-  {
-    id: "04",
-    name: "Mobile App",
-    amount: "₹80,000.00",
-    details: "Client payment for App project",
-    date: "22 Aug 2025",
-    status: "Active",
-  },
+  { id: "01", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Active" },
+  { id: "02", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Deleted" },
 ];
 
 export default function AssingnedScreen() {
-  const nav = useNavigation();
+  const [activeTab, setActiveTab] = useState<"Active" | "Deleted">("Active");
 
+  const filteredData = allData.filter(item => item.status === activeTab);
+  const nav = useNavigation()
   const renderCard = ({ item }: any) => (
-    <TouchableOpacity style={styles.card}>
-      {/* Top Row: Task & Status */}
-      <View style={styles.cardTopRow}>
-        <View>
-          <Text style={styles.taskName}>{item.name}</Text>
-          <Text style={styles.taskManager}>Task Manager: Rakesh</Text>
-          <Text style={styles.details}>{item.details}</Text>
+    <TouchableOpacity
+      onPress={() => nav.navigate(ScreenNameEnum.AssignedDetail)}
+      style={styles.card}>
+      {/* Row 1: ID & Name */}
+      <View style={styles.cardRow}>
+        <View style={styles.cardItem}>
+          <Text style={styles.label}>ID</Text>
+          <Text style={styles.value}>{item.id}</Text>
         </View>
-  
-        {/* Status */}
-        <View style={styles.statusContainer}>
-          <Text
-            style={[
-              styles.status,
-              { color: item.status === "Active" ? "#4CAF50" : "#F44336" },
-            ]}
-          >
-            {item.status}
-          </Text>
+        <View style={[styles.cardItem, styles.right]}>
+          <Text style={styles.label}>Tasks</Text>
+          <Text style={styles.value}>Test New Callback </Text>
         </View>
       </View>
-  
-      {/* Bottom Row: Date & Action */}
-      <View style={styles.cardBottomRow}>
-        <Text style={styles.date}>{item.date}</Text>
-        <TouchableOpacity
-          onPress={() => nav.navigate(ScreenNameEnum.AssignedDetail)}
-          style={styles.iconBtn}
-        >
-          <Image style={styles.icon} source={imageIndex.eyeBlue} />
-        </TouchableOpacity>
+
+
+
+      {/* Row 3: Date & Status */}
+      <View style={styles.cardRow}>
+        <View style={styles.cardItem}>
+          <Text style={styles.label}>Tast Manager</Text>
+          <Text style={styles.value}>rakesh dongre</Text>
+        </View>
+
+        <View style={[styles.cardItem, styles.right]}>
+          <Text style={styles.label}>Create Date</Text>
+          <Text style={styles.value}>Jul 29, 2025</Text>
+        </View>
+
       </View>
+
+      <View style={styles.cardRow}>
+        <View style={styles.cardItem}>
+          <Text style={styles.label}>Client</Text>
+          <Text style={styles.value}>Ram</Text>
+        </View>
+
+        <View style={[styles.cardItem, styles.right]}>
+          <Text style={styles.label}>Status</Text>
+          <Text style={[styles.value, styles.tag]}>Pending</Text>
+        </View>
+
+
+      </View>
+      <View style={styles.cardRow}>
+        <View style={styles.cardItem}>
+          <Text style={styles.label}>Priority</Text>
+          <Text style={[styles.value, styles.tag, { backgroundColor: '#0D6EFD', alignSelf: 'flex-start' }]}>Low</Text>
+        </View>
+
+        <View style={[styles.cardItem, styles.right]}>
+          <Text style={styles.label}>Action</Text>
+          <View style={{
+            flexDirection: "row",
+            alignItems: "center"
+          }}>
+            <Image source={imageIndex.eyeBlue}
+
+              style={{
+                height: 22,
+                width: 22
+              }}
+            />
+            <Text style={[styles.value, {
+              color: "#0D6EFD",
+              marginLeft: 3
+            }]}>View</Text>
+          </View>
+        </View>
+
+      </View>
+
+
+
     </TouchableOpacity>
   );
-  
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBarComponent />
       <CustomHeader />
       <SearchBar />
- <Text style={{
-  color:"black",
-  fontSize:15 ,
-  fontWeight:"600"
- }}>Assingned Task</Text>
+
+      {/* Tabs */} <Text style={styles.title}>
+        Assingned Task
+      </Text>
+     
+      {/* List */}
       <FlatList
-        data={allData}
+        data={filteredData}
         showsVerticalScrollIndicator={false}
         renderItem={renderCard}
         keyExtractor={(item) => item.id}
@@ -109,11 +116,8 @@ export default function AssingnedScreen() {
       />
 
       {/* Floating Button */}
-      <TouchableOpacity style={styles.fab} 
-      
-      onPress={()=>{
-        nav.navigate(ScreenNameEnum.AddAssignedTask)
-      }}
+      <TouchableOpacity style={styles.fab}
+        onPress={() => nav.navigate(ScreenNameEnum.AddAssignedTask)}
       >
         <Image
           source={imageIndex.AddLogo}
@@ -126,106 +130,47 @@ export default function AssingnedScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", padding: 15 },
-   
- 
-   
-  cardMiddleRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 12,
-  },
-   
-  name: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#000",
-  },
-  details: {
-    fontSize: 14,
-    color: "#878787",
-    marginTop: 2,
-    lineHeight:22
-  },
-  amount: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#000",
-  },
-  date: {
-    fontSize: 12,
-    color: "#878787",
-  },
-  
- 
-  icon: {
-    height: 22,
-    width: 22,
-  },
-  fab: {
-    position: "absolute",
-    bottom: 35,
-    right: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
+  title:{
+        fontSize: 15,
+        color: "black",
+        fontWeight: "500"
+      },
+  fab: { position: "absolute", bottom: 35, right: 20, justifyContent: "center", alignItems: "center" },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 12,
+    borderRadius: 10,
     padding: 15,
     marginBottom: 12,
-    marginHorizontal: 5,
+    // iOS shadow
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 }, // shadow ka direction
+    shadowOpacity: 0.1, // shadow ki transparency
+    shadowRadius: 5, // blur
+    // Android shadow
     elevation: 5,
+    marginHorizontal: 5
   },
-
-  cardTopRow: {
+  cardRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 12,
+    marginBottom: 10,
+    flex: 1
   },
-
-  cardBottomRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  cardItem: {
+    width: "40%", // two items per row
   },
-
-  taskName: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#000",
+  label: {
     marginBottom: 4,
-  },
+    color: "#000000",
+    fontWeight: "700",
+    fontSize: 14
 
-  taskManager: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#333",
-    marginBottom: 6,
   },
- 
-
-  statusContainer: {
-    justifyContent: "center",
-    alignItems: "flex-end",
-  },
-
-  status: {
+  value: {
+    color: "#878787",
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "500",
   },
-
-  iconBtn: {
-    marginLeft: 12,
-  },
-
-  icon: {
-    height: 22,
-    width: 22,
-  },
-
+  right: { alignItems: 'flex-end' },
+  tag: { backgroundColor: '#FF9500', color: '#fff', paddingHorizontal: 13, paddingVertical: 2, borderRadius: 12, alignSelf: 'flex-end' }
 });

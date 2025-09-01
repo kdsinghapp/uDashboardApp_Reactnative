@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -14,7 +14,6 @@ import CustomHeader from "../../compoent/CustomHeader";
 import StatusBarComponent from "../../compoent/StatusBarCompoent";
 import { useNavigation } from "@react-navigation/native";
 import ScreenNameEnum from "../../routes/screenName.enum";
-import DeleteModal from "../../compoent/DeleteModal";
 
 const allData = [
   {
@@ -51,20 +50,12 @@ const allData = [
   },
 ];
 
-export default function EmployeeScreen() {
+export default function RepliesScreen() {
   const nav = useNavigation();
-  const [activeTab, setActiveTab] = useState<"Active" | "Deleted">("Active");
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const filteredData = allData.filter(item => item.status === activeTab);
 
-  const handleDelete = () => {
-    // 👇 Your delete API or logic here
-    console.log("Item deleted!");
-    setDeleteModalVisible(false);
-  };
   const renderCard = ({ item }: any) => (
     <TouchableOpacity
-      onPress={() => nav.navigate(ScreenNameEnum.EmployeeDetail)}
+      onPress={() => nav.navigate(ScreenNameEnum.RepliesDetail)}
       style={styles.card}
     >
       {/* Top Row: Name & Status */}
@@ -72,16 +63,15 @@ export default function EmployeeScreen() {
         <View>
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.details}>{item.details}</Text>
-          <Text style={styles.details}>{"7894521631"}</Text>
         </View>
         <View style={styles.cardBottomRow}>
-          <TouchableOpacity style={styles.iconBtn} onPress={() => nav.navigate(ScreenNameEnum.EmployeeDetail)}>
+          <TouchableOpacity style={styles.iconBtn}>
             <Image style={styles.icon} source={imageIndex.eyeBlue} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBtn} >
+          <TouchableOpacity style={styles.iconBtn}>
             <Image style={styles.icon} source={imageIndex.editGreen} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBtn} onPress={()=>setDeleteModalVisible(true)}>
+          <TouchableOpacity style={styles.iconBtn}>
             <Image style={styles.icon} source={imageIndex.delite} />
           </TouchableOpacity>
         </View>
@@ -97,23 +87,13 @@ export default function EmployeeScreen() {
       <StatusBarComponent />
       <CustomHeader />
       <SearchBar />
-      <View style={styles.tabRow}>
-            <TouchableOpacity
-              style={[styles.tab, activeTab === "Active" && styles.activeTab]}
-              onPress={() => setActiveTab("Active")}
-            >
-              <Text style={activeTab === "Active" ? styles.tabTextActive : styles.tabText}>Active</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tab, activeTab === "Deleted" && styles.activeTab]}
-              onPress={() => setActiveTab("Deleted")}
-            >
-              <Text style={activeTab === "Deleted" ? styles.tabTextActive : styles.tabText}>Deleted</Text>
-            </TouchableOpacity>
-          </View>
-    
+      <Text style={{
+        color: "black",
+        fontSize: 14,
+        fontWeight: "600"
+      }}>Replies Detail</Text>
       <FlatList
-        data={filteredData}
+        data={allData}
         showsVerticalScrollIndicator={false}
         renderItem={renderCard}
         keyExtractor={(item) => item.id}
@@ -121,7 +101,7 @@ export default function EmployeeScreen() {
       />
 
       {/* Floating Button */}
-      <TouchableOpacity style={styles.fab}
+      {/* <TouchableOpacity style={styles.fab}
 
         onPress={() => {
           nav.navigate(ScreenNameEnum.AddEmployeeScreen)
@@ -131,16 +111,7 @@ export default function EmployeeScreen() {
           source={imageIndex.AddLogo}
           style={{ height: 70, width: 70, resizeMode: "contain" }}
         />
-      </TouchableOpacity>
-       <DeleteModal
-        visible={deleteModalVisible}
-        onClose={() => setDeleteModalVisible(false)}
-        onConfirm={handleDelete}
-        title="Delete Employee?"
-        message="Are you sure you want to delete this Employee from your list?"
-        cancelText="No"
-        confirmText="Yes, Delete"
-      />
+      </TouchableOpacity> */}
     </SafeAreaView>
   );
 }
@@ -154,12 +125,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  tabRow: { flexDirection: "row", borderRadius: 20, marginTop: 10, marginBottom: 10, backgroundColor: "#F5F5F5", },
-  tab: { flex: 1, paddingVertical: 10, alignItems: "center", borderRadius: 20, backgroundColor: "#F5F5F5", marginHorizontal: 5 , height:40, justifyContent:'center'},
-  activeTab: { backgroundColor: "#007bff",  },
-  tabText: { color: "#555" },
-  tabTextActive: { color: "#fff", fontWeight: "600" },
-  
   card: {
     backgroundColor: "#fff",
     borderRadius: 12,

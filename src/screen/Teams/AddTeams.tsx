@@ -17,6 +17,7 @@ import { TouchableWithoutFeedback } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 import { Keyboard } from "react-native";
 import StatusBarComponent from "../../compoent/StatusBarCompoent";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function 
 AddTeams() {
@@ -69,6 +70,8 @@ AddTeams() {
   };
 
   return (
+    <SafeAreaView style={{flex:1, backgroundColor:'#fff'}}>
+      <StatusBarComponent/>
     <KeyboardAvoidingView
     style={{ flex: 1 }}
     behavior={Platform.OS === "ios" ? "padding" : null}
@@ -133,6 +136,7 @@ borderWidth:1,        }]}
       </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 

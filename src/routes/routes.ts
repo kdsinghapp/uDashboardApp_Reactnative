@@ -24,6 +24,13 @@ import AssignedDetail from "../screen/AssignedTask/AssignedDetail";
 import AddAssignedTask from "../screen/AssignedTask/AddAssignedTask";
 import AddclientsDetail from "../screen/Addclients/AddclientsDetail";
 import Addclients from "../screen/Addclients/Addclients";
+import RepliesDetail from "../screen/Replies/RepliesDetail";
+import BudgetDetailScreen from "../screen/Financial/Budget/BudgetDetailScreen";
+import AddBudget from "../screen/Financial/Budget/AddBudget";
+import ExpensesDetailScreen from "../screen/Financial/Expenses/ExpensesDetailScreen";
+import PLSummaryDetailScreen from "../screen/Financial/PLSummary/PLSummaryDetailScreen";
+import AddExpenses from "../screen/Financial/Expenses/AddExpenses";
+import AddPLSummary from "../screen/Financial/PLSummary/AddPLSummary";
    
 const _routes: any = {
   REGISTRATION_ROUTE: [
@@ -100,6 +107,34 @@ const _routes: any = {
     {
       name: ScreenNameEnum.AddEmployeeScreen,
       Component: AddEmployeeScreen,
+    },  
+    {
+      name: ScreenNameEnum.BudgetDetail,
+      Component: BudgetDetailScreen,
+    },  
+    {
+      name: ScreenNameEnum.AddBudget,
+      Component: AddBudget,
+    },  
+     {
+      name: ScreenNameEnum.RepliesDetail,
+      Component: RepliesDetail,
+    },  
+     {
+      name: ScreenNameEnum.ExpensesDetail,
+      Component: ExpensesDetailScreen,
+    },  
+     {
+      name: ScreenNameEnum.PLSummaryDetail,
+      Component: PLSummaryDetailScreen,
+    },  
+     {
+      name: ScreenNameEnum.AddExpenses,
+      Component: AddExpenses,
+    },  
+     {
+      name: ScreenNameEnum.AddPLSummary,
+      Component: AddPLSummary,
     },  
     // {
     //   name: ScreenNameEnum.DashboardScreen,

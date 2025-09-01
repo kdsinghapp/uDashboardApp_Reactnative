@@ -16,7 +16,7 @@ interface Props {
   menuIcon?: any;
   label?: string;
   leftPress?: () => void;
-  isSearch:any
+  isSearch?:any
 }
 
 const CustomHeader: React.FC<Props> = ({ isSearch,rightIcons = [], menuIcon, label, leftPress }) => {
