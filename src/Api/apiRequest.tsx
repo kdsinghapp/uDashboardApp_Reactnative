@@ -16,15 +16,15 @@ const LoginCustomer = (
         const formdata = new FormData();
         formdata.append("email", param?.email);
         formdata.append("password", param?.password);
-        formdata.append("type", param?.roleType);
-        formdata.append("device_id", param?.token);
+        // formdata.append("type", param?.roleType);
+        // formdata.append("device_id", param?.token);
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: formdata,
         };
         console.log(param)
-        const respons = fetch(`${base_url}/Login`, requestOptions)
+        const respons = fetch(`${base_url}auth/login`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res)
@@ -34,20 +34,7 @@ const LoginCustomer = (
                         response?.message
                     );
                     dispatch(loginSuccess({ userData: response?.result, token: response?.result?.access_token, }));
-                    if (param?.roleType == "Driver") {
-                        param.navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'DrawerNavDriver' }],
-                        });
-                    } else {
-                        param.navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'DrawerNav' }],
-
-                        });
-                    }
-
-
+                    param?.navigation.replace("MainDrawer")
                     return response
                 } else {
                     setLoading(false)
@@ -76,17 +63,17 @@ const SinupCustomer = (params: any,
         const formdata = new FormData();
         formdata.append("first_name", params?.fname);
         formdata.append("last_name", params?.lName);
-        formdata.append("mobile", params?.phone);
+        // formdata.append("mobile", params?.phone);
         formdata.append("password", params?.password);
         formdata.append("email", params?.email);
-        formdata.append("type", params?.roleType);
+        // formdata.append("type", params?.roleType);
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: formdata,
         };
         console.log(formdata)
-        const respons = fetch(`${base_url}/Register`, requestOptions)
+        const respons = fetch(`${base_url}auth/signup`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res)

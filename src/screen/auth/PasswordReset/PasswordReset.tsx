@@ -25,18 +25,15 @@ export default function PasswordReset() {
     navigation
   } = usePasswordReset();
   return (
-  
       <SafeAreaView style={styles.container}>
         <StatusBarComponent />
-     
           {loading && <Loading />}
-
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
               <CustomBackHeader menuIcon={imageIndex.back} label={""} /> 
             <View style={styles.headerContainer}>
               <View style={styles.titleContainer}>
                 <Text  allowFontScaling={false} style={styles.titleText}>Password Reset</Text>
-                <Text allowFontScaling={false}  style={styles.descriptionText}>Please put your mobile number to reset your password</Text>
+                <Text allowFontScaling={false}  style={styles.descriptionText}>Please put your email address to get reset password link</Text>
               </View>
             </View>
              <View style={{
@@ -46,10 +43,12 @@ export default function PasswordReset() {
               placeholder={"Email Address"}
               leftIcon={<Icon source={imageIndex.email} size={20} />}
               value={email}
-              // onChangeText={handleEmailChange}
+              onChangeText={handleIdentityText}
               keyboardType='email-address'
 
             />
+                        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+      
             </View>
   <Image source={imageIndex.smsImg} style={{width:'80%', height:hp(28), alignSelf:'center', marginTop:30}}/>
 

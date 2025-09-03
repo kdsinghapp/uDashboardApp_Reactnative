@@ -67,26 +67,25 @@ export default function useSignup() {
   const handleSignup = async () => {
     const emailErr = validateEmail(email);
     const passErr = validatePassword(password);
-    const confirmErr = validateConfirmPassword(password, confirmPassword);
+    // const confirmErr = validateConfirmPassword(password, confirmPassword);
     const fnameErr = validateFirstName(fname)
     const lNameErr = validateLastName(lName)
-    const phoneErr = validateMobileNumber(phone)
+    // const phoneErr = validateMobileNumber(phone)
 
     setFnameError(fnameErr)
     setLNameError(lNameErr)
-    setPhoneError(phoneErr)
+    // setPhoneError(phoneErr)
     setEmailError(emailErr);
     setPasswordError(passErr);
-    setConfirmPasswordError(confirmErr);
+    // setConfirmPasswordError(confirmErr);
 
-    if (emailErr || passErr || confirmErr || fnameErr || lNameErr || phoneErr) return;
+    if (emailErr || passErr || lNameErr || fnameErr ) return;
 setLoading(true)
     try {
        const params = {
         email,
         password,
-        roleType: type,
-        phone,
+        // phone,
         fname,
         lName,
         navigation,

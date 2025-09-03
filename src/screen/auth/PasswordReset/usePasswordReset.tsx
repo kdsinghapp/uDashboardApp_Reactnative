@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { restEmailOtpScreen } from '../../../Api/apiRequest';
 import localizationStrings from '../../../localization/LocalizationString';
 import ScreenNameEnum from '../../../routes/screenName.enum';
+import { successToast } from '../../../utils/customToast';
 
 export const usePasswordReset = () => {
   const [email, setEmail] = useState('');
@@ -32,25 +33,30 @@ export const usePasswordReset = () => {
 
   const passFunction = async () => {
     try {
-     const trimmedPhone = phone.trim();
+      if (email.trim() === '') {
+        setEmailError(localizationStrings.emailRequired);
+        return;
+      }
 
-    
-      const isPhoneValid = /^[0-9]{10,15}$/.test(trimmedPhone.replace(/[^0-9]/g, ''));
+      if (!emailRegex.test(email.trim())) {
+        setEmailError(localizationStrings.emailError);
+      } else {
+        setEmailError('');
 
-     
 
-      
-   
+        // const params = {
+        //   [type]: contactValue,
+        //   type,
+        //   navigation,
+        // };
 
-      // const params = {
-      //   [type]: contactValue,
-      //   type,
-      //   navigation,
-      // };
+        // console.log(params);
+        // await restEmailOtpScreen(params, setLoading);
+        //  navigation.navigate(ScreenNameEnum.OtpScreen)
+        successToast("Send link on your mail")
+        navigation.navigate(ScreenNameEnum.LoginScreen)
+      }
 
-      // console.log(params);
-      // await restEmailOtpScreen(params, setLoading);
-       navigation.navigate(ScreenNameEnum.OtpScreen)
     } catch (error) {
       console.error('OTP error:', error);
     }

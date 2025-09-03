@@ -58,7 +58,7 @@ export const validateMobileNumber = (mobile: string): string => {
   if (!trimmed) {
     return localizationStrings.phoneReq;
   } else if (!mobileRegex.test(trimmed)) {
-    return localizationStrings.passError;
+    return localizationStrings.phoneErr;
   }
   return '';
 };

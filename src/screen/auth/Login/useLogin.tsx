@@ -50,7 +50,7 @@ const handlePasswordChange = (value: string) => {
 };
 
 const handleLogin = async () => {
-    const role = await AsyncStorage.getItem('userType');
+    // const role = await AsyncStorage.getItem('userType');
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
 
@@ -62,7 +62,7 @@ const handleLogin = async () => {
       const params = {
         email,
         password,
-        roleType: role,
+        // roleType: role,
         navigation,
         token,
       };

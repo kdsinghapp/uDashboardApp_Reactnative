@@ -14,6 +14,8 @@ import ScreenNameEnum from "../routes/screenName.enum";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StatusBarComponent from "./StatusBarCompoent";
 import LogoutModal from "./LogoutModal";
+import { logout } from "../redux/feature/authSlice";
+import { useDispatch } from "react-redux";
 
 // -------- Menu Data (sab ek jagah manage karna easy hoga) --------
 const menuItems = [
@@ -84,83 +86,83 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
 
     return (
       <View>
-      <TouchableOpacity style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center"
-      }}
-       onPress={() => {
+        <TouchableOpacity style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}
+          onPress={() => {
             if (item.title == "Logout") {
               setLogoutModal(true);
             } else {
-            if (hasChildren) {
-              toggleSubMenu(item.id);
-            } else {
-              // handleNavigation(item.screen);
+              if (hasChildren) {
+                toggleSubMenu(item.id);
+              } else {
+                // handleNavigation(item.screen);
                 navigation.navigate(item.screen);
-            }
-        
+              }
+
               // navigation.navigate(item.screen);
             }
           }}
 
-      >
-        <View
-          style={styles.menuItem}
-         
         >
-          <Image source={item.icon} style={styles.icon} />
-          <Text allowFontScaling={false} style={styles.menuText}>{item.title}</Text>
+          <View
+            style={styles.menuItem}
+
+          >
+            <Image source={item.icon} style={styles.icon} />
+            <Text allowFontScaling={false} style={styles.menuText}>{item.title}</Text>
 
 
-        </View>
-        {/* <Image source={imageIndex.next} style={[styles.icon,{
+          </View>
+          {/* <Image source={imageIndex.next} style={[styles.icon,{
             tintColor:"black" ,
             height:34,
             width:22,
 
       }]} /> */}
-        {hasChildren ? (
-          isExpanded ?
-            <Image source={imageIndex.down} style={[styles.icon, {
-              tintColor: "black",
-              height: 34,
-              width: 22,
+          {hasChildren ? (
+            isExpanded ?
+              <Image source={imageIndex.down} style={[styles.icon, {
+                tintColor: "black",
+                height: 34,
+                width: 22,
 
-            }]} />
-            :
+              }]} />
+              :
+              <Image source={imageIndex.next} style={[styles.icon, {
+                tintColor: "black",
+                height: 34,
+                width: 22,
+
+              }]} />
+
+          ) : (
             <Image source={imageIndex.next} style={[styles.icon, {
               tintColor: "black",
               height: 34,
               width: 22,
 
             }]} />
-
-        ) : (
-          <Image source={imageIndex.next} style={[styles.icon, {
-            tintColor: "black",
-            height: 34,
-            width: 22,
-
-          }]} />
-        )}
+          )}
         </TouchableOpacity>
- {hasChildren && isExpanded && item.children.map((grandChild: any) => (
-                <TouchableOpacity
-                  key={grandChild.id}
-                  style={[styles.menuItem, { paddingLeft: 80, paddingTop:0 }]}
-                  onPress={() =>
-                    navigation.navigate(grandChild.screen)
-                  }
-                >
-                  <Text style={styles.menuText}>{grandChild.title}</Text>
-                </TouchableOpacity>
-              ))}
-        
+        {hasChildren && isExpanded && item.children.map((grandChild: any) => (
+          <TouchableOpacity
+            key={grandChild.id}
+            style={[styles.menuItem, { paddingLeft: 80, paddingTop: 0 }]}
+            onPress={() =>
+              navigation.navigate(grandChild.screen)
+            }
+          >
+            <Text style={styles.menuText}>{grandChild.title}</Text>
+          </TouchableOpacity>
+        ))}
+
       </View>
     )
   }
-
+  const dispatch = useDispatch()
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <StatusBarComponent />
@@ -184,6 +186,8 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
         }}
         onConfirm={() => {
           setLogoutModal(false)
+          dispatch(logout());
+          navigation.replace(ScreenNameEnum.LoginScreen);
         }}
       />
     </SafeAreaView>
