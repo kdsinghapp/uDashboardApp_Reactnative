@@ -8,12 +8,16 @@ import {
   StyleSheet,
   Platform,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import CustomDropdown from "../../compoent/CustomDropdown";
 import CustomBackHeader from "../../compoent/CustomBackHeader";
 import imageIndex from "../../assets/imageIndex";
 import { SafeAreaView } from "react-native-safe-area-context";
-import DatePickerModal from "../../compoent/DatePickerModal"; // import modal
+import DatePickerModal from "../../compoent/DatePickerModal";
+import { AddCallbackApi } from "../../Api/apiRequest";
+import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
 export default function AddCallback() {
   const [form, setForm] = useState({
@@ -30,6 +34,9 @@ export default function AddCallback() {
     priority: "",
     status: "",
   });
+  const isLogin = useSelector((state: any) => state.auth);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [loading, setLoading] = useState(false);
 
   const [showDatePicker, setShowDatePicker] = useState({
     visible: false,
@@ -37,17 +44,67 @@ export default function AddCallback() {
     mode: "date" as "date" | "time",
   });
 
-  // Sample options for dropdowns
   const callbackOptions = ["Ram", "Kamlesh"];
   const priorityOptions = ["Low", "Medium", "High"];
   const statusOptions = ["Pending", "In Progress", "Completed"];
 
   const handleChange = (field: string, value: any) => {
     setForm({ ...form, [field]: value });
+    setErrors({ ...errors, [field]: "" }); // clear error when user types
   };
 
   const openDatePicker = (field: string, mode: "date" | "time" = "date") => {
     setShowDatePicker({ visible: true, field, mode });
+  };
+
+  // ✅ Validate fields
+  const validateForm = () => {
+    let valid = true;
+    let newErrors: { [key: string]: string } = {};
+
+    if (!form.task) {
+      newErrors.task = "Task name is required";
+      valid = false;
+    }
+    if (!form.details) {
+      newErrors.details = "Client details are required";
+      valid = false;
+    }
+    if (!form.callback) {
+      newErrors.callback = "Employee selection is required";
+      valid = false;
+    }
+    if (!form.estimateTime) {
+      newErrors.estimateTime = "Estimate time is required";
+      valid = false;
+    }
+    if (!form.priority) {
+      newErrors.priority = "Priority is required";
+      valid = false;
+    }
+    if (!form.status) {
+      newErrors.status = "Status is required";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
+  // ✅ API Call
+  const navigation = useNavigation()
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    setLoading(true);
+    const param ={
+...form,
+token:isLogin?.token,
+navigation
+    }
+AddCallbackApi(param, setLoading)
+
+  
   };
 
   return (
@@ -70,20 +127,20 @@ export default function AddCallback() {
             style={styles.input}
             placeholder="Enter task name"
             value={form.task}
-            placeholderTextColor={"#ADA4A5"}
             onChangeText={(text) => handleChange("task", text)}
           />
+          {errors.task && <Text style={styles.error}>{errors.task}</Text>}
 
           {/* Client */}
-          <Text style={styles.label}>Client</Text>
+          <Text style={styles.label}>Details</Text>
           <TextInput
             style={[styles.input, { height: 100 }]}
-            placeholder="Search Client"
+            placeholder="Search etails"
             multiline
             value={form.details}
-            placeholderTextColor={"#ADA4A5"}
             onChangeText={(text) => handleChange("details", text)}
           />
+          {errors.details && <Text style={styles.error}>{errors.details}</Text>}
 
           {/* Employee */}
           <Text style={styles.label}>Employee</Text>
@@ -93,6 +150,7 @@ export default function AddCallback() {
             value={form.callback}
             onSelect={(val) => handleChange("callback", val)}
           />
+          {errors.callback && <Text style={styles.error}>{errors.callback}</Text>}
 
           {/* Calendar Event */}
           <Text style={styles.label}>Calendar Event Date</Text>
@@ -109,10 +167,13 @@ export default function AddCallback() {
             style={styles.input}
             placeholder="Enter estimate time"
             value={form.estimateTime}
-            placeholderTextColor={"#ADA4A5"}
             onChangeText={(text) => handleChange("estimateTime", text)}
           />
+          {errors.estimateTime && (
+            <Text style={styles.error}>{errors.estimateTime}</Text>
+          )}
 
+          
           {/* Start Date & Time */}
           <Text style={styles.label}>Start Date</Text>
           <TouchableOpacity
@@ -147,6 +208,7 @@ export default function AddCallback() {
             <Text>{form.endTime.toLocaleTimeString()}</Text>
           </TouchableOpacity>
 
+
           {/* Priority */}
           <Text style={styles.label}>Priority</Text>
           <CustomDropdown
@@ -155,6 +217,9 @@ export default function AddCallback() {
             value={form.priority}
             onSelect={(val) => handleChange("priority", val)}
           />
+          {errors.priority && (
+            <Text style={styles.error}>{errors.priority}</Text>
+          )}
 
           {/* Status */}
           <Text style={styles.label}>Status</Text>
@@ -164,9 +229,10 @@ export default function AddCallback() {
             value={form.status}
             onSelect={(val) => handleChange("status", val)}
           />
+          {errors.status && <Text style={styles.error}>{errors.status}</Text>}
 
-          {/* Tags */}
-          <Text style={styles.label}>Details</Text>
+          {/* Details */}
+          <Text style={styles.label}>Tags</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter Details"
@@ -174,19 +240,26 @@ export default function AddCallback() {
             onChangeText={(text) => handleChange("tags", text)}
           />
 
-          {/* Create Button */}
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Create CallBack</Text>
+          {/* Submit */}
+          <TouchableOpacity
+            style={[styles.button, loading && { opacity: 0.6 }]}
+            onPress={handleSubmit}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? "Creating..." : "Create Callback"}
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/* DatePicker Modal */}
       <DatePickerModal
         visible={showDatePicker.visible}
         mode={showDatePicker.mode}
         value={form[showDatePicker.field] || new Date()}
-        onClose={() => setShowDatePicker({ visible: false, field: "", mode: "date" })}
+        onClose={() =>
+          setShowDatePicker({ visible: false, field: "", mode: "date" })
+        }
         onConfirm={(date) => handleChange(showDatePicker.field, date)}
       />
     </SafeAreaView>
@@ -194,25 +267,22 @@ export default function AddCallback() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    paddingBottom: 40,
-    backgroundColor: "#fff",
-  },
-  label: {
-    marginBottom: 5,
-    fontWeight: "500",
-    fontSize: 14,
-  },
+  container: { padding: 20, paddingBottom: 40 },
+  label: { marginBottom: 5, fontWeight: "500", fontSize: 14 },
   input: {
     borderWidth: 1,
     borderColor: "#EAEAEA",
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 12,
-    marginBottom: 15,
+    marginBottom: 5,
     height: 55,
     justifyContent: "center",
+  },
+  error: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 10,
   },
   button: {
     backgroundColor: "#0D6EFD",
@@ -221,9 +291,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignItems: "center",
   },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 16,
-  },
+  buttonText: { color: "#fff", fontWeight: "600", fontSize: 16 },
 });

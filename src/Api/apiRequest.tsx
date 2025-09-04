@@ -4,6 +4,7 @@ import { loginSuccess } from '../redux/feature/authSlice';
 import { errorToast, successToast } from '../utils/customToast';
 import { getSuccess } from '../redux/feature/featuresSlice';
 import { MapApiKey } from '../redux/Api';
+import moment from 'moment';
 
 const LoginCustomer = (
     param: any,
@@ -33,7 +34,7 @@ const LoginCustomer = (
                     successToast(
                         response?.message
                     );
-                    dispatch(loginSuccess({ userData: response?.result, token: response?.result?.access_token, }));
+                    dispatch(loginSuccess({ userData: response?.user, token: response?.token, }));
                     param?.navigation.replace("MainDrawer")
                     return response
                 } else {
@@ -246,7 +247,7 @@ const updatePassword = (
         );
     }
 };
-const AddPatientApi = (
+const GetCallbackListApi = (
     param: any,
     setLoading: (loading: boolean) => void,
 ) => {
@@ -257,457 +258,23 @@ const AddPatientApi = (
         const myHeaders = new Headers();
 
         myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("first_name", param?.name ?? '');
-        formData.append("last_name", param?.surname ?? '');
-        formData.append("nir", param?.nir ?? '');
-        formData.append("insurance_address_lat", param?.insurance_address_lat ?? '');
-        formData.append("insurance_address_lon", param?.insurance_address_lon ?? '');
-        formData.append("lat", param?.lat ?? '');
-        formData.append("lon", param?.lon ?? '');
-        formData.append("organization_code", param?.call ?? "");
-        formData.append("date", param?.date ?? ""); //insurance_address_lat
-        formData.append("address", param?.address);
-        formData.append("mobile_number", param?.phone);
-        formData.append("insurance", param?.mutuelle);
-        formData.append("amc_number", param?.amcNumber);
-        formData.append("insurance_address", param?.mutuelleAddress);
-        formData.append("notes", param?.notes);
-        // formData.append("", param?.);
-        // formData.append("", param?.);
+        myHeaders.append("Authorization",`Bearer ${param.token}` );
+
 
         const requestOptions = {
 
-            method: "POST",
+            method: "GET",
             headers: myHeaders,
-            body: formData,
         };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}/add_patient`, requestOptions)
+        
+        const respons = fetch(`${base_url}callbacks?page=1&limit=1000`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
                 console.log("---- ----ddv response", response)
                 if (response.status == '1') {
                     setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-const AddDriverApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("first_name", param?.name ?? '');
-        formData.append("last_name", param?.surname ?? '');
-        formData.append("email", param?.email ?? '');
-        formData.append("password", param?.password ?? '');
-        formData.append("lat", param?.lat ?? '');
-        formData.append("lon", param?.lon ?? '');
-        formData.append("dob", param?.date ?? '');
-        formData.append("date_of_obtaining_taxi", param?.dateTaxi ?? '');
-        formData.append("address", param?.address);
-        formData.append("mobile_number", param?.phone);
-        formData.append("car_id", param?.carType);
-        // formData.append("", param?.);
-        // formData.append("", param?.);
-
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}/user_add_driver`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const AddCarApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("modal", param?.model ?? '');
-        formData.append("brand", param?.brand ?? '');
-        formData.append("car_registration", param?.registration ?? '');
-        formData.append("car_technical_inspection_date", param?.date ?? "");
-        formData.append("licence_number", param?.license ?? "");
-        // formData.append("image", param?.address);
-        if (param.image) {
-            formData.append("image", {
-                uri: param.image.path,          // Make sure param.image.path is a valid file URI
-                type: 'image/jpeg',
-                name: 'image.jpg'
-            });
-        }
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}/add_car_list`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.message,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const AddPresubscriberApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("finess_number", param?.finess ?? '');
-        formData.append("RPPS_number", param?.rpps ?? '');
-        formData.append("hospital", param?.hospital ?? '');
-        formData.append("first_name", param?.firstName ?? "");
-        formData.append("last_name", param?.lastName ?? "");
-        formData.append("lat", param?.lat ?? '');
-        formData.append("lon", param?.lon ?? '');
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}/add_prescribers`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.message,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const AddContractApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("types_of_transport", param?.type ?? '');
-        formData.append("contract_name", param?.name ?? '');
-        formData.append("euro_base_price", param?.basePrice ?? '');
-        formData.append("waiting_day", param?.dayWait ?? "");
-        formData.append("night_waiting", param?.nightWait ?? "");
-        formData.append("support", param?.pickupCharge ?? "");
-        formData.append("ratesA", param?.tariffA ?? "");
-        formData.append("ratesB", param?.tariffB ?? "");
-        formData.append("ratesC", param?.tariffC ?? "");
-        formData.append("ratesD", param?.tariffD ?? "");
-        formData.append("discounts1", param?.discount1 ?? "");
-        formData.append("discounts2", param?.discount2 ?? "");
-        formData.append("discounts3", param?.discount3 ?? "");
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}/add_contracts`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.message,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-const AddTripApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("arrival_address", param?.arrivalAddress ?? '');
-        formData.append("arrival_lat", param?.arrivalLat ?? '');
-        formData.append("arrival_lon", param?.arrivalLon ?? '');
-        formData.append("date", param?.date ?? "");
-        formData.append("departure_address", param?.departureAddress ?? "");
-        formData.append("departure_lat", param?.departureLat ?? "");
-        formData.append("departure_lon", param?.departureLon ?? "");
-        formData.append("driver_id", param?.driverName ?? "");
-        formData.append("notes", param?.notes ?? "");
-        formData.append("patient_id", param?.patientName ?? "");
-        formData.append("trip_type", param?.tripType ?? "");
-        formData.append("arrival_time", param?.arrivalTime ?? "");
-        formData.append("departure_time", param?.departureTime ?? "");
-        formData.append("reason_of_trip", param?.tripReason ?? "");
-        formData.append("transport_type", param?.transportType ?? "");
-        formData.append("reminder", param?.reminderChecked ?? "");
-
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}/add_booking_trip`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    param.navigation.navigate(ScreenNameEnum.DashBoardScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.message,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-const ChangeTripStatusApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("booking_id", param?.bookingId ?? '');
-        formData.append("status", param?.status ?? '');
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}/accept_cancel_booking_trip`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.message,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-const GetPatientApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}get_patient`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    // successToast(
-                    //     response?.message
-                    // );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    
                     return response
                 } else {
                     setLoading(false)
@@ -727,60 +294,7 @@ const GetPatientApi = (
         );
     }
 };
-const UpdateCurrentLatlong = (
-    param: any,
-    // setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        // setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("lat", param?.lat ?? '');
-        formData.append("lon", param?.lon ?? '');
-
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}update_lat_lon`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    // setLoading(false)
-                    // successToast(
-                    //     response?.message
-                    // );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    // setLoading(false)
-                    // errorToast(
-                    //     response.error,
-                    // );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        // setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-const GetDriverApi = (
+const GetCallbackApi = (
     param: any,
     setLoading: (loading: boolean) => void,
 ) => {
@@ -791,73 +305,19 @@ const GetDriverApi = (
         const myHeaders = new Headers();
 
         myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization",`Bearer ${param.token}` );
+
         const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}get_user_add_driver`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    // successToast(
-                    //     response?.message
-                    // );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-const GetDriverListApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        // const myHeaders = new Headers();
-
-        // myHeaders.append("Accept", "application/json");
-        // const formData = new FormData();
         // formData.append("user_id", param?.id ?? '');
 
-        // const requestOptions = {
-
-        //     method: "POST",
-        //     headers: myHeaders,
-        //     // body: formData,
-        // };
-
         const requestOptions = {
+
             method: "GET",
+            headers: myHeaders,
+            // body: formData,
         };
-        // const respons = fetch(`${base_url}/privacy-policy.php`, requestOptions)
-        // console.log("formData", formData)
-        const respons = fetch(`${base_url}get_driver_list`, requestOptions)
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}callbacks/${param?.id}`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -887,36 +347,9 @@ const GetDriverListApi = (
         );
     }
 };
-const getDistanceAndTime = async (origin: { lat: any; lng: any; }, destination: { lat: any; lng: any; }) => {
-    const apiKey = { MapApiKey };
 
-    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${origin.lat},${origin.lng}&destinations=${destination.lat},${destination.lng}&key=${MapApiKey}`;
 
-    try {
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const result = data.rows[0].elements[0];
-
-        const distance = result.distance.text; // e.g. "5.2 km"
-        const duration = result.duration.text; // e.g. "12 mins"
-        const durationInSeconds = result.duration.value; // total seconds
-
-        console.log('Distance:', distance);
-        console.log('Duration:', duration);
-
-        return { distance, duration, durationInSeconds };
-    } catch (error) {
-        console.error('Error fetching distance matrix:', error);
-        return null;
-    }
-};
-
-const GetCarApi = (
+const DeleteCallbackApi = (
     param: any,
     setLoading: (loading: boolean) => void,
 ) => {
@@ -927,121 +360,19 @@ const GetCarApi = (
         const myHeaders = new Headers();
 
         myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization",`Bearer ${param.token}` );
+
         const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
+        // formData.append("user_id", param?.id ?? '');
 
         const requestOptions = {
 
-            method: "POST",
+            method: "DELETE",
             headers: myHeaders,
-            body: formData,
+            // body: formData,
         };
         console.log("formData", formData)
-        const respons = fetch(`${base_url}get_car_list`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) => console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const GetContractApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}get_contracts`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) => console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-const GetTripApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("date", param?.date ?? '');
-        // formData.append("status", param?.type ?? '');
-        formData.append("status_type", 'All');
-
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}get_booking_trip`, requestOptions)
+        const respons = fetch(`${base_url}callbacks/${param?.id}`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -1061,7 +392,8 @@ const GetTripApi = (
                     return response
                 }
             })
-            .catch((error) => console.error(error));
+            .catch((error) =>
+                console.error(error));
         return respons
     } catch (error) {
         setLoading(false)
@@ -1071,31 +403,38 @@ const GetTripApi = (
     }
 };
 
-const AddTimeClock = (
+const AddCallbackApi = (
     param: any,
     setLoading: (loading: boolean) => void,
 ) => {
-    // console.log("param", param)
+    console.log("param", param)
     try {
 
         setLoading(true)
-        const myHeaders = new Headers();
+           const myHeaders = new Headers();
+    myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization",`Bearer ${param.token}` );
+    
 
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("clock_date", param?.date ?? '');
-        formData.append("clock_in", param?.departureTime ?? '');
-        formData.append("clock_out", param?.arrivalTime ?? '');
+    const formdata = new FormData();
+    formdata.append("task_name", param?.task);
+    formdata.append("employee_id", "1"); // map actual employee id
+    formdata.append("estimated_time", param?.estimateTime);
+    formdata.append("start_date", param?.startDate.toISOString().split("T")[0]);
+    formdata.append("start_time", moment(param?.startTime).format("HH:mm"));
+    formdata.append("end_date", param?.endDate.toISOString().split("T")[0]);
+    formdata.append("end_time", moment(param?.endTime).format("HH:mm"));
+    formdata.append("priority_id", "1");
+    formdata.append("status_id", "2");
+    formdata.append("details", param?.details);
 
         const requestOptions = {
-
             method: "POST",
             headers: myHeaders,
-            body: formData,
+            body: formdata,
         };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}add_time_clock`, requestOptions)
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}callbacks`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -1105,7 +444,7 @@ const AddTimeClock = (
                     successToast(
                         response?.message
                     );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    param.navigation.goBack()
                     return response
                 } else {
                     setLoading(false)
@@ -1115,222 +454,8 @@ const AddTimeClock = (
                     return response
                 }
             })
-            .catch((error) => console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-const GetPresubscriberApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}get_prescribers`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) => console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const GetDriverBookingTripApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("date", param?.date ?? '');
-        formData.append("status_type", 'All');
-
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}get_driver_booking_trip`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    // successToast(
-                    //     response?.message
-                    // );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) => console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const AddPaymentCard = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("account_number", param?.cardNumber ?? '');
-        formData.append("cvv", param?.cvv ?? '');
-        formData.append("expire_date", param?.expiryDate ?? '');
-
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}add_card`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) => console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const AddSocity = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        const formData = new FormData();
-        formData.append("user_id", param?.id ?? '');
-        formData.append("siret_number", param?.siret ?? '');
-        formData.append("approval_number", param?.approvalNumber ?? '');
-        formData.append("company_name", param?.companyName ?? '');
-        formData.append("company_address", param?.companyAddress ?? '');
-        formData.append("account_number", param?.accountNumber ?? '');
-        formData.append("ifsc_code", param?.ifscCode ?? '');
-        formData.append("lat", param?.lat ?? '');
-        formData.append("lon", param?.lon ?? '');
-
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}add_society`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) => console.error(error));
+            .catch((error) =>
+                console.error(error));
         return respons
     } catch (error) {
         setLoading(false)
@@ -1600,19 +725,10 @@ const Get_Notification_Api = async (
     }
 };
 export {
-    AddPatientApi,
-    AddDriverApi, AddCarApi,
-    AddContractApi, AddPresubscriberApi,
-    GetDriverApi, GetDriverListApi, GetCarApi, GetPresubscriberApi,
-    AddTripApi, GetTripApi,
-    GetContractApi, GetUserApi,
-    GetPatientApi,
-    GetDriverBookingTripApi,
-    ChangeTripStatusApi, AddPaymentCard,
-    AddSocity, AddTimeClock,
+    GetUserApi,
     Get_Notification_Api, SinupCustomer,
     Support_Api, Policies_Api,
     ChangePass_Api, EditProfile_Api, updatePassword,
     restEmailOtpScreen, LoginCustomer, otp_Verify,
-    getDistanceAndTime, UpdateCurrentLatlong
+    GetCallbackListApi, GetCallbackApi, AddCallbackApi, DeleteCallbackApi
 }  

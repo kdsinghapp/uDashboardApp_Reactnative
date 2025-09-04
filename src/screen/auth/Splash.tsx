@@ -21,17 +21,14 @@ const Splash: React.FC = () => {
   const isLogin = useSelector((state: any) => state.auth);
   const isFocus = useIsFocused();
   const checkLogout = async () => {
-    // if (isLogin?.isLogin) {
-    //   const userType = await AsyncStorage.getItem('userType');
-    //   if (userType == "User") {
-    //     navigation.replace('DrawerNav');
-    //   } else {
-    //     navigation.replace('DrawerNavDriver');
-
-    //   }
-    // } else {
+    if (isLogin?.isLogin) {
+      
+        navigation.replace('MainDrawer');
+      
+      
+     } else {
       navigation.replace(ScreenNameEnum.LoginScreen);
-    // }
+     }
   };
 
   useEffect(() => {

@@ -3,8 +3,14 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import imageIndex from "../../assets/imageIndex";
 import CustomBackHeader from "../../compoent/CustomBackHeader";
+import { useRoute } from "@react-navigation/native";
+import moment from "moment";
 
 const CallbackDetailScreen = () => {
+  const route = useRoute()
+  const item = route?.params?.item
+    const formattedDate = (dateStr) => moment(dateStr).format("MMM DD, YYYY");
+  
   return (
     <SafeAreaView style={{
       flex:1,
@@ -20,19 +26,19 @@ const CallbackDetailScreen = () => {
       {/* Task Name */}
       <View style={styles.row}>
         <Text style={styles.label}>Task Name</Text>
-        <Text style={styles.value}>Website Redesign - Homepage Update</Text>
+        <Text style={styles.value}>{item?.task_name}</Text>
       </View>
 
       {/* Due Date */}
       <View style={styles.row}>
         <Text style={styles.label}>Due Date</Text>
-        <Text style={styles.value}>Aug 15, 2025</Text>
+        <Text style={styles.value}>{formattedDate(item?.end_date)}</Text>
       </View>
 
       {/* Estimated Time */}
       <View style={styles.row}>
         <Text style={styles.label}>Estimated Time</Text>
-        <Text style={styles.value}>10:00:00</Text>
+        <Text style={styles.value}>{item?.estimated_time}</Text>
       </View>
 
       {/* Task Manager */}
@@ -51,7 +57,7 @@ const CallbackDetailScreen = () => {
       <View style={styles.row}>
         <Text style={styles.label}>Status</Text>
         <View style={[styles.tag, { backgroundColor: "#ff9800" }]}>
-          <Text style={styles.tagText}>Pending</Text>
+          <Text style={styles.tagText}>{item?.status?.name}</Text>
         </View>
       </View>
 
@@ -59,7 +65,7 @@ const CallbackDetailScreen = () => {
       <View style={styles.row}>
         <Text style={styles.label}>Priority</Text>
         <View style={[styles.tag, { backgroundColor: "#0D6EFD" }]}>
-          <Text style={styles.tagText}>Low</Text>
+          <Text style={styles.tagText}>{item?.priority?.name}</Text>
         </View>
       </View>
 
@@ -67,8 +73,7 @@ const CallbackDetailScreen = () => {
       <View style={styles.row}>
         <Text style={styles.label}>Description</Text>
         <Text style={styles.value}>
-          The task involves redesigning the homepage of the client’s corporate
-          website. Key updates include:
+          {item?.details}
         </Text>
       </View>
     </ScrollView>
