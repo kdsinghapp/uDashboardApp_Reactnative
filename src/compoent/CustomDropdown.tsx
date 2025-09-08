@@ -41,7 +41,7 @@ const CustomDropdown = ({ label, options, value, onSelect }) => {
                   setOpen(false);
                 }}
               >
-                <Text>{item}</Text>
+                <Text>{item.label}</Text>
               </TouchableOpacity>
             )}
           />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,18 +8,24 @@ import {
   StyleSheet,
   Platform,
   KeyboardAvoidingView,
-  Alert,
 } from "react-native";
 import CustomDropdown from "../../compoent/CustomDropdown";
 import CustomBackHeader from "../../compoent/CustomBackHeader";
 import imageIndex from "../../assets/imageIndex";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DatePickerModal from "../../compoent/DatePickerModal";
-import { AddCallbackApi } from "../../Api/apiRequest";
+import { AddCallbackApi, Get_Priority_Api, Get_Status_Api, UpdateCallbackApi } from "../../Api/apiRequest"; // 👈 make sure Update API is added
 import { useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import moment from "moment";
 
 export default function AddCallback() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const editItem: any = route.params?.item || null; // 👈 get edit item if passed
+
+  const isLogin = useSelector((state: any) => state.auth);
+
   const [form, setForm] = useState({
     task: "",
     details: "",
@@ -33,11 +39,12 @@ export default function AddCallback() {
     endTime: new Date(),
     priority: "",
     status: "",
+    statusId:"",
+    priorityId:"",
   });
-  const isLogin = useSelector((state: any) => state.auth);
+
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
-
   const [showDatePicker, setShowDatePicker] = useState({
     visible: false,
     field: "",
@@ -45,12 +52,51 @@ export default function AddCallback() {
   });
 
   const callbackOptions = ["Ram", "Kamlesh"];
-  const priorityOptions = ["Low", "Medium", "High"];
-  const statusOptions = ["Pending", "In Progress", "Completed"];
+  const [priorityOptions, setPriorityOptions] = useState([]);
+  const [statusOptions, setStatusOptions] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const priority = await Get_Priority_Api(setLoading)
+      const status = await Get_Status_Api(setLoading)
+      setPriorityOptions(priority.data)
+      setStatusOptions(status.data)
+      console.log(priority.data)
+      console.log(status.data)
+    })()
+  }, [])
+  // 👇 Pre-fill form if edit mode
+  useEffect(() => {
+    if (editItem) {
+      setForm({
+        task: editItem.task_name || "",
+        details: editItem.details || "",
+        callback: editItem.employee?.first_name || "",
+        calendarDate: editItem.start_date ? new Date(editItem.start_date) : new Date(),
+        tags: "",
+        estimateTime: editItem.estimated_time || "",
+        startDate: editItem.start_date ? new Date(editItem.start_date) : new Date(),
+        startTime: editItem.start_time ? new Date(`1970-01-01T${editItem.start_time}`) : new Date(),
+        endDate: editItem.end_date ? new Date(editItem.end_date) : new Date(),
+        endTime: editItem.end_time ? new Date(`1970-01-01T${editItem.end_time}`) : new Date(),
+        priority: editItem.priority?.name || "",
+        status: editItem.status?.name || "",
+        priorityId: editItem.priority?.id || "",
+        statusId: editItem.status?.id || "",
+        
+      });
+    }
+  }, [editItem]);
 
   const handleChange = (field: string, value: any) => {
-    setForm({ ...form, [field]: value });
-    setErrors({ ...errors, [field]: "" }); // clear error when user types
+    // setForm({ ...form, [field]: value.label });
+   setForm((prev) => ({
+    ...prev,
+    [field]: value.label,                  // store label for display
+    ...(field === "priority" && { priorityId: value.value }), // add priorityId
+    ...(field === "status" && { statusId: value.value })      // add statusId
+  }));
+    setErrors({ ...errors, [field]: "" });
   };
 
   const openDatePicker = (field: string, mode: "date" | "time" = "date") => {
@@ -92,25 +138,38 @@ export default function AddCallback() {
   };
 
   // ✅ API Call
-  const navigation = useNavigation()
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
     setLoading(true);
-    const param ={
-...form,
-token:isLogin?.token,
-navigation
+    let formattedTime = form.estimateTime;
+    if (formattedTime) {
+      formattedTime = moment(form.estimateTime, ["HH:mm:ss", "HH:mm"]).format("HH:mm");
     }
-AddCallbackApi(param, setLoading)
+    const param = {
+      ...form,
+      estimateTime: formattedTime,
+      token: isLogin?.token,
+      id: editItem?.id, // 👈 required for update
+      navigation,
+    };
 
-  
+    if (editItem) {
+      // Update
+      await UpdateCallbackApi(param, setLoading);
+    } else {
+      // Add
+      await AddCallbackApi(param, setLoading);
+    }
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ marginHorizontal: 20 }}>
-        <CustomBackHeader menuIcon={imageIndex.back} label={"Add Callbacks"} />
+        <CustomBackHeader
+          menuIcon={imageIndex.back}
+          label={editItem ? "Edit Callback" : "Add Callback"}
+        />
       </View>
 
       <KeyboardAvoidingView
@@ -135,7 +194,7 @@ AddCallbackApi(param, setLoading)
           <Text style={styles.label}>Details</Text>
           <TextInput
             style={[styles.input, { height: 100 }]}
-            placeholder="Search etails"
+            placeholder="Enter details"
             multiline
             value={form.details}
             onChangeText={(text) => handleChange("details", text)}
@@ -152,7 +211,7 @@ AddCallbackApi(param, setLoading)
           />
           {errors.callback && <Text style={styles.error}>{errors.callback}</Text>}
 
-          {/* Calendar Event */}
+          {/* Calendar Date */}
           <Text style={styles.label}>Calendar Event Date</Text>
           <TouchableOpacity
             style={styles.input}
@@ -163,17 +222,44 @@ AddCallbackApi(param, setLoading)
 
           {/* Estimate Time */}
           <Text style={styles.label}>Estimate Time</Text>
-          <TextInput
+          {/* <TextInput
             style={styles.input}
             placeholder="Enter estimate time"
             value={form.estimateTime}
             onChangeText={(text) => handleChange("estimateTime", text)}
+          /> */}
+
+
+          <TextInput
+            style={styles.input}
+            placeholder="Enter estimate time (HH:mm)"
+            keyboardType="numeric"
+            value={form.estimateTime}
+            onChangeText={(text) => {
+              // Remove anything except numbers & colon
+              let cleaned = text.replace(/[^0-9:]/g, "");
+
+              // Auto format: if user types "230" → "23:0"
+              if (cleaned.length === 4 && !cleaned.includes(":")) {
+                cleaned = cleaned.slice(0, 2) + ":" + cleaned.slice(2);
+              }
+
+              // Keep only HH:mm (max 5 chars)
+              if (cleaned.length > 5) {
+                cleaned = cleaned.slice(0, 5);
+              }
+
+              setForm({ ...form, estimateTime: cleaned });
+              setErrors({ ...errors, estimateTime: "" });
+            }}
           />
           {errors.estimateTime && (
             <Text style={styles.error}>{errors.estimateTime}</Text>
           )}
+          {/* {errors.estimateTime && (
+            <Text style={styles.error}>{errors.estimateTime}</Text>
+          )} */}
 
-          
           {/* Start Date & Time */}
           <Text style={styles.label}>Start Date</Text>
           <TouchableOpacity
@@ -208,12 +294,14 @@ AddCallbackApi(param, setLoading)
             <Text>{form.endTime.toLocaleTimeString()}</Text>
           </TouchableOpacity>
 
-
           {/* Priority */}
           <Text style={styles.label}>Priority</Text>
           <CustomDropdown
             label="Select Priority"
-            options={priorityOptions}
+            options={priorityOptions.map((item) => ({
+  label: item.name,   // what will show in dropdown
+  value: item.id      // what you get when selecting
+}))}
             value={form.priority}
             onSelect={(val) => handleChange("priority", val)}
           />
@@ -225,17 +313,20 @@ AddCallbackApi(param, setLoading)
           <Text style={styles.label}>Status</Text>
           <CustomDropdown
             label="Select Status"
-            options={statusOptions}
+            options={statusOptions.map((item) => ({
+  label: item.name,   // what will show in dropdown
+  value: item.id      // what you get when selecting
+}))}
             value={form.status}
             onSelect={(val) => handleChange("status", val)}
           />
           {errors.status && <Text style={styles.error}>{errors.status}</Text>}
 
-          {/* Details */}
+          {/* Tags */}
           <Text style={styles.label}>Tags</Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter Details"
+            placeholder="Enter Tags"
             value={form.tags}
             onChangeText={(text) => handleChange("tags", text)}
           />
@@ -247,7 +338,13 @@ AddCallbackApi(param, setLoading)
             disabled={loading}
           >
             <Text style={styles.buttonText}>
-              {loading ? "Creating..." : "Create Callback"}
+              {loading
+                ? editItem
+                  ? "Updating..."
+                  : "Creating..."
+                : editItem
+                  ? "Update Callback"
+                  : "Create Callback"}
             </Text>
           </TouchableOpacity>
         </ScrollView>

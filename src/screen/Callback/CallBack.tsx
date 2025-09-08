@@ -8,40 +8,55 @@ import StatusBarComponent from "../../compoent/StatusBarCompoent";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import ScreenNameEnum from "../../routes/screenName.enum";
 import DeleteModal from "../../compoent/DeleteModal";
-import { DeleteCallbackApi, GetCallbackListApi } from "../../Api/apiRequest";
+import { DeleteCallbackApi, GetCallbackListApi, GetDeletedCallbackApi, RestoreCallbackApi } from "../../Api/apiRequest";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import LoadingModal from "../../utils/Loader";
 
-const allData = [
-  { id: "01", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Active" },
-  { id: "02", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Deleted" },
-];
 
 export default function CallbackScreen() {
   const [activeTab, setActiveTab] = useState<"Active" | "Deleted">("Active");
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [loading, setLoading] = useState(false)
   const [callbackData, setCallbackData] = useState([])
+  const [searchText, setSearchText] = useState("");
   const isLogin = useSelector((state: any) => state.auth);
-  const formattedDate = (dateStr) => moment(dateStr).format("MMM DD, YYYY");
+  const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
   // console.log(isLogin)
   useFocusEffect(
     useCallback(() => {
-      fetchCallback();
-
+      fetchCallback("Active");
     }, [])
   );
+  useEffect(() => {
+    fetchCallback(activeTab);
+  }, [activeTab]);
 
-  const fetchCallback = async () => {
+  const filteredData = callbackData.filter((item: any) => {
+  const query = searchText.toLowerCase();
+  return (
+    item?.task_name?.toLowerCase().includes(query) ||
+    item?.employee?.first_name?.toLowerCase().includes(query) ||
+    item?.employee?.last_name?.toLowerCase().includes(query) ||
+    item?.status?.name?.toLowerCase().includes(query) ||
+    item?.priority?.name?.toLowerCase().includes(query)
+  );
+});
+  const fetchCallback = async (activeTab: string) => {
     const param = {
       token: isLogin?.token
     }
-    const data = await GetCallbackListApi(param, setLoading)
-    setCallbackData(data?.data?.data)
+    if (activeTab == "Active") {
+      const data = await GetCallbackListApi(param, setLoading)
+      setCallbackData(data?.data?.data)
+    } else {
+      const data = await GetDeletedCallbackApi(param, setLoading)
+      console.log(data?.data)
+      setCallbackData(data?.data?.data)
+    }
   }
 
-  const filteredData = allData.filter(item => item.status === activeTab);
+
   const nav = useNavigation()
   const renderCard = ({ item }: any) => {
     const handleDelete = async () => {
@@ -51,9 +66,21 @@ export default function CallbackScreen() {
         id: item?.id,
         token: isLogin?.token
       }
-      const dd =await DeleteCallbackApi(param, setLoading)
-      fetchCallback()
+      const dd = await DeleteCallbackApi(param, setLoading)
+      fetchCallback(activeTab)
       setDeleteModalVisible(false);
+    };
+
+    const handleRestore = async () => {
+      // 👇 Your delete API or logic here
+      console.log("Item deleted!");
+      const param = {
+        id: item?.id,
+        token: isLogin?.token
+      }
+      const dd = await RestoreCallbackApi(param, setLoading)
+      fetchCallback(activeTab)
+      // setDeleteModalVisible(false);
     };
     return (
       <TouchableOpacity
@@ -108,31 +135,40 @@ export default function CallbackScreen() {
 
           <View style={[styles.cardItem, styles.right]}>
             <Text style={styles.label}>Action</Text>
-            <View style={{
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              alignItems: "center"
-            }}>
+            {activeTab == "Active" ?
+
+              <View style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center"
+              }}>
+
+                <TouchableOpacity
+                  onPress={() => nav.navigate(ScreenNameEnum.CallbackDetailScreen, { item: item })}
+
+                >
+                  <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.eyeBlue} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => nav.navigate(ScreenNameEnum.AddCallback, { item: item })}
+                >
+                  <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.editGreen} />
+
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setDeleteModalVisible(true)}
+
+                >
+                  <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.delite} />
+                </TouchableOpacity>
+              </View>
+              :
               <TouchableOpacity
-                onPress={() => nav.navigate(ScreenNameEnum.CallbackDetailScreen, { item: item })}
-
+                onPress={() => handleRestore()}
               >
-                <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.eyeBlue} />
+                <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.restore} />
               </TouchableOpacity>
-              <TouchableOpacity
-
-              >
-                <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.editGreen} />
-
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setDeleteModalVisible(true)}
-
-              >
-                <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.delite} />
-              </TouchableOpacity>
-            </View>
-
+            }
           </View>
         </View>
 
@@ -153,7 +189,10 @@ export default function CallbackScreen() {
       {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
-      <SearchBar />
+      <SearchBar 
+        value={searchText}
+  onSearchChange={(text) => setSearchText(text)}
+      />
 
 
       <View style={styles.tabRow}>
@@ -173,7 +212,8 @@ export default function CallbackScreen() {
 
       {/* List */}
       <FlatList
-        data={activeTab === "Active" ? callbackData : callbackData?.filter((item) => item.status_id == "6")}
+        // data={callbackData}
+         data={filteredData}
         showsVerticalScrollIndicator={false}
         renderItem={renderCard}
         keyExtractor={(item) => item.id}
@@ -181,7 +221,8 @@ export default function CallbackScreen() {
       />
 
       {/* Floating Button */}
-      <TouchableOpacity style={styles.fab}
+
+      <TouchableOpacity style={[styles.fab, { display: activeTab == "Active" ? "flex" : "none" }]}
         onPress={() => nav.navigate(ScreenNameEnum.AddCallback)}
       >
         <Image
