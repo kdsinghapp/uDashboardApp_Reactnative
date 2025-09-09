@@ -527,17 +527,17 @@ const AddCallbackApi = (
 
         const formdata = new FormData();
         formdata.append("task_name", param?.task);
-        formdata.append("employee_id", "1"); // map actual employee id
+        formdata.append("employee_id",  (param?.employeeId) ?? "1"); // map actual employee id
         formdata.append("estimated_time", param?.estimateTime);
         formdata.append("start_date", param?.startDate.toISOString().split("T")[0]);
         formdata.append("start_time", moment(param?.startTime).format("HH:mm"));
         formdata.append("end_date", param?.endDate.toISOString().split("T")[0]);
         formdata.append("end_time", moment(param?.endTime).format("HH:mm"));
-        formdata.append("priority_id", param?.priorityId);
+        formdata.append("priority_id", param?.priorityId ?? "1");
         // formdata.append("status_id", "2");
-        formdata.append("status_id", param?.statusId);
+        formdata.append("status_id", param?.statusId ?? "1");
         formdata.append("details", param?.details);
-
+console.log(formdata, 'this is formdaata')
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
@@ -637,7 +637,58 @@ const UpdateCallbackApi = (
     }
 };
 
+
+const GetNotesListApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+        };
+
+        const respons = fetch(`${base_url}notes/create`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.status == '1') {
+                    setLoading(false)
+
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.error,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
 /// Employ
+
+
+
 
 const GetEmployListApi = (
     param: any,
@@ -659,12 +710,12 @@ const GetEmployListApi = (
             headers: myHeaders,
         };
 
-        const respons = fetch(`${base_url}employees?page=1&limit=1000`, requestOptions)
+        const respons = fetch(`${base_url}employees?page=1&limit=100`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
+                console.log("---- ----ddv response employeee", response)
+                if (response.status) {
                     setLoading(false)
 
                     return response
@@ -711,7 +762,7 @@ const GetEmployApi = (
             // body: formData,
         };
         console.log("formData", formData)
-        const respons = fetch(`${base_url}callbacks/${param?.id}`, requestOptions)
+        const respons = fetch(`${base_url}employee/${param?.id}`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -765,7 +816,7 @@ const GetDeletedEmployApi = (
             // body: formData,
         };
         console.log("formData", formData)
-        const respons = fetch(`${base_url}callbacks?page=1&limit=1000&callback=deleted`, requestOptions)
+        const respons = fetch(`${base_url}employees?page=1&limit=1000&employees=deleted`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -818,12 +869,12 @@ const DeleteEmployApi = (
             body: formData,
         };
         console.log("formData", formData)
-        const respons = fetch(`${base_url}callbacks/${param?.id}`, requestOptions)
+        const respons = fetch(`${base_url}employees/${param?.id}`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
                 console.log("---- ----ddv response", response)
-                if (response.status == '1') {
+                if (response.status) {
                     setLoading(false)
                     // successToast(
                     //     response?.message
@@ -873,7 +924,7 @@ const RestoreEmployApi = (
             redirect: "follow"
         };
         // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
-        const respons = fetch(`${base_url}callbacks/${param?.id}/restore`, requestOptions)
+        const respons = fetch(`${base_url}employees/${param?.id}/restore`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);

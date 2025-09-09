@@ -4,100 +4,105 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import imageIndex from "../../assets/imageIndex";
 import CustomBackHeader from "../../compoent/CustomBackHeader";
 import StatusBarComponent from "../../compoent/StatusBarCompoent";
+import { useRoute } from "@react-navigation/native";
+import moment from "moment";
 
 const EmployeeDetail = () => {
+  const route = useRoute()
+    const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
+  
+  const item = route?.params?.item
   return (
     <SafeAreaView style={{
-      flex:1,
-      backgroundColor:"white"
+      flex: 1,
+      backgroundColor: "white"
     }}>
-      <StatusBarComponent/>
+      <StatusBarComponent />
       <View style={{
-        marginHorizontal:12
+        marginHorizontal: 12
       }}>
-             <CustomBackHeader menuIcon={imageIndex.back} label={"Employee Detail"} /> 
-             </View>
-    <ScrollView  
-    showsVerticalScrollIndicator={false}
-    style={styles.container}>
+        <CustomBackHeader menuIcon={imageIndex.back} label={"Employee Detail"} />
+      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.container}>
 
-      {/* Task Name */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Name</Text>
-        <Text style={styles.value}>Priya Sharma</Text>
-      </View>
-
-      {/* Due Date */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Email</Text>
-        <Text style={styles.value}>priya.sharma@techsolutions.com</Text>
-      </View>
-
-      {/* Estimated Time */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Phone</Text>
-        <Text style={styles.value}>+91 9876543210</Text>
-      </View>
-
-      {/* Task Manager */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Position</Text>
-        <Text style={styles.value}>Senior Software Engineer</Text>
-      </View>
-
-      {/* Client */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Start Date </Text>
-        <Text style={styles.value}>15 Mar 2021</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Termination Date</Text>
-        <Text style={styles.value}>N/A</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Last Increment Date</Text>
-        <Text style={styles.value}>01 Apr 2024/A</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Salary</Text>
-        <Text style={styles.value}>₹85,000.00</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Pay Type</Text>
-        <Text style={styles.value}>Monthly</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Employment Type</Text>
-        <Text style={styles.value}>Full-time</Text>
-      </View>
-      
-      {/* Status */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Status</Text>
-        <View style={[styles.tag, { backgroundColor: "#34C759" }]}>
-          <Text style={styles.tagText}>Pending</Text>
+        {/* Task Name */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Name</Text>
+          <Text style={styles.value}>{item?.first_name} {item?.last_name}</Text>
         </View>
-      </View>
 
-      {/* Priority */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Bonus Eligible</Text>
-        <View style={[styles.tag, ]}>
-          <Text style={[styles.tagText,{
-            color:"gray"
-          }]}>Yes</Text>
+        {/* Due Date */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Email</Text>
+          <Text style={styles.value}>{item?.email}</Text>
         </View>
-      </View>
 
-      {/* Description */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Notes</Text>
-        <Text style={styles.value}>
-          The task involves redesigning the homepage of the client’s corporate
-          website. Key updates include:
-        </Text>
-      </View>
-    </ScrollView>
+        {/* Estimated Time */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Phone</Text>
+          <Text style={styles.value}>{item?.country_phone_code} {item?.phone}</Text>
+        </View>
+
+        {/* Task Manager */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Position</Text>
+          <Text style={styles.value}>Senior Software Engineer</Text>
+        </View>
+
+        {/* Client */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Start Date </Text>
+          <Text style={styles.value}>{formattedDate(item?.start_date)}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Termination Date</Text>
+          <Text style={styles.value}>{item?.termination_date && formattedDate(item?.termination_date)}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Last Increment Date</Text>
+          <Text style={styles.value}>{formattedDate(item.last_increment_date)}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Salary</Text>
+          <Text style={styles.value}>{item?.salary}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Pay Type</Text>
+          <Text style={styles.value}>{item?.pay_type}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Employment Type</Text>
+          <Text style={styles.value}>{item?.employment_type}</Text>
+        </View>
+
+        {/* Status */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Status</Text>
+          <View style={[styles.tag, { backgroundColor: "#34C759" }]}>
+            <Text style={styles.tagText}>{item?.status}</Text>
+          </View>
+        </View>
+
+        {/* Priority */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Bonus Eligible</Text>
+          <View style={[styles.tag,]}>
+            <Text style={[styles.tagText, {
+              color: "gray"
+            }]}>{item?.bonus_eligible ? "Yes": "No"}</Text>
+          </View>
+        </View>
+
+        {/* Description */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Notes</Text>
+          <Text style={styles.value}>
+           {item?.notes}
+          </Text>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

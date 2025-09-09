@@ -33,15 +33,15 @@ export default function CallbackScreen() {
   }, [activeTab]);
 
   const filteredData = callbackData.filter((item: any) => {
-  const query = searchText.toLowerCase();
-  return (
-    item?.task_name?.toLowerCase().includes(query) ||
-    item?.employee?.first_name?.toLowerCase().includes(query) ||
-    item?.employee?.last_name?.toLowerCase().includes(query) ||
-    item?.status?.name?.toLowerCase().includes(query) ||
-    item?.priority?.name?.toLowerCase().includes(query)
-  );
-});
+    const query = searchText.toLowerCase();
+    return (
+      item?.task_name?.toLowerCase().includes(query) ||
+      item?.employee?.first_name?.toLowerCase().includes(query) ||
+      item?.employee?.last_name?.toLowerCase().includes(query) ||
+      item?.status?.name?.toLowerCase().includes(query) ||
+      item?.priority?.name?.toLowerCase().includes(query)
+    );
+  });
   const fetchCallback = async (activeTab: string) => {
     const param = {
       token: isLogin?.token
@@ -130,7 +130,7 @@ export default function CallbackScreen() {
         <View style={styles.cardRow}>
           <View style={styles.cardItem}>
             <Text style={styles.label}>Priority</Text>
-            <Text style={[styles.value, styles.tag, { backgroundColor: '#0D6EFD', alignSelf: 'flex-start' }]}>{item?.priority?.name}</Text>
+            <Text style={[styles.value, styles.tag, { backgroundColor: item?.priority?.id == "1" ? '#4CAF50' : item?.priority?.id == "4" ? '#D32F2F' : item?.priority?.id == "3" ? "#FF5722" : "#0D6EFD", alignSelf: 'flex-start' }]}>{item?.priority?.name}</Text>
           </View>
 
           <View style={[styles.cardItem, styles.right]}>
@@ -153,7 +153,6 @@ export default function CallbackScreen() {
                   onPress={() => nav.navigate(ScreenNameEnum.AddCallback, { item: item })}
                 >
                   <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.editGreen} />
-
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => setDeleteModalVisible(true)}
@@ -189,9 +188,9 @@ export default function CallbackScreen() {
       {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
-      <SearchBar 
+      <SearchBar
         value={searchText}
-  onSearchChange={(text) => setSearchText(text)}
+        onSearchChange={(text) => setSearchText(text)}
       />
 
 
@@ -213,7 +212,7 @@ export default function CallbackScreen() {
       {/* List */}
       <FlatList
         // data={callbackData}
-         data={filteredData}
+        data={filteredData}
         showsVerticalScrollIndicator={false}
         renderItem={renderCard}
         keyExtractor={(item) => item.id}

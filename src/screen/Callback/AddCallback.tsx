@@ -14,7 +14,7 @@ import CustomBackHeader from "../../compoent/CustomBackHeader";
 import imageIndex from "../../assets/imageIndex";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DatePickerModal from "../../compoent/DatePickerModal";
-import { AddCallbackApi, Get_Priority_Api, Get_Status_Api, UpdateCallbackApi } from "../../Api/apiRequest"; // 👈 make sure Update API is added
+import { AddCallbackApi, Get_Priority_Api, Get_Status_Api, GetEmployApi, GetEmployListApi, UpdateCallbackApi } from "../../Api/apiRequest"; // 👈 make sure Update API is added
 import { useSelector } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import moment from "moment";
@@ -39,8 +39,10 @@ export default function AddCallback() {
     endTime: new Date(),
     priority: "",
     status: "",
-    statusId:"",
-    priorityId:"",
+    statusId: "",
+    priorityId: "",
+    employee: "",
+    employeeId: ""
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -51,7 +53,7 @@ export default function AddCallback() {
     mode: "date" as "date" | "time",
   });
 
-  const callbackOptions = ["Ram", "Kamlesh"];
+  const [callbackOptions, setCallbackOptions] = useState([])
   const [priorityOptions, setPriorityOptions] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
 
@@ -59,10 +61,16 @@ export default function AddCallback() {
     (async () => {
       const priority = await Get_Priority_Api(setLoading)
       const status = await Get_Status_Api(setLoading)
+      const param = {
+        token: isLogin?.token
+      }
+      const employee = await GetEmployListApi(param, setLoading)
+      // console.log(employee?.data?.data, 'this is employee')
+      setCallbackOptions(employee?.data?.data)
       setPriorityOptions(priority.data)
       setStatusOptions(status.data)
-      console.log(priority.data)
-      console.log(status.data)
+      // console.log(priority.data)
+      // console.log(status.data)
     })()
   }, [])
   // 👇 Pre-fill form if edit mode
@@ -83,19 +91,23 @@ export default function AddCallback() {
         status: editItem.status?.name || "",
         priorityId: editItem.priority?.id || "",
         statusId: editItem.status?.id || "",
-        
+        employee: editItem.employee?.name || "",
+        employeeId: editItem.employee?.id || ""
+
       });
     }
   }, [editItem]);
 
   const handleChange = (field: string, value: any) => {
     // setForm({ ...form, [field]: value.label });
-   setForm((prev) => ({
-    ...prev,
-    [field]: value.label,                  // store label for display
-    ...(field === "priority" && { priorityId: value.value }), // add priorityId
-    ...(field === "status" && { statusId: value.value })      // add statusId
-  }));
+    // console.log(field, value)
+    setForm((prev) => ({
+      ...prev,
+      [field]: value.label || value,
+      ...(field === "callback" && { employeeId: value.value }), // add priorityId
+      ...(field === "priority" && { priorityId: value.value }), // add priorityId
+      ...(field === "status" && { statusId: value.value })      // add statusId
+    }));
     setErrors({ ...errors, [field]: "" });
   };
 
@@ -146,6 +158,7 @@ export default function AddCallback() {
     if (formattedTime) {
       formattedTime = moment(form.estimateTime, ["HH:mm:ss", "HH:mm"]).format("HH:mm");
     }
+    console.log(form)
     const param = {
       ...form,
       estimateTime: formattedTime,
@@ -205,9 +218,12 @@ export default function AddCallback() {
           <Text style={styles.label}>Employee</Text>
           <CustomDropdown
             label="Select Employee"
-            options={callbackOptions}
+            options={callbackOptions.map((item) => ({
+              label: item?.first_name + ' ' + item?.last_name,   // what will show in dropdown
+              value: item?.id      // what you get when selecting
+            }))}
             value={form.callback}
-            onSelect={(val) => handleChange("callback", val)}
+            onSelect={(val:any) => handleChange("callback", val)}
           />
           {errors.callback && <Text style={styles.error}>{errors.callback}</Text>}
 
@@ -217,7 +233,7 @@ export default function AddCallback() {
             style={styles.input}
             onPress={() => openDatePicker("calendarDate", "date")}
           >
-            <Text>{form.calendarDate.toDateString()}</Text>
+            <Text>{form?.calendarDate?.toDateString()}</Text>
           </TouchableOpacity>
 
           {/* Estimate Time */}
@@ -266,7 +282,7 @@ export default function AddCallback() {
             style={styles.input}
             onPress={() => openDatePicker("startDate", "date")}
           >
-            <Text>{form.startDate.toDateString()}</Text>
+            <Text>{form.startDate?.toDateString()}</Text>
           </TouchableOpacity>
 
           <Text style={styles.label}>Start Time</Text>
@@ -274,7 +290,7 @@ export default function AddCallback() {
             style={styles.input}
             onPress={() => openDatePicker("startTime", "time")}
           >
-            <Text>{form.startTime.toLocaleTimeString()}</Text>
+            <Text>{form.startTime?.toLocaleTimeString()}</Text>
           </TouchableOpacity>
 
           {/* End Date & Time */}
@@ -299,9 +315,9 @@ export default function AddCallback() {
           <CustomDropdown
             label="Select Priority"
             options={priorityOptions.map((item) => ({
-  label: item.name,   // what will show in dropdown
-  value: item.id      // what you get when selecting
-}))}
+              label: item.name,   // what will show in dropdown
+              value: item.id      // what you get when selecting
+            }))}
             value={form.priority}
             onSelect={(val) => handleChange("priority", val)}
           />
@@ -314,9 +330,9 @@ export default function AddCallback() {
           <CustomDropdown
             label="Select Status"
             options={statusOptions.map((item) => ({
-  label: item.name,   // what will show in dropdown
-  value: item.id      // what you get when selecting
-}))}
+              label: item.name,   // what will show in dropdown
+              value: item.id      // what you get when selecting
+            }))}
             value={form.status}
             onSelect={(val) => handleChange("status", val)}
           />
