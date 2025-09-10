@@ -527,7 +527,7 @@ const AddCallbackApi = (
 
         const formdata = new FormData();
         formdata.append("task_name", param?.task);
-        formdata.append("employee_id",  (param?.employeeId) ?? "1"); // map actual employee id
+        formdata.append("employee_id", (param?.employeeId) ?? "1"); // map actual employee id
         formdata.append("estimated_time", param?.estimateTime);
         formdata.append("start_date", param?.startDate.toISOString().split("T")[0]);
         formdata.append("start_time", moment(param?.startTime).format("HH:mm"));
@@ -537,7 +537,7 @@ const AddCallbackApi = (
         // formdata.append("status_id", "2");
         formdata.append("status_id", param?.statusId ?? "1");
         formdata.append("details", param?.details);
-console.log(formdata, 'this is formdaata')
+        console.log(formdata, 'this is formdaata')
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
@@ -638,7 +638,7 @@ const UpdateCallbackApi = (
 };
 
 
-const GetNotesListApi = (
+const GetAllListApi = (
     param: any,
     setLoading: (loading: boolean) => void,
 ) => {
@@ -685,7 +685,7 @@ const GetNotesListApi = (
         );
     }
 };
-/// Employ
+// Employ
 
 
 
@@ -816,7 +816,7 @@ const GetDeletedEmployApi = (
             // body: formData,
         };
         console.log("formData", formData)
-        const respons = fetch(`${base_url}employees?page=1&limit=1000&employees=deleted`, requestOptions)
+        const respons = fetch(`${base_url}employees?page=1&limit=1000&employee=deleted`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -874,17 +874,17 @@ const DeleteEmployApi = (
             .then((res) => {
                 const response = JSON.parse(res);
                 console.log("---- ----ddv response", response)
-                if (response.status) {
+                if (response.success) {
                     setLoading(false)
-                    // successToast(
-                    //     response?.message
-                    // );
+                    successToast(
+                        response?.message
+                    );
                     // param.navigation.navigate(ScreenNameEnum.LoginScreen)
                     return response
                 } else {
                     setLoading(false)
                     errorToast(
-                        response.error,
+                        response.message,
                     );
                     return response
                 }
@@ -929,7 +929,7 @@ const RestoreEmployApi = (
             .then((res) => {
                 const response = JSON.parse(res);
                 console.log("---- ----ddv response", response)
-                if (response.status) {
+                if (response.success) {
                     setLoading(false)
                     successToast(
                         response?.message
@@ -939,7 +939,7 @@ const RestoreEmployApi = (
                 } else {
                     setLoading(false)
                     errorToast(
-                        response.error,
+                        response.message,
                     );
                     return response
                 }
@@ -969,17 +969,23 @@ const AddEmployApi = (
 
 
         const formdata = new FormData();
-        formdata.append("task_name", param?.task);
-        formdata.append("employee_id", "1"); // map actual employee id
-        formdata.append("estimated_time", param?.estimateTime);
+        formdata.append("first_name", param?.first_name ?? "");
+        formdata.append("last_name", param?.last_name ?? "");
+        formdata.append("email", param?.email ?? "");
+        formdata.append("phone", param?.phone ?? "");
+        formdata.append("country_phone_code", param?.countryCode ?? "");
+        formdata.append("position_id", "1");
+        // formdata.append("position_id", param?.position ?? "");
+        formdata.append("salary", param?.salary ?? "");
+        formdata.append("pay_type", param?.payType ?? "monthly");
         formdata.append("start_date", param?.startDate.toISOString().split("T")[0]);
-        formdata.append("start_time", moment(param?.startTime).format("HH:mm"));
-        formdata.append("end_date", param?.endDate.toISOString().split("T")[0]);
-        formdata.append("end_time", moment(param?.endTime).format("HH:mm"));
-        formdata.append("priority_id", param?.priorityId);
-        // formdata.append("status_id", "2");
-        formdata.append("status_id", param?.statusId);
-        formdata.append("details", param?.details);
+
+        formdata.append("termination_date", param?.terminationDate.toISOString().split("T")[0]);
+        formdata.append("status", param?.status ?? "");
+        formdata.append("employment_type", param?.employmentType ?? "");
+        formdata.append("last_increment_date", param?.lastIncrementDate.toISOString().split("T")[0]);
+        formdata.append("bonus_eligible", param?.bonusEligible == 'yes' ? 1 : 0);
+        formdata.append("notes", param?.notes ?? "");
 
         const requestOptions = {
             method: "POST",
@@ -987,12 +993,12 @@ const AddEmployApi = (
             body: formdata,
         };
         console.log("formData", formdata)
-        const respons = fetch(`${base_url}callbacks`, requestOptions)
+        const respons = fetch(`${base_url}employees`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
                 console.log("---- ----ddv response", response)
-                if (response.status == '1') {
+                if (response.success) {
                     setLoading(false)
                     successToast(
                         response?.message
@@ -1002,7 +1008,7 @@ const AddEmployApi = (
                 } else {
                     setLoading(false)
                     errorToast(
-                        response.error,
+                        response.message,
                     );
                     return response
                 }
@@ -1031,17 +1037,25 @@ const UpdateEmployApi = (
 
 
         const formdata = new FormData();
-        formdata.append("task_name", param?.task);
-        formdata.append("employee_id", "1"); // map actual employee id
-        formdata.append("estimated_time", param?.estimateTime);
+        formdata.append("first_name", param?.first_name ?? "");
+        formdata.append("last_name", param?.last_name ?? "");
+        formdata.append("email", param?.email ?? "");
+        formdata.append("phone", param?.phone ?? "");
+        formdata.append("country_phone_code", param?.countryCode ?? "");
+        formdata.append("position_id", "1");
+        // formdata.append("position_id", param?.position ?? "");
+        formdata.append("salary", param?.salary ?? "");
+        formdata.append("pay_type", param?.payType ?? "monthly");
         formdata.append("start_date", param?.startDate.toISOString().split("T")[0]);
-        formdata.append("start_time", moment(param?.startTime).format("HH:mm"));
-        formdata.append("end_date", param?.endDate.toISOString().split("T")[0]);
-        formdata.append("end_time", moment(param?.endTime).format("HH:mm"));
-        formdata.append("priority_id", param?.priorityId);
-        formdata.append("status_id", param?.statusId);
-        formdata.append("details", param?.details);
+
+        formdata.append("termination_date", param?.terminationDate.toISOString().split("T")[0]);
+        formdata.append("status", param?.status ?? "");
+        formdata.append("employment_type", param?.employmentType ?? "");
+        formdata.append("last_increment_date", param?.lastIncrementDate.toISOString().split("T")[0]);
+        formdata.append("bonus_eligible", param?.bonusEligible == 'yes' ? 1 : 0);
+        formdata.append("notes", param?.notes ?? "");
         formdata.append("_method", "PUT");
+
 
         const requestOptions = {
             method: "POST",
@@ -1049,12 +1063,12 @@ const UpdateEmployApi = (
             body: formdata,
         };
         console.log("formData", formdata)
-        const respons = fetch(`${base_url}callbacks/${param?.id}`, requestOptions)
+        const respons = fetch(`${base_url}employees/${param?.id}`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
                 console.log("---- ----ddv response", response)
-                if (response.status == '1') {
+                if (response.success) {
                     setLoading(false)
                     successToast(
                         response?.message
@@ -1064,7 +1078,391 @@ const UpdateEmployApi = (
                 } else {
                     setLoading(false)
                     errorToast(
-                        response.error,
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+// Notes
+
+
+
+const GetNotesListApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const requestOptions = {
+            method: "GET",
+            headers: myHeaders,
+        };
+        const respons = fetch(`${base_url}notes?page=1&limit=100`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response employeee", response)
+                if (response.success) {
+                    setLoading(false)
+
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.error,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const GetNotesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const GetDeletedNotesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes?page=1&limit=1000&note=deleted`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const DeleteNotesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes/delete/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const RestoreNotesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+            redirect: "follow"
+        };
+        // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
+        const respons = fetch(`${base_url}notes/restore/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const AddNotesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("task", param?.task ?? "");
+        formdata.append("details", param?.details ?? "");
+        formdata.append("category_id", param?.categoryId ?? "");
+        formdata.append("callback_id", param?.callbackId ?? "");
+        formdata.append("tags[0]", 1);
+        // formdata.append("tags[0]", param?.tags ?? "");
+        formdata.append("calendar_event_date", param?.calendarDate.toISOString().split("T")[0]);
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}notes`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+const UpdateNotesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("task", param?.task ?? "");
+        formdata.append("details", param?.details ?? "");
+        formdata.append("category_id", param?.categoryId ?? "");
+        formdata.append("callback_id", param?.callbackId ?? "");
+        formdata.append("tags[0]", 1);
+        // formdata.append("tags[0]", param?.tags ?? "");
+        formdata.append("calendar_event_date", param?.calendarDate.toISOString().split("T")[0]);
+        formdata.append("_method", "PUT");
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}notes/update/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("--------ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
                     );
                     return response
                 }
@@ -1104,7 +1502,7 @@ const Get_Priority_Api = (
                     return response.data
                 } else {
                     setLoading(false)
-                    
+
                     return response
                 }
             })
@@ -1424,6 +1822,7 @@ export {
     ChangePass_Api, EditProfile_Api, updatePassword,
     restEmailOtpScreen, LoginCustomer, otp_Verify,
     GetCallbackListApi, GetCallbackApi, AddCallbackApi, DeleteCallbackApi, GetDeletedCallbackApi, RestoreCallbackApi, UpdateCallbackApi,
-    GetEmployListApi, GetEmployApi, AddEmployApi, DeleteEmployApi, GetDeletedEmployApi, RestoreEmployApi,UpdateEmployApi,
-    Get_Status_Api, Get_Priority_Api,
+    GetEmployListApi, GetEmployApi, AddEmployApi, DeleteEmployApi, GetDeletedEmployApi, RestoreEmployApi, UpdateEmployApi,
+    GetNotesListApi, GetNotesApi, AddNotesApi, DeleteNotesApi, GetDeletedNotesApi, RestoreNotesApi, UpdateNotesApi,
+    Get_Status_Api, Get_Priority_Api,GetAllListApi
 }  

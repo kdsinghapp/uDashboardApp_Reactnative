@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchBar from "../../compoent/SearchBar";
 import imageIndex from "../../assets/imageIndex";
 import CustomHeader from "../../compoent/CustomHeader";
 import StatusBarComponent from "../../compoent/StatusBarCompoent";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import ScreenNameEnum from "../../routes/screenName.enum";
 import DeleteModal from "../../compoent/DeleteModal";
+import { useSelector } from "react-redux";
+import moment from "moment";
+import { DeleteNotesApi, GetDeletedNotesApi, GetNotesApi, GetNotesListApi, RestoreNotesApi } from "../../Api/apiRequest";
+import LoadingModal from "../../utils/Loader";
 
 const allData = [
   { id: "01", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Active" },
@@ -18,89 +22,175 @@ const allData = [
 
 export default function Note() {
   const [activeTab, setActiveTab] = useState<"Active" | "Deleted">("Active");
-  const filteredData = allData.filter(item => item.status === activeTab);
-  const nav = useNavigation()
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  
-    const handleDelete = () => {
+  const [loading, setLoading] = useState(false)
+  const [notesData, setNotesData] = useState([])
+  const [searchText, setSearchText] = useState("");
+  const isLogin = useSelector((state: any) => state.auth);
+  const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
+  // console.log(isLogin)
+  useFocusEffect(
+    useCallback(() => {
+      fetchNotes("Active");
+    }, [])
+  );
+  useEffect(() => {
+    fetchNotes(activeTab);
+  }, [activeTab]);
+
+  const filteredData = notesData?.filter((item: any) => {
+    const query = searchText.toLowerCase();
+    return (
+      item?.task?.toLowerCase().includes(query) ||
+      item?.details?.toLowerCase().includes(query)
+    );
+  });
+  const fetchNotes = async (activeTab: string) => {
+    const param = {
+      token: isLogin?.token
+    }
+    if (activeTab == "Active") {
+      const data = await GetNotesListApi(param, setLoading)
+      // console.log(data?.data?.data)
+      setNotesData(data?.data?.data)
+    } else {
+      const data = await GetDeletedNotesApi(param, setLoading)
+      console.log(data?.data)
+      setNotesData(data?.data?.data)
+    }
+  }
+
+
+  const nav = useNavigation()
+  const renderCard = ({ item }: any) => {
+    const handleDelete = async () => {
       // 👇 Your delete API or logic here
       console.log("Item deleted!");
+      const param = {
+        id: item?.id,
+        token: isLogin?.token
+      }
+      const dd = await DeleteNotesApi(param, setLoading)
+      fetchNotes(activeTab)
       setDeleteModalVisible(false);
     };
-  const renderCard = ({ item }: any) => (
-    <TouchableOpacity
-      onPress={() => nav.navigate(ScreenNameEnum.NoteDetail)}
 
-      style={styles.card}>
-      {/* Row 1: ID & Name */}
-      <View style={styles.cardRow}>
-        <View style={styles.cardItem}>
-          <Text style={[styles.label]}>ID</Text>
-          <Text style={[styles.value]}>{item.id}</Text>
-        </View>
-        <View style={[styles.cardItem, {alignItems:'flex-end'}]}>
-          <Text style={[styles.label]}>Task Name</Text>
-          <Text style={styles.value}>{item.name}</Text>
-        </View>
-      </View>
+    const handleRestore = async () => {
+      // 👇 Your delete API or logic here
+      console.log("Item deleted!");
+      const param = {
+        id: item?.id,
+        token: isLogin?.token
+      }
+      const dd = await RestoreNotesApi(param, setLoading)
+      fetchNotes(activeTab)
+      // setDeleteModalVisible(false);
+    };
+    return (
 
-      {/* Row 2: Amount & Details */}
-      <View style={styles.cardRow}>
-        <View style={styles.cardItem}>
-          <Text style={styles.label}>Callback Reference</Text>
-          <Text style={styles.value}>AUTH-2025-01</Text>
-        </View>
-        <View style={[styles.cardItem, {alignItems:'flex-end'}]}>
-          <Text style={[styles.label]}>Category</Text>
-          <Text style={styles.value}>Bug Fix</Text>
-        </View>
-      </View>
+      <TouchableOpacity
+        onPress={() => nav.navigate(ScreenNameEnum.NoteDetail,{item:item})}
 
-      {/* Row 3: Date & Status */}
-      <View style={styles.cardRow}>
-        <View style={styles.cardItem}>
-          <Text style={[styles.label]}>Details</Text>
-          <Text style={styles.value}>Resolve login issue causing session timeout after 5 minutes</Text>
-        </View>
-        <View style={[styles.cardItem, {alignItems:'flex-end'}]}>
-          <Text style={[styles.label]}>Action</Text>
-           <View style={{
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        alignItems: "center"
-      }}>
-        <TouchableOpacity
-      onPress={() => nav.navigate(ScreenNameEnum.NoteDetail)}
-        >
-          <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.eyeBlue} />
-        </TouchableOpacity>
-        <TouchableOpacity
-
-        >
-          <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.editGreen} />
-
-        </TouchableOpacity>
-        <TouchableOpacity
-onPress={()=>setDeleteModalVisible(true)}
-        >
-          <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.delite} />
-        </TouchableOpacity>
-      </View>
+        style={styles.card}>
+        {/* Row 1: ID & Name */}
+        <View style={styles.cardRow}>
+          <View style={styles.cardItem}>
+            <Text style={[styles.label]}>ID</Text>
+            <Text style={[styles.value]}>{item.id}</Text>
+          </View>
+          <View style={[styles.cardItem, { alignItems: 'flex-end' }]}>
+            <Text style={[styles.label]}>Task Name</Text>
+            <Text style={styles.value}>{item.task}</Text>
+          </View>
         </View>
 
-      </View>
+        {/* Row 2: Amount & Details */}
+        <View style={styles.cardRow}>
+          <View style={styles.cardItem}>
+            <Text style={styles.label}>Callback Reference</Text>
+            <Text style={styles.value}>{item?.callback?.task_name}</Text>
+          </View>
+          <View style={[styles.cardItem, { alignItems: 'flex-end' }]}>
+            <Text style={[styles.label]}>Category</Text>
+            <Text style={styles.value}>{item?.category?.name}</Text>
+          </View>
+        </View>
 
-    
+        {/* Row 3: Date & Status */}
+        <View style={styles.cardRow}>
+          <View style={styles.cardItem}>
+            <Text style={[styles.label]}>Details</Text>
+            <Text style={styles.value}>{item?.details}</Text>
+          </View>
+          <View style={[styles.cardItem, { alignItems: 'flex-end' }]}>
+            <Text style={[styles.label]}>Action</Text>
+            {activeTab == "Active" &&
+              <View style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center"
+              }}>
+                <TouchableOpacity
+                  onPress={() => nav.navigate(ScreenNameEnum.NoteDetail,{item:item})}
+                >
+                  <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.eyeBlue} />
+                </TouchableOpacity>
+                <TouchableOpacity
+    onPress={() => nav.navigate(ScreenNameEnum.AddNoteScreen,{note:item})}
+                >
+                  <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.editGreen} />
+
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setDeleteModalVisible(true)}
+                >
+                  <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.delite} />
+                </TouchableOpacity>
+              </View>
+            }
+            {activeTab == "Deleted" &&
+              <View style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center"
+              }}>
+
+                <TouchableOpacity
+                  onPress={() => handleRestore()}
+                >
+                  <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.restore} />
+                </TouchableOpacity>
+              </View>
+            }
+
+          </View>
+
+        </View>
 
 
-    </TouchableOpacity>
-  );
+
+        <DeleteModal
+          visible={deleteModalVisible}
+          onClose={() => setDeleteModalVisible(false)}
+          onConfirm={handleDelete}
+          title="Delete Notes?"
+          message="Are you sure you want to delete this Notes from your list?"
+          cancelText="No"
+          confirmText="Yes, Delete"
+        />
+      </TouchableOpacity>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
+      {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
-      <SearchBar />
+      <SearchBar
+        value={searchText}
+        onSearchChange={(text) => setSearchText(text)}
+      />
       {/* <Text style={{
         fontSize: 14,
         color: "black",
@@ -132,23 +222,16 @@ onPress={()=>setDeleteModalVisible(true)}
       />
 
       {/* Floating Button */}
-      <TouchableOpacity style={styles.fab}
-        onPress={() => nav.navigate(ScreenNameEnum.AddNoteScreen)}
-      >
-        <Image
-          source={imageIndex.AddLogo}
-          style={{ height: 70, width: 70, resizeMode: "contain" }}
-        />
-      </TouchableOpacity>
-       <DeleteModal
-        visible={deleteModalVisible}
-        onClose={() => setDeleteModalVisible(false)}
-        onConfirm={handleDelete}
-        title="Delete Notes?"
-        message="Are you sure you want to delete this Notes from your list?"
-        cancelText="No"
-        confirmText="Yes, Delete"
-      />
+      {activeTab == "Active" &&
+        <TouchableOpacity style={styles.fab}
+          onPress={() => nav.navigate(ScreenNameEnum.AddNoteScreen)}
+        >
+          <Image
+            source={imageIndex.AddLogo}
+            style={{ height: 70, width: 70, resizeMode: "contain" }}
+          />
+        </TouchableOpacity>
+      }
     </SafeAreaView>
   );
 }
@@ -186,9 +269,9 @@ const styles = StyleSheet.create({
     width: "40%", // two items per row
   },
   label: {
-     color: "#000000",
-            fontWeight: "700",
-            fontSize: 14,
+    color: "#000000",
+    fontWeight: "700",
+    fontSize: 14,
     marginBottom: 4,
   },
   value: {

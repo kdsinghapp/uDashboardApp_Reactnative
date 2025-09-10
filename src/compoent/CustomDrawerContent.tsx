@@ -9,7 +9,7 @@ import {
   FlatList,
 } from "react-native";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import imageIndex from "../assets/imageIndex"; // apne icons yaha rakho
+import imageIndex from "../assets/imageIndex"; 
 import ScreenNameEnum from "../routes/screenName.enum";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StatusBarComponent from "./StatusBarCompoent";
@@ -17,21 +17,17 @@ import LogoutModal from "./LogoutModal";
 import { logout } from "../redux/feature/authSlice";
 import { useDispatch } from "react-redux";
 
-// -------- Menu Data (sab ek jagah manage karna easy hoga) --------
+// -------- Menu Data --------
 const menuItems = [
   { id: "1", title: "Dashboard", icon: imageIndex.dasboard, screen: "Dashboard" },
   { id: "2", title: "Profile", icon: imageIndex.ProfielPng, screen: ScreenNameEnum.EditProfile },
   { id: "3", title: "Backburner Task", icon: imageIndex.Bacxkbuer, screen: ScreenNameEnum.Backburner },
   { id: "4", title: "Callbacks", icon: imageIndex.MyAddress, screen: ScreenNameEnum.CallBack },
   { id: "5", title: "Employees", icon: imageIndex.dasboard, screen: ScreenNameEnum.EmployeeScreen },
-
   { id: "7", title: "Notes", icon: imageIndex.Note, screen: ScreenNameEnum.Note },
-
-  { id: "8", title: "Teams", icon: imageIndex.dasboard, screen: ScreenNameEnum.TeamScreen },
+  // { id: "8", title: "Teams", icon: imageIndex.dasboard, screen: ScreenNameEnum.TeamScreen },
   { id: "9", title: "Assigned Task", icon: imageIndex.Calendar, screen: ScreenNameEnum.AssingnedScreen },
-
   { id: "10", title: "Replies", icon: imageIndex.Replies, screen: ScreenNameEnum.RepliesScreen },
-
   { id: "11", title: "Calendar", icon: imageIndex.Calendar, screen: ScreenNameEnum.CalendarScreen },
   {
     id: "12", title: "Financial", icon: imageIndex.dasboard,
@@ -57,7 +53,7 @@ const menuItems = [
 
     ],
   },
-  { id: "13", title: "Clients", icon: imageIndex.Calendar, screen: ScreenNameEnum.AddclientsScreen },
+  { id: "13", title: "Customer", icon: imageIndex.Calendar, screen: ScreenNameEnum.AddclientsScreen },
   { id: "15", title: "Logout", icon: imageIndex.Logout, screen: "Language" },
 
 ];
@@ -83,7 +79,6 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
     const hasChildren = item.children && item.children.length > 0;
     const isExpanded = expandedMenu === item.id;
 
-
     return (
       <View>
         <TouchableOpacity style={{
@@ -101,7 +96,6 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
                 // handleNavigation(item.screen);
                 navigation.navigate(item.screen);
               }
-
               // navigation.navigate(item.screen);
             }
           }}
@@ -113,14 +107,11 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
           >
             <Image source={item.icon} style={styles.icon} />
             <Text allowFontScaling={false} style={styles.menuText}>{item.title}</Text>
-
-
           </View>
           {/* <Image source={imageIndex.next} style={[styles.icon,{
             tintColor:"black" ,
             height:34,
             width:22,
-
       }]} /> */}
           {hasChildren ? (
             isExpanded ?
@@ -167,7 +158,7 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <StatusBarComponent />
       <Image
-        source={imageIndex.logo} // apna profile image yaha lagao
+        source={imageIndex.logo} 
         style={styles.profileImage}
         resizeMode="contain"
       />

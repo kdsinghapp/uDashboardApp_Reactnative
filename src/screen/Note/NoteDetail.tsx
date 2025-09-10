@@ -3,8 +3,12 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import imageIndex from "../../assets/imageIndex";
 import CustomBackHeader from "../../compoent/CustomBackHeader";
+import { useRoute } from "@react-navigation/native";
 
 const NoteDetail = () => {
+  const route = useRoute()
+  const item = route?.params?.item
+  console.log(item)
   return (
     <SafeAreaView style={{
       flex:1,
@@ -20,25 +24,25 @@ const NoteDetail = () => {
       {/* Task Name */}
       <View style={styles.row}>
         <Text style={styles.label}>Category</Text>
-        <Text style={styles.value}>Marketing</Text>
+        <Text style={styles.value}>{item?.category?.name}</Text>
       </View>
 
       {/* Due Date */}
       <View style={styles.row}>
         <Text style={styles.label}>Callback</Text>
-        <Text style={styles.value}>N/A</Text>
+        <Text style={styles.value}>{item?.callback?.task_name}</Text>
       </View>
 
       {/* Estimated Time */}
       <View style={styles.row}>
         <Text style={styles.label}>Calendar Event Date</Text>
-        <Text style={styles.value}>01 Aug 2025</Text>
+        <Text style={styles.value}>{item?.calendar_event_date}</Text>
       </View>
 
       {/* Task Manager */}
       <View style={styles.row}>
         <Text style={styles.label}>Details</Text>
-        <Text style={styles.value}>Details</Text>
+        <Text style={styles.value}>{item?.details}</Text>
       </View>
 
      

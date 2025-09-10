@@ -142,7 +142,7 @@ export default function EmployeeScreen() {
               <TouchableOpacity style={styles.iconBtn} onPress={() => nav.navigate(ScreenNameEnum.EmployeeDetail, { item: item })}>
                 <Image style={styles.icon} source={imageIndex.eyeBlue} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.iconBtn} >
+              <TouchableOpacity style={styles.iconBtn} onPress={() => nav.navigate(ScreenNameEnum.AddEmployeeScreen, { item: item })}>
                 <Image style={styles.icon} source={imageIndex.editGreen} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.iconBtn} onPress={() => setDeleteModalVisible(true)}>
@@ -150,14 +150,14 @@ export default function EmployeeScreen() {
               </TouchableOpacity>
             </View>
           }
-             {activeTab == "Deleted" &&
+          {activeTab == "Deleted" &&
             <View style={styles.cardBottomRow}>
 
-              <TouchableOpacity style={styles.iconBtn} onPress={() =>handleRestore()}>
+              <TouchableOpacity style={styles.iconBtn} onPress={() => handleRestore()}>
                 <Image style={styles.icon} source={imageIndex.restore} />
               </TouchableOpacity>
-              </View>
-  }
+            </View>
+          }
         </View>
 
 
@@ -176,7 +176,7 @@ export default function EmployeeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {loading && <LoadingModal/>}
+      {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
       <SearchBar
@@ -208,18 +208,18 @@ export default function EmployeeScreen() {
 
       {/* Floating Button */}
       {activeTab == "Active" &&
-      <TouchableOpacity style={styles.fab}
+        <TouchableOpacity style={styles.fab}
 
-        onPress={() => {
-          nav.navigate(ScreenNameEnum.AddEmployeeScreen)
-        }}
-      >
-        <Image
-          source={imageIndex.AddLogo}
-          style={{ height: 70, width: 70, resizeMode: "contain" }}
-        />
-      </TouchableOpacity>
-}
+          onPress={() => {
+            nav.navigate(ScreenNameEnum.AddEmployeeScreen)
+          }}
+        >
+          <Image
+            source={imageIndex.AddLogo}
+            style={{ height: 70, width: 70, resizeMode: "contain" }}
+          />
+        </TouchableOpacity>
+      }
     </SafeAreaView>
   );
 }
