@@ -71,6 +71,8 @@ dot: require('./images/dot.png'),
 delite: require('./images/delite.png'),
 restore: require('./images/restore.png'),
 delete: require('./images/delete.png'),
+restoreimg: require('./images/restoreimg.png'),
+
 atom: require('./images/atom.png'),
 eth: require('./images/eth.png'),
 stars: require('./images/srars.png'),

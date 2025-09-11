@@ -20,6 +20,8 @@ import RepliesScreen from '../screen/Replies/Replies';
 import BudgetScreen from '../screen/Financial/Budget/Budget';
 import PLSummaryScreen from '../screen/Financial/PLSummary/PLSummary';
 import ExpensesScreen from '../screen/Financial/Expenses/Expenses';
+import CategoriesScreen from '../screen/Categories/CategoriesScreen';
+import TagScreen from '../screen/Tag/TagScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -46,6 +48,8 @@ export default function DrawerNavigation() {
       <Drawer.Screen name={ScreenNameEnum.Budget} component={BudgetScreen} />
       <Drawer.Screen name={ScreenNameEnum.Expenses} component={ExpensesScreen} />
       <Drawer.Screen name={ScreenNameEnum.PLSummary} component={PLSummaryScreen} />
+      <Drawer.Screen name={ScreenNameEnum.Categories} component={CategoriesScreen} />
+      <Drawer.Screen name={ScreenNameEnum.Tag} component={TagScreen} />
     </Drawer.Navigator>
   );
 }

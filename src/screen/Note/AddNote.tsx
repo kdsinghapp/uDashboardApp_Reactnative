@@ -190,10 +190,9 @@ export default function AddNoteScreen({ route, navigation }) {
             value={form.callback}
             onSelect={(val) => handleChange("callback", val)}
           />
-          {errors.callback ? (
+          {errors?.callback ? (
             <Text style={styles.error}>{errors.callback}</Text>
           ) : null}
-
           {/* Calendar Event Date */}
           <Text style={styles.label}>Calendar Event Date</Text>
           <TouchableOpacity

@@ -31,6 +31,11 @@ import ExpensesDetailScreen from "../screen/Financial/Expenses/ExpensesDetailScr
 import PLSummaryDetailScreen from "../screen/Financial/PLSummary/PLSummaryDetailScreen";
 import AddExpenses from "../screen/Financial/Expenses/AddExpenses";
 import AddPLSummary from "../screen/Financial/PLSummary/AddPLSummary";
+import CategoriesForm from "../screen/Categories/AddCategories";
+import CategoriesDetail from "../screen/Categories/CategoriesDetail";
+import CategoriesScreen from "../screen/Categories/CategoriesScreen";
+import TagDetail from "../screen/Tag/TagDetail";
+import TagForm from "../screen/Tag/AddTag";
    
 const _routes: any = {
   REGISTRATION_ROUTE: [
@@ -52,13 +57,34 @@ const _routes: any = {
       name: ScreenNameEnum.NoteDetail,
       Component: NoteDetail,
     },  
+    
+    {
+      name: ScreenNameEnum.AddNoteScreen,
+      Component: AddNoteScreen,
+    },  
+    {
+      name: ScreenNameEnum.AddCategories,
+      Component: CategoriesForm,
+    },  
     {
       name: ScreenNameEnum.CallbackDetailScreen,
       Component: CallbackDetailScreen,
     },  
     {
-      name: ScreenNameEnum.AddNoteScreen,
-      Component: AddNoteScreen,
+      name: ScreenNameEnum.Categories,
+      Component: CategoriesScreen,
+    },  
+    {
+      name: ScreenNameEnum.CategoriesDetail,
+      Component: CategoriesDetail,
+    },  
+      {
+      name: ScreenNameEnum.TagDetail,
+      Component: TagDetail,
+    },  
+    {
+      name: ScreenNameEnum.AddTag,
+      Component: TagForm,
     },  
     {
       name: ScreenNameEnum.LossDetailScren,

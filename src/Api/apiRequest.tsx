@@ -1477,8 +1477,737 @@ const UpdateNotesApi = (
         );
     }
 };
+const GetCategoryListApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const requestOptions = {
+            method: "GET",
+            headers: myHeaders,
+        };
+        const respons = fetch(`${base_url}notes/categories/list?page=1&limit=100`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response employeee", response)
+                if (response.success) {
+                    setLoading(false)
+
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.error,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
 
 
+const GetCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes/categories/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const GetDeletedCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes/categories/list?page=1&limit=1000&category=deleted`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const DeleteCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "DELETE",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes/categories/delete/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const RestoreCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+            redirect: "follow"
+        };
+        // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
+        const respons = fetch(`${base_url}notes/categories/restore/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const AddCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}notes/categories`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+const UpdateCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        formdata.append("_method", "PUT");
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}notes/categories/update/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("--------ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const GetTagListApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const requestOptions = {
+            method: "GET",
+            headers: myHeaders,
+        };
+        const respons = fetch(`${base_url}notes/tags/list?page=1&limit=100`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response employeee", response)
+                if (response.success) {
+                    setLoading(false)
+
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.error,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const GetTagApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes/tags/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const GetDeletedTagApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes/tags/list?page=1&limit=1000&tag=deleted`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const DeleteTagApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "DELETE",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes/tags/delete/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const RestoreTagApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+            redirect: "follow"
+        };
+        // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
+        const respons = fetch(`${base_url}notes/tags/restore/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const AddTagApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}notes/tags`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+const UpdateTagApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        formdata.append("_method", "PUT");
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}notes/tags/update/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("--------ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
 
 const Get_Priority_Api = (
     setLoading: (loading: boolean) => void,
@@ -1824,5 +2553,8 @@ export {
     GetCallbackListApi, GetCallbackApi, AddCallbackApi, DeleteCallbackApi, GetDeletedCallbackApi, RestoreCallbackApi, UpdateCallbackApi,
     GetEmployListApi, GetEmployApi, AddEmployApi, DeleteEmployApi, GetDeletedEmployApi, RestoreEmployApi, UpdateEmployApi,
     GetNotesListApi, GetNotesApi, AddNotesApi, DeleteNotesApi, GetDeletedNotesApi, RestoreNotesApi, UpdateNotesApi,
-    Get_Status_Api, Get_Priority_Api,GetAllListApi
+    Get_Status_Api, Get_Priority_Api, GetAllListApi,
+    GetCategoryListApi, GetCategoryApi, AddCategoryApi, DeleteCategoryApi, GetDeletedCategoryApi, RestoreCategoryApi, UpdateCategoryApi,
+    GetTagListApi, GetTagApi, AddTagApi, DeleteTagApi, GetDeletedTagApi, RestoreTagApi, UpdateTagApi,
+
 }  

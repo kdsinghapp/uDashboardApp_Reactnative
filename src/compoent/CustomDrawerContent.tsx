@@ -24,8 +24,30 @@ const menuItems = [
   { id: "3", title: "Backburner Task", icon: imageIndex.Bacxkbuer, screen: ScreenNameEnum.Backburner },
   { id: "4", title: "Callbacks", icon: imageIndex.MyAddress, screen: ScreenNameEnum.CallBack },
   { id: "5", title: "Employees", icon: imageIndex.dasboard, screen: ScreenNameEnum.EmployeeScreen },
-  { id: "7", title: "Notes", icon: imageIndex.Note, screen: ScreenNameEnum.Note },
-  // { id: "8", title: "Teams", icon: imageIndex.dasboard, screen: ScreenNameEnum.TeamScreen },
+  { id: "7", title: "Notes", icon: imageIndex.Note, 
+    // screen: ScreenNameEnum.Note 
+  children: [
+    {
+        id: '7-1',
+        title: 'All Notes',
+        screen: ScreenNameEnum.Note,
+        index: 0,
+      },
+       {
+        id: '7-2',
+        title: 'Categories',
+        screen: ScreenNameEnum.Categories,
+        index: 0,
+      },
+       {
+        id: '7-1',
+        title: 'Tag',
+        screen: ScreenNameEnum.Tag,
+        index: 0,
+      },
+    ]
+  },
+  { id: "8", title: "Teams", icon: imageIndex.dasboard, screen: ScreenNameEnum.TeamScreen },
   { id: "9", title: "Assigned Task", icon: imageIndex.Calendar, screen: ScreenNameEnum.AssingnedScreen },
   { id: "10", title: "Replies", icon: imageIndex.Replies, screen: ScreenNameEnum.RepliesScreen },
   { id: "11", title: "Calendar", icon: imageIndex.Calendar, screen: ScreenNameEnum.CalendarScreen },
@@ -99,11 +121,9 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
               // navigation.navigate(item.screen);
             }
           }}
-
         >
           <View
             style={styles.menuItem}
-
           >
             <Image source={item.icon} style={styles.icon} />
             <Text allowFontScaling={false} style={styles.menuText}>{item.title}</Text>
