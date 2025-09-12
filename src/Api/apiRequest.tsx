@@ -527,7 +527,7 @@ const AddCallbackApi = (
 
         const formdata = new FormData();
         formdata.append("task_name", param?.task);
-        formdata.append("employee_id", (param?.employeeId) ?? "1"); // map actual employee id
+        formdata.append("employee_id", (param?.employeeId) ?? "1");
         formdata.append("estimated_time", param?.estimateTime);
         formdata.append("start_date", param?.startDate.toISOString().split("T")[0]);
         formdata.append("start_time", moment(param?.startTime).format("HH:mm"));
@@ -2209,6 +2209,1124 @@ const UpdateTagApi = (
     }
 };
 
+
+
+const GetBudgetListApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+        };
+
+        const respons = fetch(`${base_url}financials/budget?page=1&limit=1000`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.error,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const GetBudgetApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}financials/budget/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.status == '1') {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.error,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const GetDeletedBudgetApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}financials/budget?page=1&limit=1000&budget=deleted`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message || "Success"
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.message,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const DeleteBudgetApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "DELETE",
+            headers: myHeaders,
+            body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}financials/budget/delete/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const RestoreBudgetApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "POST",
+            headers: myHeaders,
+            // body: formData,
+            redirect: "follow"
+        };
+        // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
+        const respons = fetch(`${base_url}financials/budget/restore/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.error,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const AddBudgetApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("category_id", param?.categoryId);
+        formdata.append("amount", param?.amount ?? "1");
+        formdata.append("description", param?.description);
+        formdata.append("status", param?.status ?? "unpaid");
+        formdata.append("profit_and_loss_date", param?.date);
+        console.log(formdata, 'this is formdaata')
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}financials/budget`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+const UpdateBudgetApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("category_id", param?.categoryId);
+        formdata.append("amount", param?.amount ?? "1");
+        formdata.append("description", param?.description);
+        formdata.append("status", param?.status ?? "unpaid");
+        formdata.append("profit_and_loss_date", param?.date);
+        formdata.append("_method", "PUT");
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}financials/budget/update/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const GetBudgetCategoryListApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const requestOptions = {
+            method: "GET",
+            headers: myHeaders,
+        };
+        const respons = fetch(`${base_url}financials/budget-categories`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response employeee", response)
+                if (response.success) {
+                    setLoading(false)
+
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.error,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const GetBudgetCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}financials/budget-categories/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const GetDeletedBudgetCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}financials/budget-categories?page=1&limit=1000&category=deleted`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.message,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const DeleteBudgetCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "DELETE",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}financials/budget-categories/delete/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const RestoreBudgetCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "POST",
+            headers: myHeaders,
+            // body: formData,
+            redirect: "follow"
+        };
+        // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
+        const respons = fetch(`${base_url}financials/budget-categories/restore/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const AddBudgetCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        formdata.append("description", param?.description ?? "");
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}financials/budget-categories`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+const UpdateBudgetCategoryApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        formdata.append("description", param?.description ?? "");
+        formdata.append("_method", "PUT");
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}financials/budget-categories/update/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("--------ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+
+const GetProfitLossListApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const requestOptions = {
+            method: "GET",
+            headers: myHeaders,
+        };
+        const respons = fetch(`${base_url}notes/tags/list?page=1&limit=100`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response employeee", response)
+                if (response.success) {
+                    setLoading(false)
+
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.error,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const GetProfitLossApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes/tags/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const GetDeletedProfitLossApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes/tags/list?page=1&limit=1000&tag=deleted`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const DeleteProfitLossApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "DELETE",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}notes/tags/delete/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const RestoreProfitLossApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+            redirect: "follow"
+        };
+        // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
+        const respons = fetch(`${base_url}notes/tags/restore/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const AddProfitLossApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}notes/tags`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+const UpdateProfitLossApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        formdata.append("_method", "PUT");
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}notes/tags/update/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("--------ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
 const Get_Priority_Api = (
     setLoading: (loading: boolean) => void,
 ) => {
@@ -2556,5 +3674,9 @@ export {
     Get_Status_Api, Get_Priority_Api, GetAllListApi,
     GetCategoryListApi, GetCategoryApi, AddCategoryApi, DeleteCategoryApi, GetDeletedCategoryApi, RestoreCategoryApi, UpdateCategoryApi,
     GetTagListApi, GetTagApi, AddTagApi, DeleteTagApi, GetDeletedTagApi, RestoreTagApi, UpdateTagApi,
+
+    GetBudgetListApi, GetBudgetApi, AddBudgetApi, DeleteBudgetApi, GetDeletedBudgetApi, RestoreBudgetApi, UpdateBudgetApi,
+    GetBudgetCategoryListApi, GetBudgetCategoryApi, AddBudgetCategoryApi, DeleteBudgetCategoryApi, GetDeletedBudgetCategoryApi, RestoreBudgetCategoryApi, UpdateBudgetCategoryApi,
+    GetProfitLossListApi, GetProfitLossApi, AddProfitLossApi, DeleteProfitLossApi, GetDeletedProfitLossApi, RestoreProfitLossApi, UpdateProfitLossApi,
 
 }  

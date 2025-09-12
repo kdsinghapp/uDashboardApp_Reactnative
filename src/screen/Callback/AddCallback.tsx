@@ -76,6 +76,7 @@ export default function AddCallback() {
   // 👇 Pre-fill form if edit mode
   useEffect(() => {
     if (editItem) {
+      console.log(editItem)
       setForm({
         task: editItem.task_name || "",
         details: editItem.details || "",
@@ -92,7 +93,7 @@ export default function AddCallback() {
         priorityId: editItem.priority?.id || "",
         statusId: editItem.status?.id || "",
         employee: editItem.employee?.name || "",
-        employeeId: editItem.employee?.id || ""
+        employeeId: editItem.employee_id || ""
 
       });
     }

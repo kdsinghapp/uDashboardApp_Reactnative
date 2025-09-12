@@ -36,6 +36,8 @@ import CategoriesDetail from "../screen/Categories/CategoriesDetail";
 import CategoriesScreen from "../screen/Categories/CategoriesScreen";
 import TagDetail from "../screen/Tag/TagDetail";
 import TagForm from "../screen/Tag/AddTag";
+import BudgetCategoriesDetail from "../screen/Financial/BudgetCategories/BudgetCategoriesDetail";
+import BudgetCategoriesForm from "../screen/Financial/BudgetCategories/AddBudgetCategories";
    
 const _routes: any = {
   REGISTRATION_ROUTE: [
@@ -141,6 +143,14 @@ const _routes: any = {
     {
       name: ScreenNameEnum.AddBudget,
       Component: AddBudget,
+    },  
+    {
+      name: ScreenNameEnum.BudgetCategoriesDetail,
+      Component: BudgetCategoriesDetail,
+    },  
+    {
+      name: ScreenNameEnum.AddBudgetCategories,
+      Component: BudgetCategoriesForm,
     },  
      {
       name: ScreenNameEnum.RepliesDetail,

@@ -18,6 +18,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import DatePickerModal from "../../compoent/DatePickerModal";
 import { AddNotesApi, GetAllListApi, UpdateNotesApi } from "../../Api/apiRequest";
 import { useSelector } from "react-redux";
+import { s } from "../../utils/Constant";
 
 export default function AddNoteScreen({ route, navigation }) {
   const noteData = route?.params?.note || null;
@@ -38,6 +39,7 @@ export default function AddNoteScreen({ route, navigation }) {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [callback, setCallback] = useState([])
+  const [categoryData, setCategoryData] = useState([])
   useEffect(() => {
 
     (async () => {
@@ -50,7 +52,12 @@ export default function AddNoteScreen({ route, navigation }) {
         label: item.task_name,
         value: item.id,
       })) : []
+      const cate = dd?.data?.categories ? dd?.data?.categories.map(item => ({
+        label: item.name,
+        value: item.id,
+      })) : []
       setCallback(calb)
+      setCategoryData(cate)
     })()
   }, [])
 
@@ -174,7 +181,7 @@ export default function AddNoteScreen({ route, navigation }) {
           <Text style={styles.label}>Category</Text>
           <CustomDropdown
             label="Select category"
-            options={categoryOptions}
+            options={categoryData}
             value={form.category}
             onSelect={(val) => handleChange("category", val)}
           />

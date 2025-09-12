@@ -66,18 +66,22 @@ const menuItems = [
         screen: ScreenNameEnum.Budget,
         index: 0,
       },
+       {
+        id: '12-3',
+        title: 'Budget Categories',
+        screen: ScreenNameEnum.BudgetCategories,
+        index: 0,
+      },
       {
-        id: '2-3',
+        id: '12-4',
         title: 'Expenses',
         screen: ScreenNameEnum.Expenses,
         index: 1,
       },
-
     ],
   },
   { id: "13", title: "Customer", icon: imageIndex.Calendar, screen: ScreenNameEnum.AddclientsScreen },
   { id: "15", title: "Logout", icon: imageIndex.Logout, screen: "Language" },
-
 ];
 
 export default function CustomDrawerContent(props: DrawerContentComponentProps) {

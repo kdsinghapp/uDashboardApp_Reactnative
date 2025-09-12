@@ -89,7 +89,7 @@ export default function Note() {
     return (
 
       <TouchableOpacity
-        onPress={() => nav.navigate(ScreenNameEnum.NoteDetail,{item:item})}
+        onPress={() => nav.navigate(ScreenNameEnum.NoteDetail, { item: item })}
 
         style={styles.card}>
         {/* Row 1: ID & Name */}
@@ -131,12 +131,12 @@ export default function Note() {
                 alignItems: "center"
               }}>
                 <TouchableOpacity
-                  onPress={() => nav.navigate(ScreenNameEnum.NoteDetail,{item:item})}
+                  onPress={() => nav.navigate(ScreenNameEnum.NoteDetail, { item: item })}
                 >
                   <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.eyeBlue} />
                 </TouchableOpacity>
                 <TouchableOpacity
-    onPress={() => nav.navigate(ScreenNameEnum.AddNoteScreen,{note:item})}
+                  onPress={() => nav.navigate(ScreenNameEnum.AddNoteScreen, { note: item })}
                 >
                   <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.editGreen} />
 

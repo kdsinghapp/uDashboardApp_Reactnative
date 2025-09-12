@@ -19,7 +19,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search", onSearchC
         onChangeText={onSearchChange}
         value={value}
       />
-      <Image source={imageIndex.Filter} style={styles.icon} resizeMode="cover" />
+      {/* <Image source={imageIndex.Filter} style={styles.icon} resizeMode="cover" /> */}
     </View>
   );
 };
