@@ -58,7 +58,7 @@ const ChangePasswordScreen = () => {
         }
     }
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView edges={['top']} style={styles.container}>
             {isLoading ? <Loading /> : null}
 
             <StatusBarComponent />

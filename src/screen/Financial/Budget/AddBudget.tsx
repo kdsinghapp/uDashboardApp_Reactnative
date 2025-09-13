@@ -19,7 +19,7 @@ import DatePickerModal from "../../../compoent/DatePickerModal";
 import { AddBudgetApi, AddNotesApi, GetAllListApi, GetBudgetCategoryListApi, UpdateBudgetApi, UpdateNotesApi } from "../../../Api/apiRequest";
 import { useSelector } from "react-redux";
 
-export default function AddNoteScreen({ route, navigation }:any) {
+export default function AddNoteScreen({ route, navigation }: any) {
   const noteData = route?.params?.note || null;
   const isEdit = !!noteData;
   const isLogin = useSelector((state: any) => state.auth);
@@ -89,7 +89,6 @@ export default function AddNoteScreen({ route, navigation }:any) {
       newErrors.category = "Category is required";
       valid = false;
     }
-    
 
     setErrors(newErrors);
     return valid;
@@ -100,23 +99,23 @@ export default function AddNoteScreen({ route, navigation }:any) {
 
     const payload = {
       ...form,
-      token:isLogin?.token,
+      token: isLogin?.token,
       navigation,
-      id:noteData?.id
+      id: noteData?.id
     };
-     if (isEdit && noteData) {
+    if (isEdit && noteData) {
       UpdateBudgetApi(payload, setLoading)
-     }
-     else{
-    AddBudgetApi(payload, setLoading)
+    }
+    else {
+      AddBudgetApi(payload, setLoading)
 
-     }
+    }
 
     console.log(payload)
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ marginHorizontal: 20 }}>
         <CustomBackHeader
           menuIcon={imageIndex.back}
@@ -167,7 +166,7 @@ export default function AddNoteScreen({ route, navigation }:any) {
             <Text style={styles.error}>{errors.category}</Text>
           ) : null}
 
-    
+
 
 
           {/* Button */}

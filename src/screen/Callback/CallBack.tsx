@@ -12,6 +12,7 @@ import { DeleteCallbackApi, GetCallbackListApi, GetDeletedCallbackApi, RestoreCa
 import { useSelector } from "react-redux";
 import moment from "moment";
 import LoadingModal from "../../utils/Loader";
+import RestoreModal from "../../compoent/RestoreModal";
 
 
 export default function CallbackScreen() {
@@ -21,6 +22,9 @@ export default function CallbackScreen() {
   const [callbackData, setCallbackData] = useState([])
   const [searchText, setSearchText] = useState("");
   const isLogin = useSelector((state: any) => state.auth);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+    const [restoreModalVisible, setRestoreModalVisible] = useState(false);
+  
   const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
   // console.log(isLogin)
   useFocusEffect(
@@ -101,7 +105,7 @@ export default function CallbackScreen() {
 
 
         {/* Row 3: Date & Status */}
-        <View style={styles.cardRow}>
+        {/* <View style={styles.cardRow}>
           <View style={styles.cardItem}>
             <Text style={styles.label}>Tast Manager</Text>
             <Text style={styles.value}>rakesh dongre</Text>
@@ -112,14 +116,20 @@ export default function CallbackScreen() {
             <Text style={styles.value}>{formattedDate(item?.created_at)}</Text>
           </View>
 
-        </View>
+        </View> */}
 
         <View style={styles.cardRow}>
+          {item?.employee?.first_name ?
           <View style={styles.cardItem}>
             <Text style={styles.label}>Client</Text>
             <Text style={styles.value}>{item?.employee?.first_name} {item?.employee?.last_name}</Text>
           </View>
-
+:
+           <View style={[styles.cardItem]}>
+            <Text style={styles.label}>Create Date</Text>
+            <Text style={styles.value}>{formattedDate(item?.created_at)}</Text>
+          </View>
+  }
           <View style={[styles.cardItem, styles.right]}>
             <Text style={styles.label}>Status</Text>
             <Text style={[styles.value, styles.tag]}>{item?.status?.name}</Text>
@@ -155,7 +165,9 @@ export default function CallbackScreen() {
                   <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.editGreen} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => setDeleteModalVisible(true)}
+                  onPress={async() => {
+                  await  setSelectedItem(item);
+                    setDeleteModalVisible(true)}}
 
                 >
                   <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.delite} />
@@ -163,7 +175,10 @@ export default function CallbackScreen() {
               </View>
               :
               <TouchableOpacity
-                onPress={() => handleRestore()}
+                onPress={() => {
+                  setSelectedItem(item);
+                  setRestoreModalVisible(true)
+                }}
               >
                 <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.restore} />
               </TouchableOpacity>
@@ -171,29 +186,20 @@ export default function CallbackScreen() {
           </View>
         </View>
 
-        <DeleteModal
-          visible={deleteModalVisible}
-          onClose={() => setDeleteModalVisible(false)}
-          onConfirm={handleDelete}
-          title="Delete Callback?"
-          message="Are you sure you want to delete this Callback from your list?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
+       
       </TouchableOpacity>
     );
   }
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
       <SearchBar
         value={searchText}
         onSearchChange={(text) => setSearchText(text)}
+        placeholder="Search Callback"
       />
-
-
       <View style={styles.tabRow}>
         <TouchableOpacity
           style={[styles.tab, activeTab === "Active" && styles.activeTab]}
@@ -229,7 +235,48 @@ export default function CallbackScreen() {
           style={{ height: 70, width: 70, resizeMode: "contain" }}
         />
       </TouchableOpacity>
+ {/* <DeleteModal
+          visible={deleteModalVisible}
+          onClose={() => setDeleteModalVisible(false)}
+          onConfirm={handleDelete}
+          title="Delete Callback?"
+          message="Are you sure you want to delete this Callback from your list?"
+          cancelText="No"
+          confirmText="Yes, Delete"
+        /> */}
 
+        <DeleteModal
+  visible={deleteModalVisible}
+  onClose={() => setDeleteModalVisible(false)}
+  onConfirm={async () => {
+    if (selectedItem) {
+      const param = { id: selectedItem.id, token: isLogin?.token };
+      await DeleteCallbackApi(param, setLoading);
+      fetchCallback(activeTab);
+    }
+    setDeleteModalVisible(false);
+  }}
+  title="Delete Budget?"
+  message="Are you sure you want to delete this Callback from your list?"
+  cancelText="No"
+  confirmText="Yes, Delete"
+/>
+
+<RestoreModal
+  visible={restoreModalVisible}
+  onClose={() => setRestoreModalVisible(false)}
+  onConfirm={async () => {
+    if (selectedItem) {
+      const param = { id: selectedItem.id, token: isLogin?.token };
+      await RestoreCallbackApi(param, setLoading);
+      fetchCallback(activeTab);
+    }
+    setRestoreModalVisible(false);
+  }}
+  message="Do you want to restore this Callback?"
+  cancelText="No"
+  confirmText="Yes, Restore"
+/>
     </SafeAreaView>
   );
 }
@@ -242,7 +289,7 @@ const styles = StyleSheet.create({
   tabText: { color: "#555" },
   tabTextActive: { color: "#fff", fontWeight: "600" },
   row: { flexDirection: "row", justifyContent: "space-between", marginBottom: 6 },
-  fab: { position: "absolute", bottom: 35, right: 20, justifyContent: "center", alignItems: "center" },
+  fab: { position: "absolute", bottom: 40, right: 20, justifyContent: "center", alignItems: "center" },
   card: {
     backgroundColor: "#fff",
     borderRadius: 10,

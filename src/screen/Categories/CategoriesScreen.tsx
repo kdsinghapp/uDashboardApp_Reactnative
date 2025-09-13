@@ -64,6 +64,9 @@ export default function CategoriesScreen() {
   const [employeeData, setEmployeeData] = useState([])
   const [searchText, setSearchText] = useState("");
   const isLogin = useSelector((state: any) => state.auth);
+  const [selectedItem, setSelectedItem] = useState(null);
+  // console.log(item, 'this is item')
+  // console.log(employeeData, 'this is employeeData')
   const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
   // console.log(isLogin)
   useFocusEffect(
@@ -98,12 +101,12 @@ export default function CategoriesScreen() {
 
 
   const nav = useNavigation()
-  const renderCard = ({ item }: any) => {
     const handleDelete = async () => {
       // 👇 Your delete API or logic here
       console.log("Item deleted!");
+      if(!selectedItem) return;
       const param = {
-        id: item?.id,
+        id: selectedItem?.id,
         token: isLogin?.token
       }
       const dd = await DeleteCategoryApi(param, setLoading)
@@ -114,14 +117,18 @@ export default function CategoriesScreen() {
     const handleRestore = async () => {
       // 👇 Your delete API or logic here
       console.log("Item deleted!");
+      if(!selectedItem) return;
+
       const param = {
-        id: item?.id,
+        id: selectedItem?.id,
         token: isLogin?.token
       }
       const dd = await RestoreCategoryApi(param, setLoading)
       fetchEmployee(activeTab)
       setRestoreModalVisible(false);
     };
+  const renderCard = ({ item }: any) => {
+  
     return (
       <TouchableOpacity
         onPress={() => nav.navigate(ScreenNameEnum.CategoriesDetail, { item: item })}
@@ -141,7 +148,10 @@ export default function CategoriesScreen() {
               <TouchableOpacity style={styles.iconBtn} onPress={() => nav.navigate(ScreenNameEnum.AddCategories, { item: item })}>
                 <Image style={styles.icon} source={imageIndex.editGreen} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.iconBtn} onPress={() => setDeleteModalVisible(true)}>
+              <TouchableOpacity style={styles.iconBtn} onPress={async() => {
+               await setSelectedItem(item)
+                setDeleteModalVisible(true)
+              }}>
                 <Image style={styles.icon} source={imageIndex.delite} />
               </TouchableOpacity>
             </View>
@@ -149,7 +159,10 @@ export default function CategoriesScreen() {
           {activeTab == "Deleted" &&
             <View style={styles.cardBottomRow}>
 
-              <TouchableOpacity style={styles.iconBtn} onPress={() => setRestoreModalVisible(true)}>
+              <TouchableOpacity style={styles.iconBtn} onPress={async() => {
+               await setSelectedItem(item)
+                setRestoreModalVisible(true)
+              }}>
                 <Image style={styles.icon} source={imageIndex.restore} />
               </TouchableOpacity>
             </View>
@@ -157,35 +170,20 @@ export default function CategoriesScreen() {
         </View>
 
 
-        <DeleteModal
-          visible={deleteModalVisible}
-          onClose={() => setDeleteModalVisible(false)}
-          onConfirm={handleDelete}
-          title="Delete Employee?"
-          message="Are you sure you want to delete this Category from your list?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
-         <RestoreModal
-          visible={restoreModalVisible}
-          onClose={() => setRestoreModalVisible(false)}
-          onConfirm={handleRestore}
-          message="Do you want to restore this category?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
+       
       </TouchableOpacity>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
       <SearchBar
         value={searchText}
         onSearchChange={(text) => setSearchText(text)}
+        placeholder="Search Category"
       />
       <View style={styles.tabRow}>
         <TouchableOpacity
@@ -224,6 +222,23 @@ export default function CategoriesScreen() {
           />
         </TouchableOpacity>
       }
+       <DeleteModal
+          visible={deleteModalVisible}
+          onClose={() => setDeleteModalVisible(false)}
+          onConfirm={handleDelete}
+          title="Delete Employee?"
+          message="Are you sure you want to delete this Category from your list?"
+          cancelText="No"
+          confirmText="Yes, Delete"
+        />
+         <RestoreModal
+          visible={restoreModalVisible}
+          onClose={() => setRestoreModalVisible(false)}
+          onConfirm={handleRestore}
+          message="Do you want to restore this category?"
+          cancelText="No"
+          confirmText="Yes, Delete"
+        />
     </SafeAreaView>
   );
 }

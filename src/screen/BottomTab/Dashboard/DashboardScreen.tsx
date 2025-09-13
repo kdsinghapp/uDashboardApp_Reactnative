@@ -32,7 +32,7 @@ export default function DashboardScreen() {
       team: "Mobile Team",
       status: "Completed",
     },
- {
+    {
       id: "2",
       title: "Android app development",
       manager: "Rachel Green",
@@ -40,7 +40,7 @@ export default function DashboardScreen() {
       team: "Mobile Team",
       status: "Completed",
     },
-     {
+    {
       id: "3",
       title: "Android app development",
       manager: "Rachel Green",
@@ -68,21 +68,19 @@ export default function DashboardScreen() {
   const circumference = 2 * Math.PI * radius;
 
   const segments = [
-    { color: "#C6E2FF", percent: 50, name:"Web" },
-    { color: "#FFE58F", percent: 10,  name:"PPC" },
-    { color: "#D2F8D2", percent: 5,  name:"Other" },
-    { color: "#F79494", percent: 35,  name:"Seo" },
+    { color: "#C6E2FF", percent: 50, name: "Web" },
+    { color: "#FFE58F", percent: 10, name: "PPC" },
+    { color: "#D2F8D2", percent: 5, name: "Other" },
+    { color: "#F79494", percent: 35, name: "Seo" },
   ];
-
   let offset = 0;
-
-
-
   return (
-    <SafeAreaView style={{
+    <SafeAreaView edges={['top']} style={{
       flex: 1,
       backgroundColor: "white"
-    }}>
+    }}
+    edges={['top']}
+    >
       <StatusBarComponent />
       <View style={{
         padding: 15,
@@ -125,13 +123,13 @@ export default function DashboardScreen() {
 
         <Text style={styles.title}>Sell</Text>
         <View style={{
-            borderWidth: 1,
-            borderColor: "#E3E3E3",
-            borderRadius: 10,
-            marginTop:15
+          borderWidth: 1,
+          borderColor: "#E3E3E3",
+          borderRadius: 10,
+          marginTop: 15
 
         }}>
-        <GroupedBarChart />
+          <GroupedBarChart />
         </View>
         <View style={{
           flex: 1,
@@ -140,16 +138,16 @@ export default function DashboardScreen() {
           borderRadius: 10,
           alignItems: 'center',
           justifyContent: 'center',
-          marginTop:15
+          marginTop: 15
         }}>
           <View style={styles.legend}>
-              {segments.map(item=>
-                  <View style={styles.legendItem}>
-                    <View style={[styles.dot, { backgroundColor: `${item?.color}` }]} />
-                    <Text style={styles.legendText}>{item?.name} {item?.percent}%</Text>
-                  </View>
-                 )}
-                </View>
+            {segments.map(item =>
+              <View style={styles.legendItem}>
+                <View style={[styles.dot, { backgroundColor: `${item?.color}` }]} />
+                <Text style={styles.legendText}>{item?.name} {item?.percent}%</Text>
+              </View>
+            )}
+          </View>
           <Svg height="300" width={wp(100) - 40} style={{ width: wp(100), alignItems: 'center', justifyContent: 'center' }}>
             {segments?.map((seg, index) => {
               const strokeDasharray = `${(circumference * seg.percent) / 100} ${circumference
@@ -172,26 +170,26 @@ export default function DashboardScreen() {
             })}
           </Svg>
 
-            
+
         </View>
-     
+
         <View style={{
-            borderWidth: 1,
-            borderColor: "#E3E3E3",
-            borderRadius: 10,
-            marginTop:15
+          borderWidth: 1,
+          borderColor: "#E3E3E3",
+          borderRadius: 10,
+          marginTop: 15
 
         }}>
-        <ActivitiesChart />
+          <ActivitiesChart />
         </View>
-         <View style={{
-            borderWidth: 1,
-            borderColor: "#E3E3E3",
-            borderRadius: 10,
-            marginTop:15
+        <View style={{
+          borderWidth: 1,
+          borderColor: "#E3E3E3",
+          borderRadius: 10,
+          marginTop: 15
 
         }}>
-        <TaskCompleteProgressBar/>
+          <TaskCompleteProgressBar />
         </View>
         <View style={{
           borderWidth: 1,
@@ -211,7 +209,7 @@ export default function DashboardScreen() {
             </View>
 
             {/* Task List */}
-            
+
             <FlatList
               data={tasks}
               keyExtractor={(item) => item.id}
@@ -219,7 +217,7 @@ export default function DashboardScreen() {
                 <TaskCard task={item} onToggleStatus={toggleStatus} />
               )}
             />
-          
+
           </View>
         </View>
       </ScrollView>
@@ -228,7 +226,7 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 15, backgroundColor: 'white' },
+  container: { flex: 1, padding: 15, backgroundColor: 'white', },
   statsContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
   statCard: { width: '48%', backgroundColor: '#fff', padding: 16, borderRadius: 12, alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.1, shadowOffset: { width: 0, height: 2 }, shadowRadius: 8, elevation: 3 },
   chartTitle: { fontSize: 16, fontWeight: '600', marginTop: 16, marginBottom: 8 },
@@ -286,11 +284,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 20
   },
-    legend: {
+  legend: {
     flexDirection: "row",
     justifyContent: "center",
     marginTop: 20,
-     // marginBottom:20
+    // marginBottom:20
   },
   legendItem: {
     flexDirection: "row",

@@ -7,7 +7,7 @@ import StatusBarComponent from "../../compoent/StatusBarCompoent";
 
 const RepliesDetail = () => {
   return (
-    <SafeAreaView style={{
+    <SafeAreaView edges={['top']} style={{
       flex: 1,
       backgroundColor: "white"
     }}>

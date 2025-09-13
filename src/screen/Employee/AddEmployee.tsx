@@ -185,10 +185,10 @@ export default function EmployeeForm({ route, navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#fff" }}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        behavior={Platform.OS === "ios" ? "padding" : 'height'}
         keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 0}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

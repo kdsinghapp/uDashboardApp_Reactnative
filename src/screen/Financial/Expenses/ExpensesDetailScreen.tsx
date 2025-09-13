@@ -3,75 +3,67 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import imageIndex from "../../../assets/imageIndex";
 import CustomBackHeader from "../../../compoent/CustomBackHeader";
+import { useRoute } from "@react-navigation/native";
+import moment from "moment";
 
 const ExpensesDetailScreen = () => {
+  const route = useRoute();
+  const { item } = route.params as { item: any };
   return (
-    <SafeAreaView style={{
-      flex:1,
-      backgroundColor:"white"
+    <SafeAreaView edges={['top']} style={{
+      flex: 1,
+      backgroundColor: "white"
     }}>
       <View style={{
-        marginHorizontal:12
+        marginHorizontal: 12
       }}>
-             <CustomBackHeader menuIcon={imageIndex.back} label={"Expenses Detail"} /> 
-             </View>
-    <ScrollView style={styles.container}>
-
-      {/* Task Name */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Task Name</Text>
-        <Text style={styles.value}>Website Redesign - Homepage Update</Text>
+        <CustomBackHeader menuIcon={imageIndex.back} label={"Expenses Detail"} />
       </View>
+      <ScrollView style={styles.container}>
 
-      {/* Due Date */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Due Date</Text>
-        <Text style={styles.value}>Aug 15, 2025</Text>
-      </View>
-
-      {/* Estimated Time */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Estimated Time</Text>
-        <Text style={styles.value}>10:00:00</Text>
-      </View>
-
-      {/* Task Manager */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Task Manager</Text>
-        <Text style={styles.value}>Priya Sharma</Text>
-      </View>
-
-      {/* Client */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Client</Text>
-        <Text style={styles.value}>ABC Tech Solutions</Text>
-      </View>
-
-      {/* Status */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Status</Text>
-        <View style={[styles.tag, { backgroundColor: "#ff9800" }]}>
-          <Text style={styles.tagText}>Pending</Text>
+        {/* Task Name */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Name</Text>
+          <Text style={styles.value}>{item?.name}</Text>
         </View>
-      </View>
 
-      {/* Priority */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Priority</Text>
-        <View style={[styles.tag, { backgroundColor: "#0D6EFD" }]}>
-          <Text style={styles.tagText}>Low</Text>
+        {/* Due Date */}
+        {item?.expense_date &&
+          <View style={styles.row}>
+            <Text style={styles.label}>Expense Date Date</Text>
+            <Text style={styles.value}>{moment(item?.expense_date).format('MMM, DD YYYY')}</Text>
+          </View>
+        }
+        <View style={styles.row}>
+          <Text style={styles.label}>Created Date	</Text>
+          <Text style={styles.value}>{moment(item?.created_at
+          ).format('MMM, DD YYYY')}</Text>
         </View>
-      </View>
 
-      {/* Description */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Description</Text>
-        <Text style={styles.value}>
-          The task involves redesigning the homepage of the client’s corporate
-          website. Key updates include:
-        </Text>
-      </View>
-    </ScrollView>
+        {/* Task Manager */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Amount</Text>
+          <Text style={styles.value}>{item?.amount}</Text>
+        </View>
+      
+
+        {/* Status */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Status</Text>
+          <View style={[styles.tag, { backgroundColor: "#ff9800" }]}>
+            <Text style={styles.tagText}>{item?.status}</Text>
+          </View>
+        </View>
+
+
+        {/* Description */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Description</Text>
+          <Text style={styles.value}>
+            {item?.description}
+          </Text>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

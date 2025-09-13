@@ -39,7 +39,7 @@ const NotificationsSetting = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       <StatusBarComponent />
       <CustomHeader menuIcon={imageIndex.back} label="Notifications" />
 

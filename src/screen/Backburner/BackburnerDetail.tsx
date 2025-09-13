@@ -6,7 +6,7 @@ import CustomBackHeader from "../../compoent/CustomBackHeader";
 
 const BackburnerDetail = () => {
   return (
-    <SafeAreaView style={{
+    <SafeAreaView edges={['top']} style={{
       flex:1,
       backgroundColor:"white"
     }}>

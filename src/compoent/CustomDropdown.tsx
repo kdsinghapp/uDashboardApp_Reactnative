@@ -33,6 +33,7 @@ const CustomDropdown = ({ label, options, value, onSelect }) => {
           <FlatList
             data={options}
             keyExtractor={(item, index) => index.toString()}
+            nestedScrollEnabled
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.dropdownItem}

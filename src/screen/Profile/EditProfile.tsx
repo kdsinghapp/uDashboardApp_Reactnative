@@ -71,7 +71,7 @@ const EditProfile = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "white" }}>
       <StatusBarComponent />
       {isLoading && <LoadingModal />}
 

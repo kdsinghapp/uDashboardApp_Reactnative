@@ -40,9 +40,9 @@ const Splash: React.FC = () => {
   }, [isFocus, navigation]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       <StatusBarComponent barStyle={'light-content'} />
-      <SafeAreaView>
+      <SafeAreaView edges={['top']}>
        
         <Image source={imageIndex.logo} style={styles.logo} resizeMode="contain" />
       </SafeAreaView>

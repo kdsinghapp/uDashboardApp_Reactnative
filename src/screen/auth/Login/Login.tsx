@@ -36,7 +36,7 @@ export default function Login() {
   const [checked, setChecked] = useState(false);
 
   return (
-    <SafeAreaView
+    <SafeAreaView edges={['top']}
       style={styles.bgContainer}
     >
       <StatusBarComponent />

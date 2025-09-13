@@ -83,7 +83,7 @@ export default function RepliesScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       <StatusBarComponent />
       <CustomHeader />
       <SearchBar />

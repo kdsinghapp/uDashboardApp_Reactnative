@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,44 +14,119 @@ import CustomBackHeader from "../../../compoent/CustomBackHeader";
 import imageIndex from "../../../assets/imageIndex";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DatePickerModal from "../../../compoent/DatePickerModal"; // import modal
+import moment from "moment";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { AddProfitLossApi, UpdateProfitLossApi } from "../../../Api/apiRequest";
 
 export default function AddPLSummary() {
+  const navigation = useNavigation()
   const [form, setForm] = useState({
-    task: "",
-    details: "",
-    callback: "",
-    calendarDate: new Date(),
-    tags: "",
-    estimateTime: "",
-    startDate: new Date(),
-    startTime: new Date(),
-    endDate: new Date(),
-    endTime: new Date(),
-    priority: "",
+    name: "",
+    description: "",
+    amount: "",
+    profit_and_loss_date: new Date(),
     status: "",
   });
+  const route = useRoute();
+  const editItem: any = route.params?.item || null; // 👈 get edit item if passed
+  const isLogin = useSelector((state: any) => state.auth);
 
+  const priorityOptions = [{ label: "paid", value: "paid" }, { label: "unpaid", value: "unpaid" }];
+
+
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [loading, setLoading] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState({
     visible: false,
     field: "",
     mode: "date" as "date" | "time",
   });
 
-  // Sample options for dropdowns
-  const callbackOptions = ["Ram", "Kamlesh"];
-  const priorityOptions = ["Low", "Medium", "High"];
-  const statusOptions = ["Pending", "In Progress", "Completed"];
+
+
+  // 👇 Pre-fill form if edit mode
+  useEffect(() => {
+    if (editItem) {
+      console.log(editItem)
+      setForm({
+        name: editItem.name || "",
+        description: editItem.description || "",
+        status: editItem.employee?.status || "",
+        profit_and_loss_date: editItem.profit_and_loss_date ? new Date(editItem.profit_and_loss_date) : new Date(),
+        amount: editItem.amount ? String(editItem.amount) : "",
+      });
+    }
+  }, [editItem]);
 
   const handleChange = (field: string, value: any) => {
-    setForm({ ...form, [field]: value });
+    // setForm({ ...form, [field]: value.label });
+    // console.log(field, value)
+    setForm((prev) => ({
+      ...prev,
+      [field]: value.value || value,
+      ...(field === "callback" && { employeeId: value.value }), // add priorityId
+      ...(field === "priority" && { priorityId: value.value }), // add priorityId
+      ...(field === "status" && { statusId: value.value })      // add statusId
+    }));
+    setErrors({ ...errors, [field]: "" });
   };
 
   const openDatePicker = (field: string, mode: "date" | "time" = "date") => {
     setShowDatePicker({ visible: true, field, mode });
   };
 
+  // ✅ Validate fields
+  const validateForm = () => {
+    let valid = true;
+    let newErrors: { [key: string]: string } = {};
+
+    if (!form.name.trim()) {
+      newErrors.name = "Name is required";
+      valid = false;
+    }
+    if (!form.description.trim()) {
+      newErrors.description = "Description are required";
+      valid = false;
+    }
+
+    if (!form.amount.trim()) {
+      newErrors.amount = "Amount is required";
+      valid = false;
+    }
+    if (!form.status) {
+      newErrors.status = "Status is required";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+  // ✅ API Call
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+    setLoading(true);
+
+    const param = {
+      ...form,
+      // estimateTime: formattedTime,
+      token: isLogin?.token,
+      id: editItem?.id, // 👈 required for update
+      navigation,
+    };
+
+    if (editItem) {
+      // Update
+      await UpdateProfitLossApi(param, setLoading);
+    } else {
+      // Add
+      await AddProfitLossApi(param, setLoading);
+    }
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ marginHorizontal: 20 }}>
         <CustomBackHeader menuIcon={imageIndex.back} label={"Add P&L Summary"} />
       </View>
@@ -64,38 +139,88 @@ export default function AddPLSummary() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.container}
         >
-
-            <Text style={styles.label}>Category</Text>
-          <CustomDropdown
-            label="Select Category"
-            options={priorityOptions}
-            value={form.priority}
-            onSelect={(val) => handleChange("priority", val)}
-          />
-
-          {/* Task */}
           <Text style={styles.label}>Name</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter name"
-            value={form.task}
+            value={form.name}
             placeholderTextColor={"#ADA4A5"}
             onChangeText={(text) => handleChange("name", text)}
           />
+          {errors.name && <Text style={styles.error}>{errors.name}</Text>}
+
+          <Text style={styles.label}>Amount</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Amount"
+            value={form.amount}
+            placeholderTextColor={"#ADA4A5"}
+            onChangeText={(text) => handleChange("amount", text)}
+            keyboardType="numeric"
+          />
+          {errors.amount && <Text style={styles.error}>{errors.amount}</Text>}
+
+          <Text style={styles.label}>Status</Text>
+          <CustomDropdown
+            label="Select status"
+            options={priorityOptions}
+            value={form.status}
+            onSelect={(val) => handleChange("status", val)}
+          />
+          {errors.status && <Text style={styles.error}>{errors.status}</Text>}
+
+
+          {/* Task */}
+          <Text style={styles.label}>Profit & Loss Date</Text>
+          <TouchableOpacity
+            style={styles.input}
+            onPress={() => openDatePicker("profit_and_loss_date", "date")}
+          >
+            <Text>{form.profit_and_loss_date?.toDateString()}</Text>
+          </TouchableOpacity>
+
 
           {/* Client */}
-          <Text style={styles.label}>Details</Text>
+          <Text style={styles.label}>Description</Text>
           <TextInput
             style={[styles.input, { height: 100 }]}
-            placeholder="Enter Budget detail"
+            placeholder="Enter description"
             multiline
-            value={form.details}
+            value={form.description}
             placeholderTextColor={"#ADA4A5"}
-            onChangeText={(text) => handleChange("details", text)}
+            onChangeText={(text) => handleChange("description", text)}
           />
+          {errors.description && <Text style={styles.error}>{errors.description}</Text>}
+          <TouchableOpacity
+            style={[styles.button, loading && { opacity: 0.6 }]}
+            onPress={handleSubmit}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading
+                ? editItem
+                  ? "Updating..."
+                  : "Creating..."
+                : editItem
+                  ? "Update"
+                  : "Create"}
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+        <DatePickerModal
+          visible={showDatePicker.visible}
+          mode={showDatePicker.mode}
+          value={form[showDatePicker.field] || new Date()}
+          onClose={() =>
+            setShowDatePicker({ visible: false, field: "", mode: "date" })
+          }
+          onConfirm={(date) => {
+            handleChange(showDatePicker.field, date);
+            setShowDatePicker({ visible: false, field: "", mode: "date" }); // 👈 yahan close karo
+          }}
+        />
+      </KeyboardAvoidingView>
 
-       </ScrollView>
-       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -132,5 +257,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "600",
     fontSize: 16,
+  },
+  error: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 10,
   },
 });

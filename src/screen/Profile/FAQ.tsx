@@ -77,7 +77,7 @@ const FAQScreen = ({ navigation }:any) => {
     );
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView edges={['top']} style={styles.container}>
             {/* Back button */}
             <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
                 <Image source={imageIndex.back} style={{height:25, width:25}}/>

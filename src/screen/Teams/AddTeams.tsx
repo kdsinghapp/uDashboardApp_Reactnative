@@ -70,7 +70,7 @@ AddTeams() {
   };
 
   return (
-    <SafeAreaView style={{flex:1, backgroundColor:'#fff'}}>
+    <SafeAreaView edges={['top']} style={{flex:1, backgroundColor:'#fff'}}>
       <StatusBarComponent/>
     <KeyboardAvoidingView
     style={{ flex: 1 }}

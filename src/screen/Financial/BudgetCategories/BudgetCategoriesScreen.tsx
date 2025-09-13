@@ -17,7 +17,7 @@ import ScreenNameEnum from "../../../routes/screenName.enum";
 import DeleteModal from "../../../compoent/DeleteModal";
 import { useSelector } from "react-redux";
 import moment from "moment";
-import { DeleteBudgetCategoryApi,  GetBudgetCategoryListApi, GetDeletedBudgetCategoryApi, RestoreBudgetCategoryApi} from "../../../Api/apiRequest";
+import { DeleteBudgetCategoryApi, GetBudgetCategoryListApi, GetDeletedBudgetCategoryApi, RestoreBudgetCategoryApi } from "../../../Api/apiRequest";
 import LoadingModal from "../../../utils/Loader";
 import RestoreModal from "../../../compoent/RestoreModal";
 
@@ -30,6 +30,7 @@ export default function BudgetCategoriesScreen() {
   const [employeeData, setEmployeeData] = useState([])
   const [searchText, setSearchText] = useState("");
   const isLogin = useSelector((state: any) => state.auth);
+  const [selectedItem, setSelectedItem] = useState(null);
   const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
   // console.log(isLogin)
   useFocusEffect(
@@ -44,7 +45,7 @@ export default function BudgetCategoriesScreen() {
   const filteredData = employeeData.filter((item: any) => {
     const query = searchText.toLowerCase();
     return (
-      item?.name?.toLowerCase().includes(query) 
+      item?.name?.toLowerCase().includes(query)
     );
   });
   const fetchEmployee = async (activeTab: string) => {
@@ -62,35 +63,37 @@ export default function BudgetCategoriesScreen() {
     }
   }
 
+  const handleDelete = async () => {
+    // 👇 Your delete API or logic here
+    console.log("Item deleted!");
+    if (!selectedItem) return;
+    const param = {
+      id: selectedItem?.id,
+      token: isLogin?.token
+    }
+    const dd = await DeleteBudgetCategoryApi(param, setLoading)
+    fetchEmployee(activeTab)
+    setDeleteModalVisible(false);
+  };
 
+  const handleRestore = async () => {
+    // 👇 Your delete API or logic here
+    console.log("Item deleted!");
+    if (!selectedItem) return;
+    const param = {
+      id: selectedItem?.id,
+      token: isLogin?.token
+    }
+    const dd = await RestoreBudgetCategoryApi(param, setLoading)
+    fetchEmployee(activeTab)
+    setRestoreModalVisible(false);
+  };
   const nav = useNavigation()
   const renderCard = ({ item }: any) => {
-    const handleDelete = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await DeleteBudgetCategoryApi(param, setLoading)
-      fetchEmployee(activeTab)
-      setDeleteModalVisible(false);
-    };
 
-    const handleRestore = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await RestoreBudgetCategoryApi(param, setLoading)
-      fetchEmployee(activeTab)
-      setRestoreModalVisible(false);
-    };
     return (
       <TouchableOpacity
-        onPress={() => nav.navigate(ScreenNameEnum.BudgetCategoriesDetail, { item: item })}
+        onPress={() => activeTab == "Active" && nav.navigate(ScreenNameEnum.BudgetCategoriesDetail, { item: item })}
         style={styles.card}
       >
         {/* Top Row: Name & Status */}
@@ -98,7 +101,7 @@ export default function BudgetCategoriesScreen() {
           <View>
             <Text style={styles.name}>{item?.name}</Text>
             <Text style={styles.details}>{item?.description}</Text>
-         
+
           </View>
           {activeTab == "Active" &&
             <View style={styles.cardBottomRow}>
@@ -108,7 +111,10 @@ export default function BudgetCategoriesScreen() {
               <TouchableOpacity style={styles.iconBtn} onPress={() => nav.navigate(ScreenNameEnum.AddBudgetCategories, { item: item })}>
                 <Image style={styles.icon} source={imageIndex.editGreen} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.iconBtn} onPress={() => setDeleteModalVisible(true)}>
+              <TouchableOpacity style={styles.iconBtn} onPress={async () => {
+                await setSelectedItem(item)
+                setDeleteModalVisible(true)
+              }}>
                 <Image style={styles.icon} source={imageIndex.delite} />
               </TouchableOpacity>
             </View>
@@ -116,7 +122,10 @@ export default function BudgetCategoriesScreen() {
           {activeTab == "Deleted" &&
             <View style={styles.cardBottomRow}>
 
-              <TouchableOpacity style={styles.iconBtn} onPress={() => setRestoreModalVisible(true)}>
+              <TouchableOpacity style={styles.iconBtn} onPress={async () => {
+                await setSelectedItem(item)
+                setRestoreModalVisible(true)
+              }}>
                 <Image style={styles.icon} source={imageIndex.restore} />
               </TouchableOpacity>
             </View>
@@ -124,35 +133,19 @@ export default function BudgetCategoriesScreen() {
         </View>
 
 
-        <DeleteModal
-          visible={deleteModalVisible}
-          onClose={() => setDeleteModalVisible(false)}
-          onConfirm={handleDelete}
-          title="Delete Employee?"
-          message="Are you sure you want to delete this Budget Category from your list?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
-         <RestoreModal
-          visible={restoreModalVisible}
-          onClose={() => setRestoreModalVisible(false)}
-          onConfirm={handleRestore}
-          message="Do you want to restore this Budget Category?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
       </TouchableOpacity>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
       <SearchBar
         value={searchText}
         onSearchChange={(text) => setSearchText(text)}
+        placeholder="Search Budget Category"
       />
       <View style={styles.tabRow}>
         <TouchableOpacity
@@ -191,6 +184,24 @@ export default function BudgetCategoriesScreen() {
           />
         </TouchableOpacity>
       }
+
+      <DeleteModal
+        visible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
+        onConfirm={handleDelete}
+        title="Delete Employee?"
+        message="Are you sure you want to delete this Budget Category from your list?"
+        cancelText="No"
+        confirmText="Yes, Delete"
+      />
+      <RestoreModal
+        visible={restoreModalVisible}
+        onClose={() => setRestoreModalVisible(false)}
+        onConfirm={handleRestore}
+        message="Do you want to restore this Budget Category?"
+        cancelText="No"
+        confirmText="Yes, Delete"
+      />
     </SafeAreaView>
   );
 }

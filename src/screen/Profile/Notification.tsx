@@ -47,7 +47,7 @@ const Notification = () => {
   )
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: '#fff' }}>
       <StatusBarComponent/>
       <View style={{
         marginHorizontal:15

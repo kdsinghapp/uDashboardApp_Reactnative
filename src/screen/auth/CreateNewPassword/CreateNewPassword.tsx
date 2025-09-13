@@ -41,7 +41,7 @@ export default function CreatePassword() {
 
   return (
    
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView edges={['top']} style={styles.container}>
         <StatusBarComponent />
         {isLoading && <Loading />}
         <CustomBackHeader menuIcon={imageIndex.back} label={""} /> 

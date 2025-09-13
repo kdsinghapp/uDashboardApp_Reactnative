@@ -12,7 +12,7 @@ const CallbackDetailScreen = () => {
     const formattedDate = (dateStr) => moment(dateStr).format("MMM DD, YYYY");
   
   return (
-    <SafeAreaView style={{
+    <SafeAreaView edges={['top']} style={{
       flex:1,
       backgroundColor:"white"
     }}>
@@ -42,17 +42,18 @@ const CallbackDetailScreen = () => {
       </View>
 
       {/* Task Manager */}
-      <View style={styles.row}>
+      {/* <View style={styles.row}>
         <Text style={styles.label}>Task Manager</Text>
         <Text style={styles.value}>Priya Sharma</Text>
-      </View>
+      </View> */}
 
       {/* Client */}
+      {item?.employee?.first_name &&
       <View style={styles.row}>
         <Text style={styles.label}>Client</Text>
-        <Text style={styles.value}>ABC Tech Solutions</Text>
+        <Text style={styles.value}>{item?.employee?.first_name} {item?.employee?.last_name}</Text>
       </View>
-
+}
       {/* Status */}
       <View style={styles.row}>
         <Text style={styles.label}>Status</Text>

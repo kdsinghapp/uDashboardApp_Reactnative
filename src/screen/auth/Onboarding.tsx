@@ -71,7 +71,7 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     );
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView edges={['top']} style={styles.container}>
             <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
             
             <ImageBackground source={imageIndex.onboarding} style={styles.image} resizeMode='contain'  >

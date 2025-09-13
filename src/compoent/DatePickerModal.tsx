@@ -119,6 +119,7 @@ const DatePickerModal: React.FC<Props> = ({ visible, mode, value, onClose, onCon
         onChange={(event: DateTimePickerEvent, selectedDate?: Date) => {
           if (event.type === "set" && selectedDate) {
             onConfirm(selectedDate);
+            onClose();
           }
           onClose(); // close whether confirm or cancel
         }}

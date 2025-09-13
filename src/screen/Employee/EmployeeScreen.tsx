@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import { DeleteEmployApi, GetDeletedEmployApi, GetEmployListApi, RestoreEmployApi } from "../../Api/apiRequest";
 import LoadingModal from "../../utils/Loader";
+import RestoreModal from "../../compoent/RestoreModal";
 
 const allData = [
   {
@@ -62,6 +63,10 @@ export default function EmployeeScreen() {
   const [employeeData, setEmployeeData] = useState([])
   const [searchText, setSearchText] = useState("");
   const isLogin = useSelector((state: any) => state.auth);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+
+  const [restoreModalVisible, setRestoreModalVisible] = useState(false);
+
   const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
   // console.log(isLogin)
   useFocusEffect(
@@ -100,30 +105,38 @@ export default function EmployeeScreen() {
 
 
   const nav = useNavigation()
-  const renderCard = ({ item }: any) => {
-    const handleDelete = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await DeleteEmployApi(param, setLoading)
-      fetchEmployee(activeTab)
-      setDeleteModalVisible(false);
-    };
 
-    const handleRestore = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await RestoreEmployApi(param, setLoading)
-      fetchEmployee(activeTab)
-      // setDeleteModalVisible(false);
-    };
+
+  const handleDelete = async () => {
+    // 👇 Your delete API or logic here
+    console.log("Item deleted!");
+    if (!selectedItem) {
+      return;
+    }
+    const param = {
+      id: selectedItem?.id,
+      token: isLogin?.token
+    }
+    const dd = await DeleteEmployApi(param, setLoading)
+    fetchEmployee(activeTab)
+    setDeleteModalVisible(false);
+  };
+
+  const handleRestore = async () => {
+    // 👇 Your delete API or logic here
+    console.log("Item deleted!");
+    if (!selectedItem) {
+      return;
+    }
+    const param = {
+      id: selectedItem?.id,
+      token: isLogin?.token
+    }
+    const dd = await RestoreEmployApi(param, setLoading)
+    fetchEmployee(activeTab)
+    setRestoreModalVisible(false);
+  };
+  const renderCard = ({ item }: any) => {
     return (
       <TouchableOpacity
         onPress={() => nav.navigate(ScreenNameEnum.EmployeeDetail, { item: item })}
@@ -145,7 +158,11 @@ export default function EmployeeScreen() {
               <TouchableOpacity style={styles.iconBtn} onPress={() => nav.navigate(ScreenNameEnum.AddEmployeeScreen, { item: item })}>
                 <Image style={styles.icon} source={imageIndex.editGreen} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.iconBtn} onPress={() => setDeleteModalVisible(true)}>
+              <TouchableOpacity style={styles.iconBtn} onPress={async () => {
+                await setSelectedItem(item);
+                setDeleteModalVisible(true)
+              }
+              } >
                 <Image style={styles.icon} source={imageIndex.delite} />
               </TouchableOpacity>
             </View>
@@ -153,7 +170,11 @@ export default function EmployeeScreen() {
           {activeTab == "Deleted" &&
             <View style={styles.cardBottomRow}>
 
-              <TouchableOpacity style={styles.iconBtn} onPress={() => handleRestore()}>
+              <TouchableOpacity style={styles.iconBtn} onPress={async () => {
+                await setSelectedItem(item);
+                setRestoreModalVisible(true)
+              }
+              }>
                 <Image style={styles.icon} source={imageIndex.restore} />
               </TouchableOpacity>
             </View>
@@ -161,27 +182,20 @@ export default function EmployeeScreen() {
         </View>
 
 
-        <DeleteModal
-          visible={deleteModalVisible}
-          onClose={() => setDeleteModalVisible(false)}
-          onConfirm={handleDelete}
-          title="Delete Employee?"
-          message="Are you sure you want to delete this Employee from your list?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
+
       </TouchableOpacity>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
       <SearchBar
         value={searchText}
         onSearchChange={(text) => setSearchText(text)}
+        placeholder="Search Employee"
       />
       <View style={styles.tabRow}>
         <TouchableOpacity
@@ -220,6 +234,24 @@ export default function EmployeeScreen() {
           />
         </TouchableOpacity>
       }
+      <DeleteModal
+        visible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
+        onConfirm={handleDelete}
+        title="Delete Employee?"
+        message="Are you sure you want to delete this Employee from your list?"
+        cancelText="No"
+        confirmText="Yes, Delete"
+      />
+      <RestoreModal
+        visible={restoreModalVisible}
+        onClose={() => setRestoreModalVisible(false)}
+        onConfirm={handleRestore}
+        title="Delete Employee?"
+        message="Do you want to restore this Employee?"
+        cancelText="No"
+        confirmText="Yes, Restore"
+      />
     </SafeAreaView>
   );
 }

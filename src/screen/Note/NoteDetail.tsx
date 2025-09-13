@@ -10,7 +10,7 @@ const NoteDetail = () => {
   const item = route?.params?.item
   console.log(item)
   return (
-    <SafeAreaView style={{
+    <SafeAreaView edges={['top']} style={{
       flex:1,
       backgroundColor:"white"
     }}>

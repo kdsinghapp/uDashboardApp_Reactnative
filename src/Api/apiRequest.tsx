@@ -589,7 +589,7 @@ const UpdateCallbackApi = (
 
         const formdata = new FormData();
         formdata.append("task_name", param?.task);
-        formdata.append("employee_id", "1"); // map actual employee id
+        formdata.append("employee_id", param?.employeeId); // map actual employee id
         formdata.append("estimated_time", param?.estimateTime);
         formdata.append("start_date", param?.startDate.toISOString().split("T")[0]);
         formdata.append("start_time", moment(param?.startTime).format("HH:mm"));
@@ -1379,7 +1379,7 @@ const AddNotesApi = (
         formdata.append("details", param?.details ?? "");
         formdata.append("category_id", param?.categoryId ?? "");
         formdata.append("callback_id", param?.callbackId ?? "");
-        formdata.append("tags[0]", 1);
+        formdata.append("tags[0]", param?.tagsId ?? "1");
         // formdata.append("tags[0]", param?.tags ?? "");
         formdata.append("calendar_event_date", param?.calendarDate.toISOString().split("T")[0]);
         const requestOptions = {
@@ -1436,7 +1436,7 @@ const UpdateNotesApi = (
         formdata.append("details", param?.details ?? "");
         formdata.append("category_id", param?.categoryId ?? "");
         formdata.append("callback_id", param?.callbackId ?? "");
-        formdata.append("tags[0]", 1);
+        formdata.append("tags[0]", param?.tagsId ?? "1");
         // formdata.append("tags[0]", param?.tags ?? "");
         formdata.append("calendar_event_date", param?.calendarDate.toISOString().split("T")[0]);
         formdata.append("_method", "PUT");
@@ -2978,7 +2978,7 @@ const GetProfitLossListApi = (
             method: "GET",
             headers: myHeaders,
         };
-        const respons = fetch(`${base_url}notes/tags/list?page=1&limit=100`, requestOptions)
+        const respons = fetch(`${base_url}financials/profit-and-loss?page=1&limit=100`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -3030,7 +3030,7 @@ const GetProfitLossApi = (
             // body: formData,
         };
         console.log("formData", formData)
-        const respons = fetch(`${base_url}notes/tags/${param?.id}`, requestOptions)
+        const respons = fetch(`${base_url}financials/profit-and-loss/${param?.id}`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -3082,7 +3082,7 @@ const GetDeletedProfitLossApi = (
             // body: formData,
         };
         console.log("formData", formData)
-        const respons = fetch(`${base_url}notes/tags/list?page=1&limit=1000&tag=deleted`, requestOptions)
+        const respons = fetch(`${base_url}financials/profit-and-loss?page=1&limit=1000&profit_and_loss=deleted`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -3135,7 +3135,7 @@ const DeleteProfitLossApi = (
             // body: formData,
         };
         console.log("formData", formData)
-        const respons = fetch(`${base_url}notes/tags/delete/${param?.id}`, requestOptions)
+        const respons = fetch(`${base_url}financials/profit-and-loss/delete/${param?.id}`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -3184,13 +3184,13 @@ const RestoreProfitLossApi = (
         // formData.append("_method", "PUT");
         const requestOptions = {
 
-            method: "GET",
+            method: "POST",
             headers: myHeaders,
             // body: formData,
             redirect: "follow"
         };
         // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
-        const respons = fetch(`${base_url}notes/tags/restore/${param?.id}`, requestOptions)
+        const respons = fetch(`${base_url}financials/profit-and-loss/restore/${param?.id}`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -3232,17 +3232,19 @@ const AddProfitLossApi = (
         const myHeaders = new Headers();
         myHeaders.append("Accept", "application/json");
         myHeaders.append("Authorization", `Bearer ${param.token}`);
-
-
         const formdata = new FormData();
         formdata.append("name", param?.name ?? "");
+        formdata.append("amount", param?.amount ?? "");
+        formdata.append("status", param?.status ?? "");
+        formdata.append("description", param?.description ?? "");
+        formdata.append("profit_and_loss_date", param?.profit_and_loss_date.toISOString().split("T")[0] ?? "");
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: formdata,
         };
         console.log("formData", formdata)
-        const respons = fetch(`${base_url}notes/tags`, requestOptions)
+        const respons = fetch(`${base_url}financials/profit-and-loss`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -3287,6 +3289,11 @@ const UpdateProfitLossApi = (
 
         const formdata = new FormData();
         formdata.append("name", param?.name ?? "");
+        formdata.append("amount", param?.amount ?? "");
+        formdata.append("status", param?.status ?? "");
+        formdata.append("description", param?.description ?? "");
+
+        formdata.append("profit_and_loss_date", param?.profit_and_loss_date.toISOString().split("T")[0] ?? "");
         formdata.append("_method", "PUT");
 
         const requestOptions = {
@@ -3295,7 +3302,7 @@ const UpdateProfitLossApi = (
             body: formdata,
         };
         console.log("formData", formdata)
-        const respons = fetch(`${base_url}notes/tags/update/${param?.id}`, requestOptions)
+        const respons = fetch(`${base_url}financials/profit-and-loss/update/${param?.id}`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -3325,6 +3332,382 @@ const UpdateProfitLossApi = (
         );
     }
 };
+
+
+const GetExpensesListApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const requestOptions = {
+            method: "GET",
+            headers: myHeaders,
+        };
+        const respons = fetch(`${base_url}financials/expenses?page=1&limit=100`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response employeee", response)
+                if (response.success) {
+                    setLoading(false)
+
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.error,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const GetExpensesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}financials/expenses/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const GetDeletedExpensesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+        const formData = new FormData();
+        // formData.append("user_id", param?.id ?? '');
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}financials/expenses?expense=deleted`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    // successToast(
+                    //     response?.message
+                    // );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.message,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const DeleteExpensesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "DELETE",
+            headers: myHeaders,
+            // body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url}financials/expenses/delete/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+const RestoreExpensesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        // formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "POST",
+            headers: myHeaders,
+            // body: formData,
+            redirect: "follow"
+        };
+        // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
+        const respons = fetch(`${base_url}financials/expenses/restore/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const AddExpensesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        formdata.append("amount", param?.amount ?? "");
+        formdata.append("status", param?.status ?? "");
+        formdata.append("description", param?.description ?? "");
+        formdata.append("expense_date", param?.expense_date.toISOString().split("T")[0] ?? "");
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}financials/expenses`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+const UpdateExpensesApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        formdata.append("amount", param?.amount ?? "");
+        formdata.append("status", param?.status ?? "");
+        formdata.append("description", param?.description ?? "");
+
+        formdata.append("expense_date", param?.expense_date.toISOString().split("T")[0] ?? "");
+        formdata.append("_method", "PUT");
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}financials/expenses/update/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("--------ddv response", response)
+                if (response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+
+
 
 
 const Get_Priority_Api = (
@@ -3678,5 +4061,6 @@ export {
     GetBudgetListApi, GetBudgetApi, AddBudgetApi, DeleteBudgetApi, GetDeletedBudgetApi, RestoreBudgetApi, UpdateBudgetApi,
     GetBudgetCategoryListApi, GetBudgetCategoryApi, AddBudgetCategoryApi, DeleteBudgetCategoryApi, GetDeletedBudgetCategoryApi, RestoreBudgetCategoryApi, UpdateBudgetCategoryApi,
     GetProfitLossListApi, GetProfitLossApi, AddProfitLossApi, DeleteProfitLossApi, GetDeletedProfitLossApi, RestoreProfitLossApi, UpdateProfitLossApi,
+    GetExpensesListApi, GetExpensesApi, AddExpensesApi, DeleteExpensesApi, GetDeletedExpensesApi, RestoreExpensesApi, UpdateExpensesApi,
 
 }  

@@ -14,21 +14,17 @@ import { DeleteBudgetApi, GetDeletedBudgetApi, GetBudgetListApi, RestoreBudgetAp
 import LoadingModal from "../../../utils/Loader";
 import RestoreModal from "../../../compoent/RestoreModal";
 
-const allData = [
-  { id: "01", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Active" },
-  { id: "02", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Deleted" },
-  { id: "03", name: "Mobile App", amount: "₹80,000.00", details: "Client payment for App project", date: "22 Aug 2025", status: "Active" },
-  { id: "03", name: "Mobile App", amount: "₹80,000.00", details: "Client payment for App project", date: "22 Aug 2025", status: "Active" },
-];
 
-export default function Note() {
+
+export default function Budget() {
   const [activeTab, setActiveTab] = useState<"Active" | "Deleted">("Active");
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-   const [restoreModalVisible, setRestoreModalVisible] = useState(false);
+  const [restoreModalVisible, setRestoreModalVisible] = useState(false);
   const [loading, setLoading] = useState(false)
   const [BudgetData, setBudgetData] = useState([])
   const [searchText, setSearchText] = useState("");
   const isLogin = useSelector((state: any) => state.auth);
+  const [selectedItem, setSelectedItem] = useState(null);
   const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
   // console.log(isLogin)
   useFocusEffect(
@@ -43,7 +39,7 @@ export default function Note() {
   const filteredData = BudgetData?.filter((item: any) => {
     const query = searchText.toLowerCase();
     return (
-      item?.description?.toLowerCase().includes(query) || 
+      item?.description?.toLowerCase().includes(query) ||
       item?.amount?.toLowerCase().includes(query)
     );
   });
@@ -64,35 +60,34 @@ export default function Note() {
 
 
   const nav = useNavigation()
-  const renderCard = ({ item }: any) => {
-    const handleDelete = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await DeleteBudgetApi(param, setLoading)
-      fetchBudget(activeTab)
-      setDeleteModalVisible(false);
-    };
+  const handleDelete = async () => {
 
-    const handleRestore = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await RestoreBudgetApi(param, setLoading)
-      fetchBudget(activeTab)
-      setRestoreModalVisible(false);
-    };
+    if (!selectedItem) return;
+    const param = {
+      id: selectedItem?.id,
+      token: isLogin?.token
+    }
+    const dd = await DeleteBudgetApi(param, setLoading)
+    fetchBudget(activeTab)
+    setDeleteModalVisible(false);
+  };
+
+  const handleRestore = async () => {
+    if (!selectedItem) return;
+    const param = {
+      id: selectedItem?.id,
+      token: isLogin?.token
+    }
+    const dd = await RestoreBudgetApi(param, setLoading)
+    fetchBudget(activeTab)
+    setRestoreModalVisible(false);
+  };
+  const renderCard = ({ item }: any) => {
+
     return (
 
       <TouchableOpacity
-        onPress={() => nav.navigate(ScreenNameEnum.BudgetDetail, { item: item })}
-
+        onPress={() => { activeTab == "Active" && nav.navigate(ScreenNameEnum.BudgetDetail, { item: item }) }}
         style={styles.card}>
         {/* Row 1: ID & Name */}
         <View style={styles.cardRow}>
@@ -171,35 +166,19 @@ export default function Note() {
 
 
 
-        <DeleteModal
-          visible={deleteModalVisible}
-          onClose={() => setDeleteModalVisible(false)}
-          onConfirm={handleDelete}
-          title="Delete Budget?"
-          message="Are you sure you want to delete this Budget from your list?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
-            <RestoreModal
-          visible={restoreModalVisible}
-          onClose={() => setRestoreModalVisible(false)}
-          onConfirm={handleRestore}
-          message="Do you want to restore this Tag?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
       </TouchableOpacity>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
       <SearchBar
         value={searchText}
         onSearchChange={(text) => setSearchText(text)}
+        placeholder="Search Budget"
       />
       {/* <Text style={{
         fontSize: 14,
@@ -242,6 +221,24 @@ export default function Note() {
           />
         </TouchableOpacity>
       }
+
+      <DeleteModal
+        visible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
+        onConfirm={handleDelete}
+        title="Delete Budget?"
+        message="Are you sure you want to delete this Budget from your list?"
+        cancelText="No"
+        confirmText="Yes, Delete"
+      />
+      <RestoreModal
+        visible={restoreModalVisible}
+        onClose={() => setRestoreModalVisible(false)}
+        onConfirm={handleRestore}
+        message="Do you want to restore this Budget?"
+        cancelText="No"
+        confirmText="Yes, Delete"
+      />
     </SafeAreaView>
   );
 }

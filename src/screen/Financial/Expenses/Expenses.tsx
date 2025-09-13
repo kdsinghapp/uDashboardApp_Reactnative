@@ -1,106 +1,188 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchBar from "../../../compoent/SearchBar";
 import imageIndex from "../../../assets/imageIndex";
 import CustomHeader from "../../../compoent/CustomHeader";
 import StatusBarComponent from "../../../compoent/StatusBarCompoent";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import ScreenNameEnum from "../../../routes/screenName.enum";
 import DeleteModal from "../../../compoent/DeleteModal";
+import { useSelector } from "react-redux";
+import moment from "moment";
+import { GetExpensesListApi, GetDeletedExpensesApi, DeleteExpensesApi, RestoreExpensesApi } from "../../../Api/apiRequest";
+import LoadingModal from "../../../utils/Loader";
+import RestoreModal from "../../../compoent/RestoreModal";
 
-const allData = [
-  { id: "01", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Active" },
-  { id: "02", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Deleted" },
-  { id: "03", name: "Mobile App", amount: "₹80,000.00", details: "Client payment for App project", date: "22 Aug 2025", status: "Active" },
-  { id: "03", name: "Mobile App", amount: "₹80,000.00", details: "Client payment for App project", date: "22 Aug 2025", status: "Active" },
-];
-
-export default function Note() {
+export default function Expenses() {
   const [activeTab, setActiveTab] = useState<"Active" | "Deleted">("Active");
-  const filteredData = allData.filter(item => item.status === activeTab);
-  const nav = useNavigation()
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  
-    const handleDelete = () => {
+  const [restoreModalVisible, setRestoreModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [loading, setLoading] = useState(false)
+  const [ExpensesData, setExpensesData] = useState([])
+  const [searchText, setSearchText] = useState("");
+  const isLogin = useSelector((state: any) => state.auth);
+  const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
+  // console.log(isLogin)
+  useFocusEffect(
+    useCallback(() => {
+      fetchExpenses("Active");
+    }, [])
+  );
+  useEffect(() => {
+    fetchExpenses(activeTab);
+  }, [activeTab]);
+
+  const filteredData = ExpensesData?.filter((item: any) => {
+    const query = searchText.toLowerCase();
+    return (
+      item?.name?.toLowerCase().includes(query)
+    );
+  });
+  const fetchExpenses = async (activeTab: string) => {
+    const param = {
+      token: isLogin?.token
+    }
+    if (activeTab == "Active") {
+      const data = await GetExpensesListApi(param, setLoading)
+      // console.log(data?.data?.data)
+      setExpensesData(data?.data)
+    } else {
+      const data = await GetDeletedExpensesApi(param, setLoading)
+      console.log(data?.data)
+      setExpensesData(data?.data)
+    }
+  }
+
+
+  const nav = useNavigation()
+  const renderCard = ({ item }: any) => {
+    const handleDelete = async () => {
       // 👇 Your delete API or logic here
-      console.log("Item deleted!");
+      console.log("Item deleted!", item);
+      const param = {
+        id: item?.id,
+        token: isLogin?.token
+      }
+      const dd = await DeleteExpensesApi(param, setLoading)
+      fetchExpenses(activeTab)
       setDeleteModalVisible(false);
     };
-  const renderCard = ({ item }: any) => (
-    <TouchableOpacity
-      onPress={() => nav.navigate(ScreenNameEnum.ExpensesDetail)}
 
-      style={styles.card}>
-      {/* Row 1: ID & Name */}
-      <View style={styles.cardRow}>
-        <View style={styles.cardItem}>
-          <Text style={[styles.label]}>ID</Text>
-          <Text style={[styles.value]}>{item.id}</Text>
-        </View>
-        <View style={[styles.cardItem, {alignItems:'flex-end'}]}>
-          <Text style={[styles.label]}>Name</Text>
-          <Text style={styles.value}>{item.name}</Text>
-        </View>
-      </View>
+    const handleRestore = async () => {
+      // 👇 Your delete API or logic here
+      console.log("Item deleted!", item);
+      const param = {
+        id: item?.id,
+        token: isLogin?.token
+      }
+      const dd = await RestoreExpensesApi(param, setLoading)
+      fetchExpenses(activeTab)
+      setRestoreModalVisible(false);
+    };
+    return (
 
-      {/* Row 2: Amount & Details */}
-      <View style={styles.cardRow}>
-        <View style={styles.cardItem}>
-          <Text style={styles.label}>Amount</Text>
-          <Text style={styles.value}>$50,000</Text>
-        </View>
-        <View style={[styles.cardItem, {alignItems:'flex-end'}]}>
-          <Text style={[styles.label]}>Description</Text>
-          <Text style={styles.value}>Budget for UI</Text>
-        </View>
-      </View>
+      <TouchableOpacity
+        onPress={() => activeTab == "Active" && nav.navigate(ScreenNameEnum.ExpensesDetail, { item: item })}
 
-      {/* Row 3: Date & Status */}
-      <View style={styles.cardRow}>
-        <View style={styles.cardItem}>
-          <Text style={[styles.label]}>Created At</Text>
-          <Text style={styles.value}>20 Aug 2025</Text>
-        </View>
-        <View style={[styles.cardItem, {alignItems:'flex-end'}]}>
-          <Text style={[styles.label]}>Action</Text>
-           <View style={{
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        alignItems: "center"
-      }}>
-        <TouchableOpacity
-      onPress={() => nav.navigate(ScreenNameEnum.ExpensesDetail)}
-        >
-          <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.eyeBlue} />
-        </TouchableOpacity>
-        <TouchableOpacity
-
-        >
-          <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.editGreen} />
-
-        </TouchableOpacity>
-        <TouchableOpacity
-onPress={()=>setDeleteModalVisible(true)}
-        >
-          <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.delite} />
-        </TouchableOpacity>
-      </View>
+        style={styles.card}>
+        {/* Row 1: ID & Name */}
+        <View style={styles.cardRow}>
+          <View style={styles.cardItem}>
+            <Text style={[styles.label]}>ID</Text>
+            <Text style={[styles.value]}>{item.id}</Text>
+          </View>
+          <View style={[styles.cardItem, { alignItems: 'flex-end' }]}>
+            <Text style={[styles.label]}>Name</Text>
+            <Text style={styles.value}>{item?.name}</Text>
+          </View>
         </View>
 
-      </View>
+        {/* Row 2: Amount & Details */}
+        <View style={styles.cardRow}>
+          <View style={styles.cardItem}>
+            <Text style={styles.label}>Description</Text>
+            <Text style={styles.value}>{item?.description}</Text>
+          </View>
+          <View style={[styles.cardItem, { alignItems: 'flex-end' }]}>
+            <Text style={[styles.label]}>Amount</Text>
+            <Text style={styles.value}>{item?.amount}</Text>
+          </View>
+        </View>
 
-    
+        {/* Row 3: Date & Status */}
+        <View style={styles.cardRow}>
+          <View style={styles.cardItem}>
+            <Text style={[styles.label]}>Status</Text>
+            <Text style={styles.value}>{item?.status}</Text>
+          </View>
+          <View style={[styles.cardItem, { alignItems: 'flex-end' }]}>
+            <Text style={[styles.label]}>Action</Text>
+            {activeTab == "Active" &&
+              <View style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center"
+              }}>
+                <TouchableOpacity
+                  onPress={() => nav.navigate(ScreenNameEnum.ExpensesDetail, { item: item })}
+                >
+                  <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.eyeBlue} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => nav.navigate(ScreenNameEnum.AddExpenses, { item: item })}
+                >
+                  <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.editGreen} />
 
+                </TouchableOpacity>
+                <TouchableOpacity
+                  // onPress={() => setDeleteModalVisible(true)}
+                  onPress={async () => {
+                    await setSelectedItem(item); // ✅ save selected item
+                    setDeleteModalVisible(true);
+                  }}
+                >
+                  <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.delite} />
+                </TouchableOpacity>
+              </View>
+            }
+            {activeTab == "Deleted" &&
+              <View style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center"
+              }}>
 
-    </TouchableOpacity>
-  );
+                <TouchableOpacity
+                  onPress={async () => {
+                    await setSelectedItem(item);
+                    setRestoreModalVisible(true)
+                  }}
+                >
+                  <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.restore} />
+                </TouchableOpacity>
+              </View>
+            }
+
+          </View>
+
+        </View>
+
+      </TouchableOpacity>
+    );
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
+      {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
-      <SearchBar />
+      <SearchBar
+        value={searchText}
+        onSearchChange={(text) => setSearchText(text)}
+        placeholder="Search Expenses"
+      />
       {/* <Text style={{
         fontSize: 14,
         color: "black",
@@ -132,22 +214,48 @@ onPress={()=>setDeleteModalVisible(true)}
       />
 
       {/* Floating Button */}
-      <TouchableOpacity style={styles.fab}
-        onPress={() => nav.navigate(ScreenNameEnum.AddExpenses)}
-      >
-        <Image
-          source={imageIndex.AddLogo}
-          style={{ height: 70, width: 70, resizeMode: "contain" }}
-        />
-      </TouchableOpacity>
-       <DeleteModal
+      {activeTab == "Active" &&
+        <TouchableOpacity style={styles.fab}
+          onPress={() => nav.navigate(ScreenNameEnum.AddExpenses)}
+        >
+          <Image
+            source={imageIndex.AddLogo}
+            style={{ height: 70, width: 70, resizeMode: "contain" }}
+          />
+        </TouchableOpacity>
+      }
+
+      <DeleteModal
         visible={deleteModalVisible}
         onClose={() => setDeleteModalVisible(false)}
-        onConfirm={handleDelete}
-        title="Delete Expenses?"
-        message="Are you sure you want to delete this Expenses from your list?"
+        onConfirm={async () => {
+          if (selectedItem) {
+            const param = { id: selectedItem.id, token: isLogin?.token };
+            await DeleteExpensesApi(param, setLoading);
+            fetchExpenses(activeTab);
+          }
+          setDeleteModalVisible(false);
+        }}
+        title="Delete Budget?"
+        message="Are you sure you want to delete this expense from your list?"
         cancelText="No"
         confirmText="Yes, Delete"
+      />
+
+      <RestoreModal
+        visible={restoreModalVisible}
+        onClose={() => setRestoreModalVisible(false)}
+        onConfirm={async () => {
+          if (selectedItem) {
+            const param = { id: selectedItem.id, token: isLogin?.token };
+            await RestoreExpensesApi(param, setLoading);
+            fetchExpenses(activeTab);
+          }
+          setRestoreModalVisible(false);
+        }}
+        message="Do you want to restore this expense?"
+        cancelText="No"
+        confirmText="Yes, Restore"
       />
     </SafeAreaView>
   );
@@ -186,9 +294,9 @@ const styles = StyleSheet.create({
     width: "40%", // two items per row
   },
   label: {
-     color: "#000000",
-            fontWeight: "700",
-            fontSize: 14,
+    color: "#000000",
+    fontWeight: "700",
+    fontSize: 14,
     marginBottom: 4,
   },
   value: {

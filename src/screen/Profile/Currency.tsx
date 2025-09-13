@@ -62,7 +62,7 @@ const CurrencyScreen = ({ navigation }) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       {/* Header */}
       <CustomHeader
         menuIcon={imageIndex.back}

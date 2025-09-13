@@ -26,6 +26,7 @@ export default function CategoriesForm({ route, navigation }) {
   const [form, setForm] = useState({
     name: "",
   });
+  const [nameError, setNameError] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -41,16 +42,22 @@ export default function CategoriesForm({ route, navigation }) {
   }, [item]);
 
   const handleInputChange = (field, value) => {
-    // setForm((prev) => ({ ...prev, [key]: value }));
     setForm((prev) => ({
       ...prev,
       [field]: value,
-       }));
+    }));
+    if (field === "name") {
+      setNameError(false);
+    }
   };
 
   const isLogin = useSelector((state: any) => state.auth);
 
   const handleSubmit = async () => {
+    if (!form.name.trim()) {
+      setNameError(true);
+      return;
+    }
     setLoading(true);
     try {
       console.log(form)
@@ -75,7 +82,7 @@ export default function CategoriesForm({ route, navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#fff" }}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -95,13 +102,20 @@ export default function CategoriesForm({ route, navigation }) {
 
             {/* Text Inputs */}
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                // nameError && { borderColor: "red" }
+              ]}
               placeholder="Enter name"
               placeholderTextColor={"#ADA4A5"}
               value={form.name}
               onChangeText={(val) => handleInputChange("name", val)}
             />
-
+            {nameError && (
+              <Text style={{ color: "red", marginBottom: 8, marginLeft: 4 }}>
+                Name is required
+              </Text>
+            )}
 
             {/* Submit Button */}
             <TouchableOpacity

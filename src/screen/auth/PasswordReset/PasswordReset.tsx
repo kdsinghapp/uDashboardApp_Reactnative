@@ -25,7 +25,7 @@ export default function PasswordReset() {
     navigation
   } = usePasswordReset();
   return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView edges={['top']} style={styles.container}>
         <StatusBarComponent />
           {loading && <Loading />}
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>

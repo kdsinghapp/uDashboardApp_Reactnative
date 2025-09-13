@@ -33,13 +33,16 @@ export default function AddNoteScreen({ route, navigation }) {
     calendarDate: new Date(),
     tags: "",
     callbackId: "",
-    categoryId: ""
+    categoryId: "",
+    tagsId: ""
   });
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [callback, setCallback] = useState([])
   const [categoryData, setCategoryData] = useState([])
+  const [tag, setTag] = useState([])
+  const [showTagDropdown, setShowTagDropdown] = useState(false);  
   useEffect(() => {
 
     (async () => {
@@ -56,6 +59,12 @@ export default function AddNoteScreen({ route, navigation }) {
         label: item.name,
         value: item.id,
       })) : []
+      const tag = dd?.data?.tags ? dd?.data?.tags.map(item => ({
+        label: item.name,
+        value: item.id,
+      })) : []
+      
+      setTag(tag)
       setCallback(calb)
       setCategoryData(cate)
     })()
@@ -67,9 +76,6 @@ export default function AddNoteScreen({ route, navigation }) {
     mode: "date",
   });
 
-  const categoryOptions = [{label:"Work", value:"1"}, {label:"Personal", value:"2"}];
-  const callbackOptions = ["Email", "Phone", "Meeting", "None"];
-
   useEffect(() => {
     if (isEdit && noteData) {
       setForm({
@@ -80,9 +86,11 @@ export default function AddNoteScreen({ route, navigation }) {
         calendarDate: noteData.calendar_event_date
           ? new Date(noteData.calendar_event_date)
           : new Date(),
-        tags:  "",
+        // tags:  "",
         callbackId: noteData?.callback_id,
-        categoryId: noteData?.category_id
+        categoryId: noteData?.category_id,
+        tags: noteData.tags?.name || "",
+        tagsId: noteData?.tags_id
       });
     }
   }, [noteData]);
@@ -92,6 +100,7 @@ export default function AddNoteScreen({ route, navigation }) {
       ...form, [field]: value.label || value,
       ...(field === "callback" && { callbackId: value.value }), // add priorityId
       ...(field === "category" && { categoryId: value.value }),
+      ...(field === "tags" && { tagsId: value.value }), // add statusId
     });
     setErrors({ ...errors, [field]: "" }); // clear error on change
   };
@@ -139,7 +148,7 @@ export default function AddNoteScreen({ route, navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ marginHorizontal: 20 }}>
         <CustomBackHeader
           menuIcon={imageIndex.back}
@@ -227,11 +236,17 @@ export default function AddNoteScreen({ route, navigation }) {
 
           {/* Tags */}
           <Text style={styles.label}>Tags</Text>
-          <TextInput
+          {/* <TextInput
             style={styles.input}
             placeholder="Select tags"
             value={form.tags}
             onChangeText={(text) => handleChange("tags", text)}
+          /> */}
+           <CustomDropdown
+            label="Select tags"
+            options={tag}
+            value={form.tags}
+            onSelect={(val) => handleChange("tags", val)}
           />
 
           {/* Button */}

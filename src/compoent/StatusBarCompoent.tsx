@@ -20,7 +20,7 @@ const StatusBarComponent: React.FC<StatusBarComponentProps> = ({
         backgroundColor={backgroundColor}
         translucent={translucent}
       />
-      <SafeAreaView style={{ backgroundColor }} />
+      <SafeAreaView edges={['top']} style={{ backgroundColor }} />
     </>
   );
 };

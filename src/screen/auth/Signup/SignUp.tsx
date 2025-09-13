@@ -52,7 +52,7 @@ export default function Signup() {
     handlePhoneChange
   } = useSignup();
   return (
-    <SafeAreaView
+    <SafeAreaView edges={['top']}
       style={styles.bgContainer}
     >
       {loading && <Loading />}

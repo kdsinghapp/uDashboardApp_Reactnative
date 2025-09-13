@@ -12,7 +12,8 @@ import NetworkStatusModal from '../compoent/NetworkStatusModal';
 import { LanguageProvider } from '../localization/LanguageContext';
 // import messaging from '@react-native-firebase/messaging';
 import { Alert, PermissionsAndroid, Platform } from 'react-native';
- const AppNavigator: React.FC = () => {
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+const AppNavigator: React.FC = () => {
   const [isConnected, setIsConnected] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   // const token =  messaging().getToken();
@@ -23,7 +24,7 @@ import { Alert, PermissionsAndroid, Platform } from 'react-native';
   //   // listenForForegroundNotification();
   // }, []);
 
- 
+
 
   // const listenForForegroundNotification = () => {
   //   messaging().onMessage(async remoteMessage => {
@@ -40,9 +41,13 @@ import { Alert, PermissionsAndroid, Platform } from 'react-native';
               modalVisible={modalVisible}
               offlineText="No Internet! Please check your connection."
             />
-             <LanguageProvider>
-              <RegistrationRoutes />
-            </LanguageProvider>
+            <SafeAreaProvider>
+              <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }} edges={['bottom']}>
+                <LanguageProvider>
+                  <RegistrationRoutes />
+                </LanguageProvider>
+              </SafeAreaView>
+            </SafeAreaProvider>
             <Toast config={toastConfig} />
           </NavigationContainer>
         </GestureHandlerRootView>

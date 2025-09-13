@@ -179,7 +179,7 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
   }
   const dispatch = useDispatch()
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#fff" }}>
       <StatusBarComponent />
       <Image
         source={imageIndex.logo} 

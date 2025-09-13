@@ -15,7 +15,7 @@ const AddclientsDetail = () => {
   ];
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView edges={['top']} style={styles.safeArea}>
       <StatusBarComponent />
       <View style={styles.headerContainer}>
         <CustomBackHeader menuIcon={imageIndex.back} label={"Clients Detail"} />

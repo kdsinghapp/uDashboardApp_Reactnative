@@ -78,7 +78,7 @@ export default function TagScreen() {
   const filteredData = employeeData.filter((item: any) => {
     const query = searchText.toLowerCase();
     return (
-      item?.name?.toLowerCase().includes(query) 
+      item?.name?.toLowerCase().includes(query)
     );
   });
   const fetchEmployee = async (activeTab: string) => {
@@ -98,40 +98,43 @@ export default function TagScreen() {
 
 
   const nav = useNavigation()
-  const renderCard = ({ item }: any) => {
-    const handleDelete = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await DeleteTagApi(param, setLoading)
-      fetchEmployee(activeTab)
-      setDeleteModalVisible(false);
-    };
+  const [selectedItem, setSelectedItem] = useState(null);
+  const handleDelete = async () => {
+    // 👇 Your delete API or logic here
+    if (!selectedItem) return;
+    console.log("Item deleted!");
+    const param = {
+      id: selectedItem?.id,
+      token: isLogin?.token
+    }
+    const dd = await DeleteTagApi(param, setLoading)
+    fetchEmployee(activeTab)
+    setDeleteModalVisible(false);
+  };
 
-    const handleRestore = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await RestoreTagApi(param, setLoading)
-      fetchEmployee(activeTab)
-      setRestoreModalVisible(false);
-    };
+  const handleRestore = async () => {
+    // 👇 Your delete API or logic here
+    if (!selectedItem) return;
+    const param = {
+      id: selectedItem?.id,
+      token: isLogin?.token
+    }
+    const dd = await RestoreTagApi(param, setLoading)
+    fetchEmployee(activeTab)
+    setRestoreModalVisible(false);
+  };
+  const renderCard = ({ item }: any) => {
+
     return (
       <TouchableOpacity
-        onPress={() => nav.navigate(ScreenNameEnum.TagDetail, { item: item })}
+        onPress={() => { activeTab == "Active" && nav.navigate(ScreenNameEnum.TagDetail, { item: item }) }}
         style={styles.card}
       >
         {/* Top Row: Name & Status */}
         <View style={styles.cardTopRow}>
           <View>
             <Text style={styles.name}>{item?.name}</Text>
-         
+
           </View>
           {activeTab == "Active" &&
             <View style={styles.cardBottomRow}>
@@ -141,7 +144,11 @@ export default function TagScreen() {
               <TouchableOpacity style={styles.iconBtn} onPress={() => nav.navigate(ScreenNameEnum.AddTag, { item: item })}>
                 <Image style={styles.icon} source={imageIndex.editGreen} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.iconBtn} onPress={() => setDeleteModalVisible(true)}>
+              <TouchableOpacity style={styles.iconBtn} onPress={async () => {
+                await setSelectedItem(item)
+                setDeleteModalVisible(true)
+              }
+              }>
                 <Image style={styles.icon} source={imageIndex.delite} />
               </TouchableOpacity>
             </View>
@@ -149,7 +156,10 @@ export default function TagScreen() {
           {activeTab == "Deleted" &&
             <View style={styles.cardBottomRow}>
 
-              <TouchableOpacity style={styles.iconBtn} onPress={() => setRestoreModalVisible(true)}>
+              <TouchableOpacity style={styles.iconBtn} onPress={async () => {
+                await setSelectedItem(item)
+                setRestoreModalVisible(true)
+              }}>
                 <Image style={styles.icon} source={imageIndex.restore} />
               </TouchableOpacity>
             </View>
@@ -157,35 +167,20 @@ export default function TagScreen() {
         </View>
 
 
-        <DeleteModal
-          visible={deleteModalVisible}
-          onClose={() => setDeleteModalVisible(false)}
-          onConfirm={handleDelete}
-          title="Delete Employee?"
-          message="Are you sure you want to delete this Tag from your list?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
-         <RestoreModal
-          visible={restoreModalVisible}
-          onClose={() => setRestoreModalVisible(false)}
-          onConfirm={handleRestore}
-          message="Do you want to restore this Tag?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
+
       </TouchableOpacity>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
       <SearchBar
         value={searchText}
         onSearchChange={(text) => setSearchText(text)}
+        placeholder="Search Tag"
       />
       <View style={styles.tabRow}>
         <TouchableOpacity
@@ -224,6 +219,23 @@ export default function TagScreen() {
           />
         </TouchableOpacity>
       }
+      <DeleteModal
+        visible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
+        onConfirm={handleDelete}
+        title="Delete Employee?"
+        message="Are you sure you want to delete this tag from your list?"
+        cancelText="No"
+        confirmText="Yes, Delete"
+      />
+      <RestoreModal
+        visible={restoreModalVisible}
+        onClose={() => setRestoreModalVisible(false)}
+        onConfirm={handleRestore}
+        message="Do you want to restore this tag?"
+        cancelText="No"
+        confirmText="Yes, Delete"
+      />
     </SafeAreaView>
   );
 }

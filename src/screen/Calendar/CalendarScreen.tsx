@@ -81,7 +81,7 @@ export default function CalendarScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
             <StatusBarComponent/>
       <View style={{
         padding: 15,

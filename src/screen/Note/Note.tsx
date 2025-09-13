@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import { DeleteNotesApi, GetDeletedNotesApi, GetNotesApi, GetNotesListApi, RestoreNotesApi } from "../../Api/apiRequest";
 import LoadingModal from "../../utils/Loader";
+import RestoreModal from "../../compoent/RestoreModal";
 
 const allData = [
   { id: "01", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Active" },
@@ -27,6 +28,8 @@ export default function Note() {
   const [notesData, setNotesData] = useState([])
   const [searchText, setSearchText] = useState("");
   const isLogin = useSelector((state: any) => state.auth);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [restoreModalVisible, setRestoreModalVisible] = useState(false)
   const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
   // console.log(isLogin)
   useFocusEffect(
@@ -60,32 +63,36 @@ export default function Note() {
     }
   }
 
+  const handleDelete = async () => {
+    // 👇 Your delete API or logic here
+    if (!selectedItem) return;
 
+    console.log("Item deleted!");
+    const param = {
+      id: selectedItem?.id,
+      token: isLogin?.token
+    }
+    const dd = await DeleteNotesApi(param, setLoading)
+    fetchNotes(activeTab)
+    setDeleteModalVisible(false);
+  };
+
+  const handleRestore = async () => {
+    // 👇 Your delete API or logic here
+    if (!selectedItem) return;
+    console.log("Item deleted!");
+    const param = {
+      id: selectedItem?.id,
+      token: isLogin?.token
+    }
+    const dd = await RestoreNotesApi(param, setLoading)
+    fetchNotes(activeTab)
+    setRestoreModalVisible(false);
+    // setDeleteModalVisible(false);
+  };
   const nav = useNavigation()
   const renderCard = ({ item }: any) => {
-    const handleDelete = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await DeleteNotesApi(param, setLoading)
-      fetchNotes(activeTab)
-      setDeleteModalVisible(false);
-    };
 
-    const handleRestore = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await RestoreNotesApi(param, setLoading)
-      fetchNotes(activeTab)
-      // setDeleteModalVisible(false);
-    };
     return (
 
       <TouchableOpacity
@@ -142,7 +149,10 @@ export default function Note() {
 
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => setDeleteModalVisible(true)}
+                  onPress={async () => {
+                    await setSelectedItem(item);
+                    setDeleteModalVisible(true);
+                  }}
                 >
                   <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.delite} />
                 </TouchableOpacity>
@@ -156,7 +166,10 @@ export default function Note() {
               }}>
 
                 <TouchableOpacity
-                  onPress={() => handleRestore()}
+                  onPress={async () => {
+                    await setSelectedItem(item);
+                    setRestoreModalVisible(true);
+                  }}
                 >
                   <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.restore} />
                 </TouchableOpacity>
@@ -169,27 +182,20 @@ export default function Note() {
 
 
 
-        <DeleteModal
-          visible={deleteModalVisible}
-          onClose={() => setDeleteModalVisible(false)}
-          onConfirm={handleDelete}
-          title="Delete Notes?"
-          message="Are you sure you want to delete this Notes from your list?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
+
       </TouchableOpacity>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView edges={['top']} style={styles.container}>
       {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
       <SearchBar
         value={searchText}
         onSearchChange={(text) => setSearchText(text)}
+        placeholder="Search Notes"
       />
       {/* <Text style={{
         fontSize: 14,
@@ -232,6 +238,24 @@ export default function Note() {
           />
         </TouchableOpacity>
       }
+      <DeleteModal
+        visible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
+        onConfirm={handleDelete}
+        title="Delete Notes?"
+        message="Are you sure you want to delete this Notes from your list?"
+        cancelText="No"
+        confirmText="Yes, Delete"
+      />
+      <RestoreModal
+        visible={restoreModalVisible}
+        onClose={() => setRestoreModalVisible(false)}
+        onConfirm={handleRestore}
+        title="Delete Notes?"
+        message="Do you want to restore this Notes?"
+        cancelText="No"
+        confirmText="Yes, Restore"
+      />
     </SafeAreaView>
   );
 }

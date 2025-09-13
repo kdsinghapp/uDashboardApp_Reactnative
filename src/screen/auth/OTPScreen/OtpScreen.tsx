@@ -42,7 +42,7 @@ export default function OtpScreen() {
     type
   } = useOtpVerification()
   return (
-    <SafeAreaView
+    <SafeAreaView edges={['top']}
       style={{ flex: 1, backgroundColor: "#fff" }}
 
     >
