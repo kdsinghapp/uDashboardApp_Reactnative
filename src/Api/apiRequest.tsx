@@ -247,6 +247,158 @@ const updatePassword = (
         );
     }
 };
+
+const GetApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const requestOptions = {
+
+            method: "GET",
+            headers: myHeaders,
+        };
+
+        const respons = fetch(`${base_url + param?.url}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.status == '1') {
+                    setLoading(false)
+                    return response
+                } else {
+                    setLoading(false)
+                    // errorToast(
+                    //     response.error,
+                    // );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const DeleteApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        formData.append("_method", "PUT");
+        const requestOptions = {
+
+            method: "DELETE",
+            headers: myHeaders,
+            body: formData,
+        };
+        console.log("formData", formData)
+        const respons = fetch(`${base_url+ param?.url}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success || response.status) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
+const RestoreApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+        const formData = new FormData();
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            redirect: "follow"
+        };
+        // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
+        const respons = fetch(`${base_url + param?.url}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success || response.status) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.error,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+
 const GetCallbackListApi = (
     param: any,
     setLoading: (loading: boolean) => void,
@@ -272,7 +424,7 @@ const GetCallbackListApi = (
             .then((res) => {
                 const response = JSON.parse(res);
                 console.log("---- ----ddv response", response)
-                if (response.status == '1') {
+                if (response.success) {
                     setLoading(false)
 
                     return response
@@ -3705,7 +3857,114 @@ const UpdateExpensesApi = (
         );
     }
 };
+const AddTeamsApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
 
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        formdata.append("description", param?.description ?? "");
+        formdata.append("employee_ids[]", param?.employeeId ?? "");
+         const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}teams`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response", response)
+                if (response.success || response.status) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
+const UpdateTeamsApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("name", param?.name ?? "");
+        formdata.append("description", param?.description ?? "");
+        formdata.append("employee_ids[]", param?.employeeId ?? "");
+         formdata.append("_method", "PUT");
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(`${base_url}teams/update/${param?.id}`, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("--------ddv response", response)
+                if (response.success || response.status) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.message,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
 
 
 
@@ -4046,6 +4305,7 @@ const Get_Notification_Api = async (
     }
 };
 export {
+    GetApi,DeleteApi,RestoreApi,
     GetUserApi,
     Get_Notification_Api, SinupCustomer,
     Support_Api, Policies_Api,
@@ -4062,5 +4322,5 @@ export {
     GetBudgetCategoryListApi, GetBudgetCategoryApi, AddBudgetCategoryApi, DeleteBudgetCategoryApi, GetDeletedBudgetCategoryApi, RestoreBudgetCategoryApi, UpdateBudgetCategoryApi,
     GetProfitLossListApi, GetProfitLossApi, AddProfitLossApi, DeleteProfitLossApi, GetDeletedProfitLossApi, RestoreProfitLossApi, UpdateProfitLossApi,
     GetExpensesListApi, GetExpensesApi, AddExpensesApi, DeleteExpensesApi, GetDeletedExpensesApi, RestoreExpensesApi, UpdateExpensesApi,
-
+AddTeamsApi, UpdateTeamsApi
 }  

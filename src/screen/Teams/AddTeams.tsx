@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,166 +7,235 @@ import {
   ScrollView,
   StyleSheet,
   Platform,
+  KeyboardAvoidingView,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
-import DateTimePicker from '@react-native-community/datetimepicker';
- import { Alert } from "react-native";
 import CustomDropdown from "../../compoent/CustomDropdown";
 import CustomBackHeader from "../../compoent/CustomBackHeader";
 import imageIndex from "../../assets/imageIndex";
-import { TouchableWithoutFeedback } from "react-native";
-import { KeyboardAvoidingView } from "react-native";
-import { Keyboard } from "react-native";
-import StatusBarComponent from "../../compoent/StatusBarCompoent";
 import { SafeAreaView } from "react-native-safe-area-context";
+import DatePickerModal from "../../compoent/DatePickerModal";
+import { AddNotesApi, AddTeamsApi, GetAllListApi, UpdateNotesApi, UpdateTeamsApi } from "../../Api/apiRequest";
+import { useSelector } from "react-redux";
+import { s } from "../../utils/Constant";
 
-export default function 
-AddTeams() {
-   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    salary: "",
-    startDate: null,
-    lastIncrementDate: null,
-    employmentType: "",
-    countryCode: "",
-    position: "",
-    payType: "",
-    terminationDate: null,
-    status: "",
-    bonusEligible: "",
-    notes: "",
+export default function AddNoteScreen({ route, navigation }) {
+  const noteData = route?.params?.item || null;
+  const isEdit = !!noteData;
+  const isLogin = useSelector((state: any) => state.auth);
+
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    employee: "",
+    employeeId: "",
   });
+
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [callback, setCallback] = useState([])
+  const [categoryData, setCategoryData] = useState([])
+  const [tag, setTag] = useState([])
+  const [showTagDropdown, setShowTagDropdown] = useState(false);  
+  useEffect(() => {
+
+    (async () => {
+      const param = {
+        token: isLogin?.token
+      }
+      const dd = await GetAllListApi(param, setLoading)
+      console.log(dd?.data?.employees, 'this isv all type data')
+      const calb = dd?.data?.employees ? dd?.data?.employees.map(item => ({
+        label: item.first_name + ' ' + item.last_name,
+        value: item.id,
+      })) : []
+      const cate = dd?.data?.categories ? dd?.data?.categories.map(item => ({
+        label: item.name,
+        value: item.id,
+      })) : []
+      const tag = dd?.data?.tags ? dd?.data?.tags.map(item => ({
+        label: item.name,
+        value: item.id,
+      })) : []
+      
+      setTag(tag)
+      setCallback(calb)
+      setCategoryData(cate)
+    })()
+  }, [])
 
   const [showDatePicker, setShowDatePicker] = useState({
-    field: "",
     visible: false,
+    field: "",
+    mode: "date",
   });
 
-  const handleInputChange = (key, value) => {
-    setForm({ ...form, [key]: value });
-  };
-
-  const handleDateChange = (event, selectedDate) => {
-    if (selectedDate) {
-      setForm({ ...form, [showDatePicker.field]: selectedDate });
+  useEffect(() => {
+    if (isEdit && noteData) {
+      setForm({
+        name: noteData.name || "",
+        description: noteData.description || "",
+        employee: noteData.employee?.name || "",
+          employeeId: noteData?.employee?.id || "",
+      });
     }
-    setShowDatePicker({ field: "", visible: false });
+  }, [noteData]);
+
+  const handleChange = (field: string, value: any) => {
+    setForm({
+      ...form, [field]: value.label || value,
+     ...(field === "employee" && { employeeId: value.value }),
+        });
+    setErrors({ ...errors, [field]: "" }); // clear error on change
   };
 
-  const formatDate = (date) => {
-    if (!date) return "";
-    const d = new Date(date);
-    const day = String(d.getDate()).padStart(2, "0");
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
+  const validateForm = () => {
+    let valid = true;
+    let newErrors: any = {};
+
+    if (!form.name.trim()) {
+      newErrors.name = "Name is required";
+      valid = false;
+    }
+    if (!form.employee) {
+      newErrors.employee = "Employee is required";
+      valid = false;
+    }
+   
+
+    setErrors(newErrors);
+    return valid;
   };
 
-  const handleSubmit = () => {
-    console.log("Form Data:", form);
-    Alert.alert("Employee Saved ✅");
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    const payload = {
+      ...form,
+     token:isLogin?.token,
+      navigation,
+      id:noteData?.id
+    };
+     if (isEdit && noteData) {
+      UpdateTeamsApi(payload, setLoading)
+     }
+     else{
+    AddTeamsApi(payload, setLoading)
+
+     }
+
+    console.log(payload)
   };
 
   return (
-    <SafeAreaView edges={['top']} style={{flex:1, backgroundColor:'#fff'}}>
-      <StatusBarComponent/>
-    <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === "ios" ? "padding" : null}
-    keyboardVerticalOffset={Platform.OS === "ios" ? 5 : 0}
-  >
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        style={styles.container}
-        contentContainerStyle={{ paddingBottom: 30 }}
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={{ marginHorizontal: 20 }}>
+        <CustomBackHeader
+          menuIcon={imageIndex.back}
+          label={isEdit ? "Edit Team" : "Add Team"}
+        />
+      </View>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
       >
-        <StatusBarComponent/>
-       <CustomBackHeader menuIcon={imageIndex.back} label={"Add Team"} />
-      {/* Text Inputs */}
-      {["Enter first name",  ].map((field) => (
-        <TextInput
-          key={field}
-          style={styles.input}
-          placeholderTextColor={"#ADA4A5"}
-          placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-          keyboardType={
-            field === "email"
-              ? "email-address"
-              : field === "Enter phone number" || field === "Enter salary amount"
-              ? "numeric"
-              : "default"
-          }
-          value={form[field]}
-          onChangeText={(val) => handleInputChange(field, val)}
-        />
-      ))}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.container}
+        >
+          {/* Task */}
+          <Text style={styles.label}>Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter name"
+            value={form.name}
+            placeholderTextColor={"#ADA4A5"}
+            onChangeText={(text) => handleChange("name", text)}
+          />
+          {errors.name ? <Text style={styles.error}>{errors?.name}</Text> : null}
 
- 
+          {/* Details */}
+          <Text style={styles.label}>Description</Text>
+          <TextInput
+            style={[styles.input, { height: 100 }]}
+            placeholder="Enter descriptions"
+            multiline
+            value={form.description}
+            placeholderTextColor={"#ADA4A5"}
+            onChangeText={(text) => handleChange("description", text)}
+          />
 
-      {/* Custom Dropdowns */}
-      {[
-        { key: "employmentType", label: "Assign Employees", options: ["Ram", "Mohan", "Kamlesh"] },
-        ].map(({ key, label, options }) => (
-        <CustomDropdown
-          key={key}
-          label={label}
-          options={options}
-          value={form[key]}
-          onSelect={(val) => handleInputChange(key, val)}
-        />
-      ))}
+          {/* Category */}
+          <Text style={styles.label}>Employee</Text>
+          <CustomDropdown
+            label="Select employee"
+            options={callback}
+            value={form.employee}
+            onSelect={(val) => handleChange("employee", val)}
+          />
+          {errors.employee ? (
+            <Text style={styles.error}>{errors.employee}</Text>
+          ) : null}
 
-      {/* Notes */}
-      <TextInput
-        style={[styles.input, { height: 80,    borderColor: "#EAEAEA",
-borderWidth:1,        }]}
-        placeholder="Description"
-        multiline
-        value={form.notes}
-        onChangeText={(val) => handleInputChange("notes", val)}
-      />
-
-      {/* Submit Button */}
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Create Team</Text>
-      </TouchableOpacity>
-      </ScrollView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+      
+          {/* Button */}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>
+                {isEdit ? "Update Team" : "Create Team"}
+              </Text>
+            )}
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 15 },
-  title: { fontSize: 20, fontWeight: "600", marginBottom: 15 },
+  container: {
+    padding: 20,
+    paddingBottom: 40,
+    backgroundColor: "#fff",
+  },
+  label: {
+    marginBottom: 5,
+    fontWeight: "500",
+    fontSize: 14,
+  },
   input: {
     borderWidth: 1,
     borderColor: "#EAEAEA",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    height:50,
-   },
-  dateInput: {
-    borderWidth: 1,
-    borderColor: "#EAEAEA",
-    borderRadius: 8,
-    padding: 14,
-    marginBottom: 12,
-    height:50,
-
-   },
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    marginBottom: 8,
+    height: 55,
+    justifyContent: "center",
+  },
+  error: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 10,
+  },
   button: {
     backgroundColor: "#0D6EFD",
-    padding: 15,
     borderRadius: 10,
-    alignItems: "center",
+    paddingVertical: 15,
     marginTop: 20,
-    marginBottom: 30,
+    alignItems: "center",
   },
-  buttonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 16,
+  },
 });

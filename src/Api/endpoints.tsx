@@ -1,3 +1,5 @@
+import { G } from "react-native-svg";
+
  
 export const endpointCustomer = {
   
@@ -22,6 +24,17 @@ export const endpointCustomer = {
   offerlist:"/bikedoctor/offer/offerlist?service_id",
   paymentCash:"/bikedoctor/payment/cash",
   addshopdetails:"/bikedoctor/dealer/add-shop-details",
-  adddocuments:"/bikedoctor/dealer/add-dealer-documents"
+  adddocuments:"/bikedoctor/dealer/add-dealer-documents",
+
+  GetEmployeeList:"employees?page=1&limit=100",
+  GetDeletedEmployeeList:"employees?page=1&limit=1000&employee=deleted",
+  DeleteEmployee:'employees/',
+
+
+  // Teams
+  GetTeamsList :"teams?page=1&limit=100",
+  GetDeletedTeamsList:"teams?page=1&limit=1000&team=deleted",
+  DeleteTeams:'teams/delete/',
+  RestoreTeams:'teams/restore/', 
 };
  

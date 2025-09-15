@@ -17,55 +17,30 @@ import ScreenNameEnum from "../../routes/screenName.enum";
 import DeleteModal from "../../compoent/DeleteModal";
 import { useSelector } from "react-redux";
 import moment from "moment";
-import { DeleteEmployApi, GetDeletedEmployApi, GetEmployListApi, RestoreEmployApi } from "../../Api/apiRequest";
+import { DeleteApi, GetApi, RestoreApi } from "../../Api/apiRequest";
 import LoadingModal from "../../utils/Loader";
+import RestoreModal from "../../compoent/RestoreModal";
+import { endpointCustomer } from "../../Api/endpoints";
+import CommonCard from "../../compoent/CustomCard";
+import CommonTabBar from "../../compoent/CustomTabbar";
 
-const allData = [
-  {
-    id: "01",
-    name: "Website Redesign",
-    amount: "₹50,000.00",
-    details: "Client payment for UI project",
-    date: "20 Aug 2025",
-    status: "Active",
-  },
-  {
-    id: "02",
-    name: "Website Redesign",
-    amount: "₹50,000.00",
-    details: "Client payment for UI project",
-    date: "20 Aug 2025",
-    status: "Deleted",
-  },
-  {
-    id: "03",
-    name: "Mobile App",
-    amount: "₹80,000.00",
-    details: "Client payment for App project",
-    date: "22 Aug 2025",
-    status: "Active",
-  },
-  {
-    id: "04",
-    name: "Mobile App",
-    amount: "₹80,000.00",
-    details: "Client payment for App project",
-    date: "22 Aug 2025",
-    status: "Active",
-  },
-];
 
-export default function TeamsScreen() {
+export default function EmployeeScreen() {
   const [activeTab, setActiveTab] = useState<"Active" | "Deleted">("Active");
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [loading, setLoading] = useState(false)
   const [employeeData, setEmployeeData] = useState([])
   const [searchText, setSearchText] = useState("");
   const isLogin = useSelector((state: any) => state.auth);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+
+  const [restoreModalVisible, setRestoreModalVisible] = useState(false);
+
   const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
   // console.log(isLogin)
   useFocusEffect(
     useCallback(() => {
+      setActiveTab("Active");
       fetchEmployee("Active");
     }, [])
   );
@@ -77,100 +52,82 @@ export default function TeamsScreen() {
     const query = searchText.toLowerCase();
     return (
       // item?.task_name?.toLowerCase().includes(query) ||
-      item?.first_name?.toLowerCase().includes(query) ||
-      item?.last_name?.toLowerCase().includes(query)
+      item?.name?.toLowerCase().includes(query) ||
+      item?.description?.toLowerCase().includes(query)
       // item?.status?.name?.toLowerCase().includes(query) ||
       // item?.priority?.name?.toLowerCase().includes(query)
     );
   });
   const fetchEmployee = async (activeTab: string) => {
     const param = {
-      token: isLogin?.token
+      token: isLogin?.token,
+      url: activeTab == "Active" ? endpointCustomer?.GetTeamsList : endpointCustomer?.GetDeletedTeamsList
     }
-    if (activeTab == "Active") {
-      const data = await GetEmployListApi(param, setLoading)
-      setEmployeeData(data?.data?.data)
-      console.log(data?.data?.data, 'this is instide employee')
-    } else {
-      const data = await GetDeletedEmployApi(param, setLoading)
-      // console.log(data?.data)
-      setEmployeeData(data?.data?.data)
-    }
+    const data = await GetApi(param, setLoading)
+    setEmployeeData(data?.data)
+    // console.log(data?.data?.data, 'this is instide employee')
+
   }
-
-
   const nav = useNavigation()
+
+  const handleDelete = async () => {
+    if (!selectedItem) return
+    const param = {
+      token: isLogin?.token,
+      url: endpointCustomer?.DeleteTeams + selectedItem?.id
+    }
+    await DeleteApi(param, setLoading)
+    fetchEmployee(activeTab)
+    setDeleteModalVisible(false);
+  };
+
+  const handleRestore = async () => {
+    if (!selectedItem) return
+    const param = {
+      token: isLogin?.token,
+      url: endpointCustomer?.RestoreTeams + selectedItem?.id,
+    }
+    await RestoreApi(param, setLoading)
+    fetchEmployee(activeTab)
+    setRestoreModalVisible(false);
+  };
   const renderCard = ({ item }: any) => {
-    const handleDelete = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await DeleteEmployApi(param, setLoading)
-      fetchEmployee(activeTab)
-      setDeleteModalVisible(false);
-    };
-
-    const handleRestore = async () => {
-      // 👇 Your delete API or logic here
-      console.log("Item deleted!");
-      const param = {
-        id: item?.id,
-        token: isLogin?.token
-      }
-      const dd = await RestoreEmployApi(param, setLoading)
-      fetchEmployee(activeTab)
-      // setDeleteModalVisible(false);
-    };
     return (
-      <TouchableOpacity
-        onPress={() => nav.navigate(ScreenNameEnum.TeamsDetail, { item: item })}
-        style={styles.card}
-      >
-        {/* Top Row: Name & Status */}
-        <View style={styles.cardTopRow}>
-          <View>
-            <Text style={styles.name}>{item?.first_name}{' '} {item?.last_name}</Text>
-            <Text style={styles.details}>{item?.email}</Text>
-            <Text style={styles.details}>{item?.phone}</Text>
-          </View>
-          {activeTab == "Active" &&
-            <View style={styles.cardBottomRow}>
-
-              <TouchableOpacity style={styles.iconBtn} onPress={() => nav.navigate(ScreenNameEnum.TeamsDetail, { item: item })}>
-                <Image style={styles.icon} source={imageIndex.eyeBlue} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.iconBtn} onPress={() => nav.navigate(ScreenNameEnum.AddTeams, { item: item })}>
-                <Image style={styles.icon} source={imageIndex.editGreen} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.iconBtn} onPress={() => setDeleteModalVisible(true)}>
-                <Image style={styles.icon} source={imageIndex.delite} />
-              </TouchableOpacity>
-            </View>
-          }
-          {activeTab == "Deleted" &&
-            <View style={styles.cardBottomRow}>
-
-              <TouchableOpacity style={styles.iconBtn} onPress={() => handleRestore()}>
-                <Image style={styles.icon} source={imageIndex.restore} />
-              </TouchableOpacity>
-            </View>
-          }
-        </View>
-
-
-        <DeleteModal
-          visible={deleteModalVisible}
-          onClose={() => setDeleteModalVisible(false)}
-          onConfirm={handleDelete}
-          title="Delete Employee?"
-          message="Are you sure you want to delete this Employee from your list?"
-          cancelText="No"
-          confirmText="Yes, Delete"
-        />
-      </TouchableOpacity>
+      <CommonCard
+        title={item?.name}
+        subtitle={item?.description}
+        // subtitle2={item.phone}
+        onPress={() => nav.navigate(ScreenNameEnum.TeamsDetail, { item })}
+        actions={
+          activeTab === "Active"
+            ? [
+              {
+                icon: imageIndex.eyeBlue,
+                onPress: () => nav.navigate(ScreenNameEnum.TeamsDetail, { item }),
+              },
+              {
+                icon: imageIndex.editGreen,
+                onPress: () => nav.navigate(ScreenNameEnum.AddTeams, { item }),
+              },
+              {
+                icon: imageIndex.delite,
+                onPress: async () => {
+                  await setSelectedItem(item);
+                  setDeleteModalVisible(true);
+                },
+              },
+            ]
+            : [
+              {
+                icon: imageIndex.restore,
+                onPress: async () => {
+                  await setSelectedItem(item);
+                  setRestoreModalVisible(true);
+                },
+              },
+            ]
+        }
+      />
     );
   }
 
@@ -182,22 +139,12 @@ export default function TeamsScreen() {
       <SearchBar
         value={searchText}
         onSearchChange={(text) => setSearchText(text)}
+        placeholder="Search Team"
       />
-      <View style={styles.tabRow}>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === "Active" && styles.activeTab]}
-          onPress={() => setActiveTab("Active")}
-        >
-          <Text style={activeTab === "Active" ? styles.tabTextActive : styles.tabText}>Active</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === "Deleted" && styles.activeTab]}
-          onPress={() => setActiveTab("Deleted")}
-        >
-          <Text style={activeTab === "Deleted" ? styles.tabTextActive : styles.tabText}>Deleted</Text>
-        </TouchableOpacity>
-      </View>
-
+      <CommonTabBar
+        activeTab={activeTab}
+        onTabPress={(key) => setActiveTab(key)}
+      />
       <FlatList
         data={filteredData}
         showsVerticalScrollIndicator={false}
@@ -211,15 +158,33 @@ export default function TeamsScreen() {
         <TouchableOpacity style={styles.fab}
 
           onPress={() => {
-            nav.navigate(ScreenNameEnum.AddEmployeeScreen)
+            nav.navigate(ScreenNameEnum.AddTeams)
           }}
         >
           <Image
             source={imageIndex.AddLogo}
-            style={{ height: 70, width: 70, resizeMode: "contain" }}
+            style={styles.icon}
           />
         </TouchableOpacity>
       }
+      <DeleteModal
+        visible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
+        onConfirm={handleDelete}
+        title="Delete Employee?"
+        message="Are you sure you want to delete this Team from your list?"
+        cancelText="No"
+        confirmText="Yes, Delete"
+      />
+      <RestoreModal
+        visible={restoreModalVisible}
+        onClose={() => setRestoreModalVisible(false)}
+        onConfirm={handleRestore}
+        title="Delete Employee?"
+        message="Do you want to restore this Team?"
+        cancelText="No"
+        confirmText="Yes, Restore"
+      />
     </SafeAreaView>
   );
 }
@@ -233,71 +198,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  tabRow: { flexDirection: "row", borderRadius: 20, marginTop: 10, marginBottom: 10, backgroundColor: "#F5F5F5", },
-  tab: { flex: 1, paddingVertical: 10, alignItems: "center", borderRadius: 20, backgroundColor: "#F5F5F5", marginHorizontal: 5, height: 40, justifyContent: 'center' },
-  activeTab: { backgroundColor: "#007bff", },
-  tabText: { color: "#555" },
-  tabTextActive: { color: "#fff", fontWeight: "600" },
-
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 12,
-    marginHorizontal: 5,
-    // iOS shadow
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    // Android shadow
-    elevation: 5,
-  },
-  cardTopRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  cardMiddleRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 12,
-  },
-  cardBottomRow: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center"
-
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#000",
-  },
-  details: {
-    fontSize: 14,
-    color: "#878787",
-    marginTop: 2,
-    lineHeight: 22
-  },
-  amount: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#000",
-  },
-  date: {
-    fontSize: 12,
-    color: "#878787",
-  },
-  status: {
-    fontSize: 12,
-    fontWeight: "600",
-  },
-  iconBtn: {
-    marginLeft: 12,
-  },
-  icon: {
-    height: 22,
-    width: 22,
-  },
+  icon: { height: 70, width: 70, resizeMode: "contain" }
 });
