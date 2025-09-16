@@ -15,7 +15,7 @@ import Backburner from '../screen/Backburner/BackburnerScreen';
 import TeamScreen from '../screen/Teams/TeamScreen';
 import AssingnedScreen from '../screen/AssignedTask/AssingnedScreen';
 import CalendarScreen from '../screen/Calendar/CalendarScreen';
-import AddclientsScreen from '../screen/Addclients/AddclientsScreen';
+import AddclientsScreen from '../screen/Client/ClientsScreen';
 import RepliesScreen from '../screen/Replies/Replies';
 import BudgetScreen from '../screen/Financial/Budget/Budget';
 import PLSummaryScreen from '../screen/Financial/PLSummary/PLSummary';
@@ -23,6 +23,7 @@ import ExpensesScreen from '../screen/Financial/Expenses/Expenses';
 import CategoriesScreen from '../screen/Categories/CategoriesScreen';
 import TagScreen from '../screen/Tag/TagScreen';
 import BudgetCategoriesScreen from '../screen/Financial/BudgetCategories/BudgetCategoriesScreen';
+import PosisionScreen from '../screen/Employee/Posision/PosisionScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -52,6 +53,7 @@ export default function DrawerNavigation() {
       <Drawer.Screen name={ScreenNameEnum.Categories} component={CategoriesScreen} />
       <Drawer.Screen name={ScreenNameEnum.BudgetCategories} component={BudgetCategoriesScreen} />
       <Drawer.Screen name={ScreenNameEnum.Tag} component={TagScreen} />
+      <Drawer.Screen name={ScreenNameEnum.PosisionScreen} component={PosisionScreen} />
     </Drawer.Navigator>
   );
 }

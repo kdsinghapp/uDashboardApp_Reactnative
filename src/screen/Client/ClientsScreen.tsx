@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchBar from "../../compoent/SearchBar";
@@ -8,7 +8,7 @@ import StatusBarComponent from "../../compoent/StatusBarCompoent";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import ScreenNameEnum from "../../routes/screenName.enum";
 import DeleteModal from "../../compoent/DeleteModal";
-import { DeleteApi, DeleteCallbackApi, GetApi, RestoreApi, RestoreCallbackApi } from "../../Api/apiRequest";
+import { DeleteApi, GetApi, RestoreApi } from "../../Api/apiRequest";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import LoadingModal from "../../utils/Loader";
@@ -17,11 +17,11 @@ import { endpointCustomer } from "../../Api/endpoints";
 import CommonTabBar from "../../compoent/CustomTabbar";
 
 
-export default function CallbackScreen() {
+export default function clientScreen() {
   const [activeTab, setActiveTab] = useState<"Active" | "Deleted">("Active");
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [loading, setLoading] = useState(false)
-  const [callbackData, setCallbackData] = useState([])
+  const [clientData, setclientData] = useState([])
   const [searchText, setSearchText] = useState("");
   const isLogin = useSelector((state: any) => state.auth);
   const [selectedItem, setSelectedItem] = useState<any>(null);
@@ -31,53 +31,53 @@ export default function CallbackScreen() {
   // console.log(isLogin)
   useFocusEffect(
     useCallback(() => {
-      fetchCallback("Active");
+      fetchclient("Active");
       setActiveTab("Active");
 
     }, [])
   );
   useEffect(() => {
-    fetchCallback(activeTab);
+    fetchclient(activeTab);
   }, [activeTab]);
 
-  const filteredData = callbackData.filter((item: any) => {
+  const filteredData = clientData.filter((item: any) => {
     const query = searchText.toLowerCase();
     return (
-      item?.task_name?.toLowerCase().includes(query) ||
-      item?.employee?.first_name?.toLowerCase().includes(query) ||
-      item?.employee?.last_name?.toLowerCase().includes(query) ||
-      item?.status?.name?.toLowerCase().includes(query) ||
-      item?.priority?.name?.toLowerCase().includes(query)
+      // item?.task_name?.toLowerCase().includes(query) ||
+      item?.first_name?.toLowerCase().includes(query) ||
+      item?.last_name?.toLowerCase().includes(query)
+      // item?.status?.name?.toLowerCase().includes(query) ||
+      // item?.priority?.name?.toLowerCase().includes(query)
     );
   });
-  const fetchCallback = async (activeTab: string) => {
+  const fetchclient = async (activeTab: string) => {
     const param = {
       token: isLogin?.token,
-      url: activeTab == "Active" ? endpointCustomer?.GetCallbacksList : endpointCustomer?.GetDeletedCallbacksList
+      url: activeTab == "Active" ? endpointCustomer?.GetClientsList : endpointCustomer?.GetDeletedClientsList
     }
     const data = await GetApi(param, setLoading)
-    setCallbackData(data?.data?.data)
+    setclientData(data?.data || [])
   }
 
   const handleDelete = async () => {
-   if (!selectedItem)  return
+    if (!selectedItem) return
     const param = {
       token: isLogin?.token,
-      url: endpointCustomer?.DeleteCallbacks + selectedItem?.id
+      url: endpointCustomer?.DeleteClients + selectedItem?.id
     }
     await DeleteApi(param, setLoading)
-    fetchCallback(activeTab)
+    fetchclient(activeTab)
     setDeleteModalVisible(false);
   };
 
   const handleRestore = async () => {
-  if (!selectedItem)  return
+    if (!selectedItem) return
     const param = {
       token: isLogin?.token,
-      url: endpointCustomer?.DeleteCallbacks + selectedItem?.id + "/restore",
+      url: endpointCustomer?.RestoreClients + selectedItem?.id,
     }
     await RestoreApi(param, setLoading)
-    fetchCallback(activeTab)
+    fetchclient(activeTab)
     setRestoreModalVisible(false);
   };
   const nav = useNavigation()
@@ -85,7 +85,7 @@ export default function CallbackScreen() {
 
     return (
       <TouchableOpacity
-        onPress={() => nav.navigate(ScreenNameEnum.CallbackDetailScreen, { item: item })}
+        onPress={() => nav.navigate(ScreenNameEnum.AddclientsDetail, { item: item })}
         style={styles.card}>
         {/* Row 1: ID & Name */}
         <View style={styles.cardRow}>
@@ -94,40 +94,36 @@ export default function CallbackScreen() {
             <Text style={styles.value}>{item.id}</Text>
           </View>
           <View style={[styles.cardItem, styles.right]}>
-            <Text style={styles.label}>Tasks</Text>
-            <Text style={styles.value}>{item?.task_name} </Text>
+            <Text style={styles.label}>Case</Text>
+            <Text style={styles.value}>{item?.case} </Text>
           </View>
         </View>
 
         {/* Row 3: Date & Status */}
-        {/* <View style={styles.cardRow}>
+        <View style={styles.cardRow}>
           <View style={styles.cardItem}>
-            <Text style={styles.label}>Tast Manager</Text>
-            <Text style={styles.value}>rakesh dongre</Text>
+            <Text style={styles.label}>Name</Text>
+            <Text style={styles.value}>{item?.first_name} {item?.last_name}</Text>
           </View>
 
           <View style={[styles.cardItem, styles.right]}>
-            <Text style={styles.label}>Create Date</Text>
-            <Text style={styles.value}>{formattedDate(item?.created_at)}</Text>
+            <Text style={styles.label}>Team Name</Text>
+            <Text style={styles.value}>{item?.team?.name}</Text>
           </View>
 
-        </View> */}
+        </View>
 
         <View style={styles.cardRow}>
-          {item?.employee?.first_name ?
-            <View style={styles.cardItem}>
-              <Text style={styles.label}>Client</Text>
-              <Text style={styles.value}>{item?.employee?.first_name} {item?.employee?.last_name}</Text>
-            </View>
-            :
-            <View style={[styles.cardItem]}>
-              <Text style={styles.label}>Create Date</Text>
-              <Text style={styles.value}>{formattedDate(item?.created_at)}</Text>
-            </View>
-          }
-          <View style={[styles.cardItem, styles.right]}>
+
+          <View style={[styles.cardItem]}>
+            <Text style={styles.label}>Date</Text>
+            <Text style={styles.value}>{formattedDate(item?.start_date
+            )}</Text>
+          </View>
+
+          {/* <View style={[styles.cardItem, styles.right]}>
             <Text style={styles.label}>Status</Text>
-            <Text style={[styles.value, styles.tag]}>{item?.status?.name}</Text>
+            <Text style={[styles.value, styles.tag]}>{item?.status}</Text>
           </View>
 
 
@@ -136,7 +132,7 @@ export default function CallbackScreen() {
           <View style={styles.cardItem}>
             <Text style={styles.label}>Priority</Text>
             <Text style={[styles.value, styles.tag, { backgroundColor: item?.priority?.id == "1" ? '#4CAF50' : item?.priority?.id == "4" ? '#D32F2F' : item?.priority?.id == "3" ? "#FF5722" : "#0D6EFD", alignSelf: 'flex-start' }]}>{item?.priority?.name}</Text>
-          </View>
+          </View> */}
 
           <View style={[styles.cardItem, styles.right]}>
             <Text style={styles.label}>Action</Text>
@@ -149,13 +145,13 @@ export default function CallbackScreen() {
               }}>
 
                 <TouchableOpacity
-                  onPress={() => nav.navigate(ScreenNameEnum.CallbackDetailScreen, { item: item })}
+                  onPress={() => nav.navigate(ScreenNameEnum.AddclientsDetail, { item: item })}
 
                 >
                   <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.eyeBlue} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => nav.navigate(ScreenNameEnum.AddCallback, { item: item })}
+                  onPress={() => nav.navigate(ScreenNameEnum.Addclients, { item: item })}
                 >
                   <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.editGreen} />
                 </TouchableOpacity>
@@ -164,7 +160,6 @@ export default function CallbackScreen() {
                     await setSelectedItem(item);
                     setDeleteModalVisible(true)
                   }}
-
                 >
                   <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.delite} />
                 </TouchableOpacity>
@@ -194,16 +189,16 @@ export default function CallbackScreen() {
       <SearchBar
         value={searchText}
         onSearchChange={(text) => setSearchText(text)}
-        placeholder="Search Callback"
+        placeholder="Search client"
       />
-   <CommonTabBar
+      <CommonTabBar
         activeTab={activeTab}
         onTabPress={(key) => setActiveTab(key)}
       />
 
       {/* List */}
       <FlatList
-        // data={callbackData}
+        // data={clientData}
         data={filteredData}
         showsVerticalScrollIndicator={false}
         renderItem={renderCard}
@@ -214,7 +209,7 @@ export default function CallbackScreen() {
       {/* Floating Button */}
 
       <TouchableOpacity style={[styles.fab, { display: activeTab == "Active" ? "flex" : "none" }]}
-        onPress={() => nav.navigate(ScreenNameEnum.AddCallback)}
+        onPress={() => nav.navigate(ScreenNameEnum.Addclients)}
       >
         <Image
           source={imageIndex.AddLogo}
@@ -225,14 +220,14 @@ export default function CallbackScreen() {
         visible={deleteModalVisible}
         onClose={() => setDeleteModalVisible(false)}
         onConfirm={handleDelete}
-        message="Are you sure you want to delete this Callback from your list?"
+        message="Are you sure you want to delete this client from your list?"
       />
 
       <RestoreModal
         visible={restoreModalVisible}
         onClose={() => setRestoreModalVisible(false)}
         onConfirm={handleRestore}
-        message="Do you want to restore this Callback?"
+        message="Do you want to restore this client?"
       />
     </SafeAreaView>
   );

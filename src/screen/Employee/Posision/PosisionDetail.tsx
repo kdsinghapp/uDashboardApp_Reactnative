@@ -1,13 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import imageIndex from "../../assets/imageIndex";
-import CustomBackHeader from "../../compoent/CustomBackHeader";
-import StatusBarComponent from "../../compoent/StatusBarCompoent";
+import imageIndex from "../../../assets/imageIndex";
+import CustomBackHeader from "../../../compoent/CustomBackHeader";
+import StatusBarComponent from "../../../compoent/StatusBarCompoent";
 import { useRoute } from "@react-navigation/native";
 import moment from "moment";
 
-const TagDetail = () => {
+const PosisionDetail = () => {
   const route = useRoute()
     const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
   
@@ -21,7 +21,7 @@ const TagDetail = () => {
       <View style={{
         marginHorizontal: 12
       }}>
-        <CustomBackHeader menuIcon={imageIndex.back} label={"Tag Detail"} />
+        <CustomBackHeader menuIcon={imageIndex.back} label={"Posision Detail"} />
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -29,8 +29,12 @@ const TagDetail = () => {
 
         {/* Task Name */}
         <View style={styles.row}>
-          <Text style={styles.label}>Name</Text>
-          <Text style={styles.value}>{item?.name} </Text>
+          <Text style={styles.label}>Title</Text>
+          <Text style={styles.value}>{item?.title} </Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Descriptions</Text>
+          <Text style={styles.value}>{item?.description} </Text>
         </View>
 
 
@@ -77,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TagDetail;
+export default PosisionDetail;

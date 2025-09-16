@@ -30,11 +30,36 @@ export const endpointCustomer = {
   GetDeletedEmployeeList:"employees?page=1&limit=1000&employee=deleted",
   DeleteEmployee:'employees/',
 
+  // Employees Posision
+  GetPosisionList :"employees/positions/all-positions?page=1&limit=100",
+  GetDeletedPosisionList:"employees/positions/all-positions?page=1&limit=1000&position=deleted",
+  DeletePosision:'employees/positions/delete/',
+  RestorePosision:'employees/positions/restore/',
 
   // Teams
   GetTeamsList :"teams?page=1&limit=100",
+  GetTeams :"teams",
   GetDeletedTeamsList:"teams?page=1&limit=1000&team=deleted",
   DeleteTeams:'teams/delete/',
   RestoreTeams:'teams/restore/', 
+
+  //Callbacks
+  GetCallbacksList :"callbacks?page=1&limit=100",
+  GetDeletedCallbacksList:"callbacks?page=1&limit=1000&callback=deleted",
+  DeleteCallbacks:'callbacks/',
+  RestoreCallbacks:'/restore/',
+
+  //Clients
+  GetClientsList :"clients?page=1&limit=100",
+  GetClient :"clients",
+  GetDeletedClientsList:"clients?page=1&limit=1000&client=deleted",
+  DeleteClients:'clients/delete/',
+  RestoreClients:'clients/restore/',
+
+
+
+  // common
+  Get_Status :"common/callback-statuses",
+  Get_Priority :"common/callback-priorities",
 };
  

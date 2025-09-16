@@ -14,17 +14,18 @@ import {
   Keyboard,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomBackHeader from "../../compoent/CustomBackHeader";
-import imageIndex from "../../assets/imageIndex";
-import StatusBarComponent from "../../compoent/StatusBarCompoent";
+import CustomBackHeader from "../../../compoent/CustomBackHeader";
+import imageIndex from "../../../assets/imageIndex";
+import StatusBarComponent from "../../../compoent/StatusBarCompoent";
 import { useSelector } from "react-redux";
-import { AddTagApi, UpdateTagApi, } from "../../Api/apiRequest";
+import { AddPosisionApi, } from "../../../Api/apiRequest";
 
-export default function TagForm({ route, navigation }) {
+export default function AddPosision({ route, navigation }) {
   const item = route?.params?.item; // data passed for update
 
   const [form, setForm] = useState({
     name: "",
+    description: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -35,6 +36,7 @@ export default function TagForm({ route, navigation }) {
     if (item) {
       setForm({
         name: item?.name ?? "",
+        description: item?.description ?? "",
 
       });
     }
@@ -54,6 +56,7 @@ export default function TagForm({ route, navigation }) {
     setLoading(true);
     try {
       console.log(form)
+      
       const param = {
         ...form,
         token: isLogin?.token,
@@ -61,11 +64,11 @@ export default function TagForm({ route, navigation }) {
         navigation,
       };
 
-      if (item) {
-        await UpdateTagApi(param, setLoading);
-      } else {
-        await AddTagApi(param, setLoading);
-      }
+    //   if (item) {
+    //     await UpdateTagApi(param, setLoading);
+    //   } else {
+        await AddPosisionApi(param, setLoading);
+    //   }
     } catch (error) {
       console.error(error);
       Alert.alert("Error ❌", "Something went wrong. Try again.");
@@ -90,7 +93,7 @@ export default function TagForm({ route, navigation }) {
             <StatusBarComponent />
             <CustomBackHeader
               menuIcon={imageIndex.back}
-              label={item ? "Update Tag" : "Add Tag"}
+              label={item ? "Update Posision" : "Add Posision"}
             />
             {/* Text Inputs */}
             <TextInput
@@ -99,6 +102,14 @@ export default function TagForm({ route, navigation }) {
               placeholderTextColor={"#ADA4A5"}
               value={form.name}
               onChangeText={(val) => handleInputChange("name", val)}
+            />
+
+            <TextInput
+              style={styles.input}
+              placeholder="Enter description"
+              placeholderTextColor={"#ADA4A5"}
+              value={form.description}
+              onChangeText={(val) => handleInputChange("description", val)}
             />
 
 
@@ -112,7 +123,7 @@ export default function TagForm({ route, navigation }) {
                 <ActivityIndicator color="#fff" />
               ) : (
                 <Text style={styles.buttonText}>
-                  {item ? "Update Tag" : "Create Tag"}
+                  {item ? "Update Posision" : "Create Posision"}
                 </Text>
               )}
             </TouchableOpacity>

@@ -22,8 +22,8 @@ import AddTeams from "../screen/Teams/AddTeams";
 import TeamsDetail from "../screen/Teams/TeamsDetail";
 import AssignedDetail from "../screen/AssignedTask/AssignedDetail";
 import AddAssignedTask from "../screen/AssignedTask/AddAssignedTask";
-import AddclientsDetail from "../screen/Addclients/AddclientsDetail";
-import Addclients from "../screen/Addclients/Addclients";
+import AddclientsDetail from "../screen/Client/AddclientsDetail";
+import Addclients from "../screen/Client/Addclients";
 import RepliesDetail from "../screen/Replies/RepliesDetail";
 import BudgetDetailScreen from "../screen/Financial/Budget/BudgetDetailScreen";
 import AddBudget from "../screen/Financial/Budget/AddBudget";
@@ -38,6 +38,8 @@ import TagDetail from "../screen/Tag/TagDetail";
 import TagForm from "../screen/Tag/AddTag";
 import BudgetCategoriesDetail from "../screen/Financial/BudgetCategories/BudgetCategoriesDetail";
 import BudgetCategoriesForm from "../screen/Financial/BudgetCategories/AddBudgetCategories";
+import PosisionDetail from "../screen/Employee/Posision/PosisionDetail";
+import AddPosision from "../screen/Employee/Posision/AddPosision";
    
 const _routes: any = {
   REGISTRATION_ROUTE: [
@@ -136,6 +138,14 @@ const _routes: any = {
       name: ScreenNameEnum.AddEmployeeScreen,
       Component: AddEmployeeScreen,
     },  
+      {
+      name: ScreenNameEnum.PosisionDetail,
+      Component: PosisionDetail,
+    },
+      {
+      name: ScreenNameEnum.AddPosisionScreen,
+      Component: AddPosision,
+      },
     {
       name: ScreenNameEnum.BudgetDetail,
       Component: BudgetDetailScreen,

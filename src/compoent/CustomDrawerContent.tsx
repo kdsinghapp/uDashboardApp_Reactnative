@@ -23,7 +23,23 @@ const menuItems = [
   { id: "2", title: "Profile", icon: imageIndex.ProfielPng, screen: ScreenNameEnum.EditProfile },
   { id: "3", title: "Backburner Task", icon: imageIndex.Bacxkbuer, screen: ScreenNameEnum.Backburner },
   { id: "4", title: "Callbacks", icon: imageIndex.MyAddress, screen: ScreenNameEnum.CallBack },
-  { id: "5", title: "Employees", icon: imageIndex.dasboard, screen: ScreenNameEnum.EmployeeScreen },
+  { id: "5", title: "Employees", icon: imageIndex.dasboard,
+    //  screen: ScreenNameEnum.EmployeeScreen 
+      children: [
+      {
+        id: '5-1',
+        title: 'Employees',
+        screen: ScreenNameEnum.EmployeeScreen,
+        index: 0,
+      },
+      {
+        id: '5-2',
+        title: 'Positions',
+        screen: ScreenNameEnum.PosisionScreen,
+        index: 0,
+      },
+    ]
+    },
   { id: "7", title: "Notes", icon: imageIndex.Note, 
     // screen: ScreenNameEnum.Note 
   children: [
@@ -80,7 +96,7 @@ const menuItems = [
       },
     ],
   },
-  { id: "13", title: "Customer", icon: imageIndex.Calendar, screen: ScreenNameEnum.AddclientsScreen },
+  { id: "13", title: "Client", icon: imageIndex.Calendar, screen: ScreenNameEnum.AddclientsScreen },
   { id: "15", title: "Logout", icon: imageIndex.Logout, screen: "Language" },
 ];
 

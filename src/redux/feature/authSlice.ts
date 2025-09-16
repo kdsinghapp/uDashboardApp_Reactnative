@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// State का टाइप डिफाइन
+
 interface AuthState {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
   isLogin: boolean;
   isLogOut: boolean;
-  userData: any;  // यहां पर आप specific userData type दे सकते हैं
+  userData: any;  
   token: string | null;
-  forgotData: any;  // अगर structure पता हो तो type बना सकते हैं
+  forgotData: any;  
   betOption: any;
   gameResult: any;
   newbetOption: any;
@@ -30,9 +30,8 @@ const initialState: AuthState = {
   newbetOption: null,
 };
 
-// Login payload type
 interface LoginPayload {
-  userData: any;  // इसको भी टाइप कर सकते हैं
+  userData: any;  
   token: string;
 }
 

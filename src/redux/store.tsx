@@ -80,7 +80,7 @@ const persistor = persistStore(store);
 // Debugging: Check Persisted State
 persistor.subscribe(() => {
   AsyncStorage.getItem('persist:root').then((data) => {
-   });
+  });
 });
 
 export { store, persistor };

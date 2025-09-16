@@ -317,7 +317,7 @@ const DeleteApi = (
             body: formData,
         };
         console.log("formData", formData)
-        const respons = fetch(`${base_url+ param?.url}`, requestOptions)
+        const respons = fetch(`${base_url + param?.url}`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -399,270 +399,9 @@ const RestoreApi = (
     }
 };
 
-const GetCallbackListApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", `Bearer ${param.token}`);
 
 
-        const requestOptions = {
 
-            method: "GET",
-            headers: myHeaders,
-        };
-
-        const respons = fetch(`${base_url}callbacks?page=1&limit=1000`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.success) {
-                    setLoading(false)
-
-                    return response
-                } else {
-                    setLoading(false)
-                    // errorToast(
-                    //     response.error,
-                    // );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-
-const GetCallbackApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", `Bearer ${param.token}`);
-
-        const formData = new FormData();
-        // formData.append("user_id", param?.id ?? '');
-
-        const requestOptions = {
-
-            method: "GET",
-            headers: myHeaders,
-            // body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}callbacks/${param?.id}`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    // successToast(
-                    //     response?.message
-                    // );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const GetDeletedCallbackApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", `Bearer ${param.token}`);
-
-        const formData = new FormData();
-        // formData.append("user_id", param?.id ?? '');
-
-        const requestOptions = {
-
-            method: "GET",
-            headers: myHeaders,
-            // body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}callbacks?page=1&limit=1000&callback=deleted`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status) {
-                    setLoading(false)
-                    // successToast(
-                    //     response?.message
-                    // );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const DeleteCallbackApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", `Bearer ${param.token}`);
-
-        const formData = new FormData();
-        formData.append("_method", "PUT");
-        const requestOptions = {
-
-            method: "DELETE",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}callbacks/${param?.id}`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    // successToast(
-                    //     response?.message
-                    // );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-
-const RestoreCallbackApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", `Bearer ${param.token}`);
-
-        const formData = new FormData();
-        // formData.append("_method", "PUT");
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            // body: formData,
-            redirect: "follow"
-        };
-        // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
-        const respons = fetch(`${base_url}callbacks/${param?.id}/restore`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status) {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
 
 const AddCallbackApi = (
     param: any,
@@ -689,6 +428,11 @@ const AddCallbackApi = (
         // formdata.append("status_id", "2");
         formdata.append("status_id", param?.statusId ?? "1");
         formdata.append("details", param?.details);
+        let url = `${base_url}callbacks`;
+        if (param?.id) {
+            formdata.append("_method", "PUT");
+            url = `${base_url}callbacks/${param?.id}`;
+        }
         console.log(formdata, 'this is formdaata')
         const requestOptions = {
             method: "POST",
@@ -696,7 +440,7 @@ const AddCallbackApi = (
             body: formdata,
         };
         console.log("formData", formdata)
-        const respons = fetch(`${base_url}callbacks`, requestOptions)
+        const respons = fetch(url, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
@@ -726,7 +470,8 @@ const AddCallbackApi = (
         );
     }
 };
-const UpdateCallbackApi = (
+
+const AddClientApi = (
     param: any,
     setLoading: (loading: boolean) => void,
 ) => {
@@ -740,30 +485,34 @@ const UpdateCallbackApi = (
 
 
         const formdata = new FormData();
-        formdata.append("task_name", param?.task);
-        formdata.append("employee_id", param?.employeeId); // map actual employee id
-        formdata.append("estimated_time", param?.estimateTime);
+        formdata.append("case", param?.case);
+        formdata.append("first_name", (param?.first_name) ?? "");
+        formdata.append("last_name", param?.last_name ?? "");
         formdata.append("start_date", param?.startDate.toISOString().split("T")[0]);
         formdata.append("start_time", moment(param?.startTime).format("HH:mm"));
-        formdata.append("end_date", param?.endDate.toISOString().split("T")[0]);
-        formdata.append("end_time", moment(param?.endTime).format("HH:mm"));
-        formdata.append("priority_id", param?.priorityId);
-        formdata.append("status_id", param?.statusId);
+         formdata.append("end_time", moment(param?.endTime).format("HH:mm"));
+        formdata.append("assigned_team", param?.callbackId ?? "1");
+        formdata.append("status_id", param?.statusId ?? "1");
+        formdata.append("priority_id", param?.priorityId ?? "1");
         formdata.append("details", param?.details);
-        formdata.append("_method", "PUT");
-
+        let url = `${base_url}clients`;
+        if (param?.id) {
+            formdata.append("_method", "PUT");
+            url = `${base_url}clients/update/${param?.id}`;
+        }
+        console.log(formdata, 'this is formdaata')
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: formdata,
         };
         console.log("formData", formdata)
-        const respons = fetch(`${base_url}callbacks/${param?.id}`, requestOptions)
+        const respons = fetch(url, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
+                console.log("---- ----ddv response client", response)
+                if (response.status || response.success) {
                     setLoading(false)
                     successToast(
                         response?.message
@@ -789,6 +538,65 @@ const UpdateCallbackApi = (
     }
 };
 
+const AddPosisionApi = (
+    param: any,
+    setLoading: (loading: boolean) => void,
+) => {
+    console.log("param", param)
+    try {
+
+        setLoading(true)
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+
+
+        const formdata = new FormData();
+        formdata.append("title", param?.name);
+        formdata.append("description", (param?.description) ?? "");
+       
+        let url = `${base_url}employees/positions`;
+        if (param?.id) {
+            formdata.append("_method", "PUT");
+            url = `${base_url}employees/positions/update/${param?.id}`;
+        }
+        console.log(formdata, 'this is formdaata')
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: formdata,
+        };
+        console.log("formData", formdata)
+        const respons = fetch(url, requestOptions)
+            .then((response) => response.text())
+            .then((res) => {
+                const response = JSON.parse(res);
+                console.log("---- ----ddv response client", response)
+                if (response.status || response.success) {
+                    setLoading(false)
+                    successToast(
+                        response?.message
+                    );
+                    param.navigation.goBack()
+                    return response
+                } else {
+                    setLoading(false)
+                    errorToast(
+                        response.error,
+                    );
+                    return response
+                }
+            })
+            .catch((error) =>
+                console.error(error));
+        return respons
+    } catch (error) {
+        setLoading(false)
+        errorToast(
+            'Network error',
+        );
+    }
+};
 
 const GetAllListApi = (
     param: any,
@@ -838,274 +646,6 @@ const GetAllListApi = (
     }
 };
 // Employ
-
-
-
-
-const GetEmployListApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", `Bearer ${param.token}`);
-
-
-        const requestOptions = {
-
-            method: "GET",
-            headers: myHeaders,
-        };
-
-        const respons = fetch(`${base_url}employees?page=1&limit=100`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response employeee", response)
-                if (response.status) {
-                    setLoading(false)
-
-                    return response
-                } else {
-                    setLoading(false)
-                    // errorToast(
-                    //     response.error,
-                    // );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-
-const GetEmployApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", `Bearer ${param.token}`);
-
-        const formData = new FormData();
-        // formData.append("user_id", param?.id ?? '');
-
-        const requestOptions = {
-
-            method: "GET",
-            headers: myHeaders,
-            // body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}employee/${param?.id}`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status == '1') {
-                    setLoading(false)
-                    // successToast(
-                    //     response?.message
-                    // );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const GetDeletedEmployApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", `Bearer ${param.token}`);
-
-        const formData = new FormData();
-        // formData.append("user_id", param?.id ?? '');
-
-        const requestOptions = {
-
-            method: "GET",
-            headers: myHeaders,
-            // body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}employees?page=1&limit=1000&employee=deleted`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.status) {
-                    setLoading(false)
-                    // successToast(
-                    //     response?.message
-                    // );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.error,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const DeleteEmployApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", `Bearer ${param.token}`);
-
-        const formData = new FormData();
-        formData.append("_method", "PUT");
-        const requestOptions = {
-
-            method: "DELETE",
-            headers: myHeaders,
-            body: formData,
-        };
-        console.log("formData", formData)
-        const respons = fetch(`${base_url}employees/${param?.id}`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.success) {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.message,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-
-const RestoreEmployApi = (
-    param: any,
-    setLoading: (loading: boolean) => void,
-) => {
-    console.log("param", param)
-    try {
-
-        setLoading(true)
-        const myHeaders = new Headers();
-
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", `Bearer ${param.token}`);
-
-        const formData = new FormData();
-        // formData.append("_method", "PUT");
-        const requestOptions = {
-
-            method: "POST",
-            headers: myHeaders,
-            // body: formData,
-            redirect: "follow"
-        };
-        // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
-        const respons = fetch(`${base_url}employees/${param?.id}/restore`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("---- ----ddv response", response)
-                if (response.success) {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    // param.navigation.navigate(ScreenNameEnum.LoginScreen)
-                    return response
-                } else {
-                    setLoading(false)
-                    errorToast(
-                        response.message,
-                    );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
 
 const AddEmployApi = (
     param: any,
@@ -2222,7 +1762,7 @@ const RestoreTagApi = (
             method: "GET",
             headers: myHeaders,
             // body: formData,
-            redirect: "follow"
+            // redirect: "follow"
         };
         // console.log("formData", `${base_url}callbacks/${param?.id}/restore`)
         const respons = fetch(`${base_url}notes/tags/restore/${param?.id}`, requestOptions)
@@ -3811,13 +3351,11 @@ const UpdateExpensesApi = (
         myHeaders.append("Accept", "application/json");
         myHeaders.append("Authorization", `Bearer ${param.token}`);
 
-
         const formdata = new FormData();
         formdata.append("name", param?.name ?? "");
         formdata.append("amount", param?.amount ?? "");
         formdata.append("status", param?.status ?? "");
         formdata.append("description", param?.description ?? "");
-
         formdata.append("expense_date", param?.expense_date.toISOString().split("T")[0] ?? "");
         formdata.append("_method", "PUT");
 
@@ -3874,7 +3412,7 @@ const AddTeamsApi = (
         formdata.append("name", param?.name ?? "");
         formdata.append("description", param?.description ?? "");
         formdata.append("employee_ids[]", param?.employeeId ?? "");
-         const requestOptions = {
+        const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: formdata,
@@ -3927,7 +3465,7 @@ const UpdateTeamsApi = (
         formdata.append("name", param?.name ?? "");
         formdata.append("description", param?.description ?? "");
         formdata.append("employee_ids[]", param?.employeeId ?? "");
-         formdata.append("_method", "PUT");
+        formdata.append("_method", "PUT");
 
         const requestOptions = {
             method: "POST",
@@ -3968,82 +3506,6 @@ const UpdateTeamsApi = (
 
 
 
-
-const Get_Priority_Api = (
-    setLoading: (loading: boolean) => void,
-) => {
-    try {
-        setLoading(true)
-
-        const requestOptions = {
-            method: "GET",
-        };
-        const respons = fetch(`${base_url}common/callback-priorities`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("----response", response)
-                if (response.status) {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    return response.data
-                } else {
-                    setLoading(false)
-
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
-
-const Get_Status_Api = (
-    setLoading: (loading: boolean) => void,
-) => {
-    try {
-        setLoading(true)
-
-        const requestOptions = {
-            method: "GET",
-        };
-        const respons = fetch(`${base_url}common/callback-statuses`, requestOptions)
-            .then((response) => response.text())
-            .then((res) => {
-                const response = JSON.parse(res);
-                console.log("----response", response)
-                if (response.status) {
-                    setLoading(false)
-                    successToast(
-                        response?.message
-                    );
-                    return response.data
-                } else {
-                    setLoading(false)
-                    // errorToast(
-                    //     response.error,
-                    // );
-                    return response
-                }
-            })
-            .catch((error) =>
-                console.error(error));
-        return respons
-    } catch (error) {
-        setLoading(false)
-        errorToast(
-            'Network error',
-        );
-    }
-};
 const Policies_Api = (
     setLoading: (loading: boolean) => void,
 ) => {
@@ -4305,22 +3767,23 @@ const Get_Notification_Api = async (
     }
 };
 export {
-    GetApi,DeleteApi,RestoreApi,
+    GetApi, DeleteApi, RestoreApi,
     GetUserApi,
     Get_Notification_Api, SinupCustomer,
     Support_Api, Policies_Api,
     ChangePass_Api, EditProfile_Api, updatePassword,
     restEmailOtpScreen, LoginCustomer, otp_Verify,
-    GetCallbackListApi, GetCallbackApi, AddCallbackApi, DeleteCallbackApi, GetDeletedCallbackApi, RestoreCallbackApi, UpdateCallbackApi,
-    GetEmployListApi, GetEmployApi, AddEmployApi, DeleteEmployApi, GetDeletedEmployApi, RestoreEmployApi, UpdateEmployApi,
+    AddCallbackApi,
+    AddClientApi,
+    AddPosisionApi,
+    AddEmployApi, UpdateEmployApi,
     GetNotesListApi, GetNotesApi, AddNotesApi, DeleteNotesApi, GetDeletedNotesApi, RestoreNotesApi, UpdateNotesApi,
-    Get_Status_Api, Get_Priority_Api, GetAllListApi,
+    GetAllListApi,
     GetCategoryListApi, GetCategoryApi, AddCategoryApi, DeleteCategoryApi, GetDeletedCategoryApi, RestoreCategoryApi, UpdateCategoryApi,
     GetTagListApi, GetTagApi, AddTagApi, DeleteTagApi, GetDeletedTagApi, RestoreTagApi, UpdateTagApi,
-
     GetBudgetListApi, GetBudgetApi, AddBudgetApi, DeleteBudgetApi, GetDeletedBudgetApi, RestoreBudgetApi, UpdateBudgetApi,
     GetBudgetCategoryListApi, GetBudgetCategoryApi, AddBudgetCategoryApi, DeleteBudgetCategoryApi, GetDeletedBudgetCategoryApi, RestoreBudgetCategoryApi, UpdateBudgetCategoryApi,
     GetProfitLossListApi, GetProfitLossApi, AddProfitLossApi, DeleteProfitLossApi, GetDeletedProfitLossApi, RestoreProfitLossApi, UpdateProfitLossApi,
     GetExpensesListApi, GetExpensesApi, AddExpensesApi, DeleteExpensesApi, GetDeletedExpensesApi, RestoreExpensesApi, UpdateExpensesApi,
-AddTeamsApi, UpdateTeamsApi
+    AddTeamsApi, UpdateTeamsApi
 }  

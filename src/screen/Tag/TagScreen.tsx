@@ -17,7 +17,7 @@ import ScreenNameEnum from "../../routes/screenName.enum";
 import DeleteModal from "../../compoent/DeleteModal";
 import { useSelector } from "react-redux";
 import moment from "moment";
-import { DeleteTagApi, DeleteEmployApi, GetTagListApi, GetDeletedTagApi, GetDeletedEmployApi, GetEmployListApi, RestoreTagApi, RestoreEmployApi } from "../../Api/apiRequest";
+import { DeleteTagApi, GetTagListApi, GetDeletedTagApi, RestoreTagApi } from "../../Api/apiRequest";
 import LoadingModal from "../../utils/Loader";
 import RestoreModal from "../../compoent/RestoreModal";
 
