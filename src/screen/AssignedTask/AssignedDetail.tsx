@@ -4,8 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import imageIndex from "../../assets/imageIndex";
 import CustomBackHeader from "../../compoent/CustomBackHeader";
 import StatusBarComponent from "../../compoent/StatusBarCompoent";
+import { useRoute } from "@react-navigation/native";
 
 const AssignedDetail = () => {
+  const route = useRoute()
+  const item = route?.params?.item
   return (
     <SafeAreaView edges={['top']} style={{
       flex:1,
@@ -24,17 +27,17 @@ const AssignedDetail = () => {
       {/* Task Name */}
       <View style={styles.row}>
         <Text style={styles.label}>Task Name</Text>
-        <Text style={styles.value}>Priya Sharma</Text>
+        <Text style={styles.value}>{item?.task_name}</Text>
       </View>
-      <View style={styles.row}>
+      {/* <View style={styles.row}>
         <Text style={styles.label}>Task Manager:</Text>
         <Text style={styles.value}>rakesh dongre</Text>
-      </View>
+      </View> */}
 
       {/* Due Date */}
       <View style={styles.row}>
-        <Text style={styles.label}>Due Date:</Text>
-        <Text style={styles.value}>Jul 29, 2025</Text>
+        <Text style={styles.label}>End Date:</Text>
+        <Text style={styles.value}>{item?.end_date}</Text>
       </View>
 
      
@@ -45,7 +48,7 @@ const AssignedDetail = () => {
       <View style={styles.row}>
         <Text style={styles.label}>Priority:</Text>
         <View style={[styles.tag, { backgroundColor: "#34C759" }]}>
-          <Text style={styles.tagText}>LOW</Text>
+          <Text style={styles.tagText}>{item?.priority?.name}</Text>
         </View>
       </View>
 
@@ -56,7 +59,7 @@ const AssignedDetail = () => {
         <Text style={styles.label}>Description
         </Text>
         <Text style={styles.value}>
-          The task involves 
+          {item?.details}
         </Text>
       </View>
     </ScrollView>

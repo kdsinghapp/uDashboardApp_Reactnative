@@ -3,8 +3,11 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import imageIndex from "../../assets/imageIndex";
 import CustomBackHeader from "../../compoent/CustomBackHeader";
+import { useRoute } from "@react-navigation/native";
 
 const BackburnerDetail = () => {
+  const route = useRoute()
+  const item = route?.params?.item
   return (
     <SafeAreaView edges={['top']} style={{
       flex:1,
@@ -20,38 +23,38 @@ const BackburnerDetail = () => {
       {/* Task Name */}
       <View style={styles.row}>
         <Text style={styles.label}>Task Name</Text>
-        <Text style={styles.value}>Website Redesign - Homepage Update</Text>
+        <Text style={styles.value}>{item?.task_name}</Text>
       </View>
 
       {/* Due Date */}
       <View style={styles.row}>
-        <Text style={styles.label}>Due Date</Text>
-        <Text style={styles.value}>Aug 15, 2025</Text>
+        <Text style={styles.label}>End Date</Text>
+        <Text style={styles.value}>{item?.end_date}</Text>
       </View>
 
       {/* Estimated Time */}
       <View style={styles.row}>
         <Text style={styles.label}>Estimated Time</Text>
-        <Text style={styles.value}>10:00:00</Text>
+        <Text style={styles.value}>{item?.estimated_time}</Text>
       </View>
 
       {/* Task Manager */}
-      <View style={styles.row}>
+      {/* <View style={styles.row}>
         <Text style={styles.label}>Task Manager</Text>
-        <Text style={styles.value}>Priya Sharma</Text>
-      </View>
+        <Text style={styles.value}>{}</Text>
+      </View> */}
 
       {/* Client */}
       <View style={styles.row}>
         <Text style={styles.label}>Client</Text>
-        <Text style={styles.value}>ABC Tech Solutions</Text>
+        <Text style={styles.value}>{item?.employee?.first_name} {item?.employee?.last_name}</Text>
       </View>
 
       {/* Status */}
       <View style={styles.row}>
         <Text style={styles.label}>Status</Text>
         <View style={[styles.tag, { backgroundColor: "#ff9800" }]}>
-          <Text style={styles.tagText}>Pending</Text>
+          <Text style={styles.tagText}>{item?.status?.name}</Text>
         </View>
       </View>
 
@@ -59,7 +62,7 @@ const BackburnerDetail = () => {
       <View style={styles.row}>
         <Text style={styles.label}>Priority</Text>
         <View style={[styles.tag, { backgroundColor: "#0D6EFD" }]}>
-          <Text style={styles.tagText}>Low</Text>
+          <Text style={styles.tagText}>{item?.priority?.name}</Text>
         </View>
       </View>
 
@@ -67,8 +70,7 @@ const BackburnerDetail = () => {
       <View style={styles.row}>
         <Text style={styles.label}>Description</Text>
         <Text style={styles.value}>
-          The task involves redesigning the homepage of the client’s corporate
-          website. Key updates include:
+          {item?.details}
         </Text>
       </View>
     </ScrollView>

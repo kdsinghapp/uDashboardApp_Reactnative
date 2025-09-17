@@ -48,7 +48,9 @@ export const endpointCustomer = {
   GetDeletedCallbacksList:"callbacks?page=1&limit=1000&callback=deleted",
   DeleteCallbacks:'callbacks/',
   RestoreCallbacks:'/restore/',
-
+//Backburner
+GetBackburnerList :"backburner-tasks?page=1&limit=100",
+GetAssignedList :"assigned-tasks?page=1&limit=100",
   //Clients
   GetClientsList :"clients?page=1&limit=100",
   GetClient :"clients",

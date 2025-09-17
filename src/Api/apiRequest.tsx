@@ -610,10 +610,8 @@ const GetAllListApi = (
 
         myHeaders.append("Accept", "application/json");
         myHeaders.append("Authorization", `Bearer ${param.token}`);
-
-
+        
         const requestOptions = {
-
             method: "GET",
             headers: myHeaders,
         };

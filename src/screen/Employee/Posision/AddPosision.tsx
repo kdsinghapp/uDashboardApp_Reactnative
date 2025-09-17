@@ -20,7 +20,7 @@ import StatusBarComponent from "../../../compoent/StatusBarCompoent";
 import { useSelector } from "react-redux";
 import { AddPosisionApi, } from "../../../Api/apiRequest";
 
-export default function AddPosision({ route, navigation }) {
+export default function AddPosision({ route, navigation }:any) {
   const item = route?.params?.item; // data passed for update
 
   const [form, setForm] = useState({
@@ -35,7 +35,7 @@ export default function AddPosision({ route, navigation }) {
   useEffect(() => {
     if (item) {
       setForm({
-        name: item?.name ?? "",
+        name: item?.title ?? "",
         description: item?.description ?? "",
 
       });

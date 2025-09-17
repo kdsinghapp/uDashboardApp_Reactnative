@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchBar from "../../compoent/SearchBar";
@@ -7,20 +7,49 @@ import CustomHeader from "../../compoent/CustomHeader";
 import StatusBarComponent from "../../compoent/StatusBarCompoent";
 import { useNavigation } from "@react-navigation/native";
 import ScreenNameEnum from "../../routes/screenName.enum";
+import { useSelector } from "react-redux";
+import { endpointCustomer } from "../../Api/endpoints";
+import { GetApi } from "../../Api/apiRequest";
+import LoadingModal from "../../utils/Loader";
+import moment from "moment";
 
 const allData = [
   { id: "01", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Active" },
   { id: "02", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Deleted" },
 ];
 
-export default function AssingnedScreen() {
-  const [activeTab, setActiveTab] = useState<"Active" | "Deleted">("Active");
+  const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
 
-  const filteredData = allData.filter(item => item.status === activeTab);
-  const nav = useNavigation()
+export default function AssignedScreen() {
+  // const [activeTab, setActiveTab] = useState<"Active" | "Deleted">("Active");
+  const isLogin = useSelector((state: any) => state.auth);
+const [loading, setLoading] = useState(false)
+const [callbackData, setCallbackData] = useState([])
+const [searchText, setSearchText] = useState("")
+   const nav = useNavigation()
+    useEffect(() => {
+      fetchCallback();
+    }, []);
+  
+    const filteredData = callbackData.filter((item: any) => {
+      const query = searchText.toLowerCase();
+      return (
+        item?.task_name?.toLowerCase().includes(query) 
+      //  item?.status?.name?.toLowerCase().includes(query) ||
+      //   item?.priority?.name?.toLowerCase().includes(query)
+      );
+    });
+   const fetchCallback = async () => {
+    const param = {
+      token: isLogin?.token,
+      url: endpointCustomer?.GetAssignedList
+    }
+    const data = await GetApi(param, setLoading)
+    setCallbackData(data?.data)
+  }
   const renderCard = ({ item }: any) => (
     <TouchableOpacity
-      onPress={() => nav.navigate(ScreenNameEnum.AssignedDetail)}
+      onPress={() => nav.navigate(ScreenNameEnum.AssignedDetail,{item:item})}
       style={styles.card}>
       {/* Row 1: ID & Name */}
       <View style={styles.cardRow}>
@@ -37,7 +66,7 @@ export default function AssingnedScreen() {
 
 
       {/* Row 3: Date & Status */}
-      <View style={styles.cardRow}>
+      {/* <View style={styles.cardRow}>
         <View style={styles.cardItem}>
           <Text style={styles.label}>Tast Manager</Text>
           <Text style={styles.value}>rakesh dongre</Text>
@@ -48,48 +77,48 @@ export default function AssingnedScreen() {
           <Text style={styles.value}>Jul 29, 2025</Text>
         </View>
 
-      </View>
+      </View> */}
+  <View style={styles.cardRow}>
+          {item?.employee?.first_name ?
+            <View style={styles.cardItem}>
+              <Text style={styles.label}>Client</Text>
+              <Text style={styles.value}>{item?.employee?.first_name} {item?.employee?.last_name}</Text>
+            </View>
+            :
+            <View style={[styles.cardItem]}>
+              <Text style={styles.label}>Create Date</Text>
+              <Text style={styles.value}>{formattedDate(item?.created_at)}</Text>
+            </View>
+          }
+          <View style={[styles.cardItem, styles.right]}>
+            <Text style={styles.label}>Status</Text>
+            <Text style={[styles.value, styles.tag]}>{item?.status?.name}</Text>
+          </View>
 
-      <View style={styles.cardRow}>
-        <View style={styles.cardItem}>
-          <Text style={styles.label}>Client</Text>
-          <Text style={styles.value}>Ram</Text>
+
         </View>
+        <View style={styles.cardRow}>
+          <View style={styles.cardItem}>
+            <Text style={styles.label}>Priority</Text>
+            <Text style={[styles.value, styles.tag, { backgroundColor: item?.priority?.id == "1" ? '#4CAF50' : item?.priority?.id == "4" ? '#D32F2F' : item?.priority?.id == "3" ? "#FF5722" : "#0D6EFD", alignSelf: 'flex-start' }]}>{item?.priority?.name}</Text>
+          </View>
 
-        <View style={[styles.cardItem, styles.right]}>
-          <Text style={styles.label}>Status</Text>
-          <Text style={[styles.value, styles.tag]}>Pending</Text>
-        </View>
+          <View style={[styles.cardItem, styles.right]}>
+            <Text style={styles.label}>Action</Text>
+          
+              <TouchableOpacity
+                onPress={() => {
+      nav.navigate(ScreenNameEnum.AssignedDetail,{item:item})
 
-
-      </View>
-      <View style={styles.cardRow}>
-        <View style={styles.cardItem}>
-          <Text style={styles.label}>Priority</Text>
-          <Text style={[styles.value, styles.tag, { backgroundColor: '#0D6EFD', alignSelf: 'flex-start' }]}>Low</Text>
-        </View>
-
-        <View style={[styles.cardItem, styles.right]}>
-          <Text style={styles.label}>Action</Text>
-          <View style={{
-            flexDirection: "row",
-            alignItems: "center"
-          }}>
-            <Image source={imageIndex.eyeBlue}
-
-              style={{
-                height: 22,
-                width: 22
-              }}
-            />
-            <Text style={[styles.value, {
-              color: "#0D6EFD",
-              marginLeft: 3
-            }]}>View</Text>
+                  // setSelectedItem(item);
+                  // setRestoreModalVisible(true)
+                }}
+              >
+                <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.eyeBlue} />
+              </TouchableOpacity>
+            
           </View>
         </View>
-
-      </View>
 
 
 
@@ -98,13 +127,19 @@ export default function AssingnedScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={styles.container}>
+      {loading && <LoadingModal/>}
       <StatusBarComponent />
       <CustomHeader />
-      <SearchBar />
+      <SearchBar 
+      value={searchText}
+      onSearchChange={setSearchText}
+      placeholder="Search Assigned Task"
+      />
 
-      {/* Tabs */} <Text style={styles.title}>
-        Assingned Task
-      </Text>
+      {/* Tabs */}
+       {/* <Text style={styles.title}>
+        Backburner Task
+      </Text> */}
      
       {/* List */}
       <FlatList
@@ -116,14 +151,14 @@ export default function AssingnedScreen() {
       />
 
       {/* Floating Button */}
-      <TouchableOpacity style={styles.fab}
-        onPress={() => nav.navigate(ScreenNameEnum.AddAssignedTask)}
+      {/* <TouchableOpacity style={styles.fab}
+        onPress={() => nav.navigate(ScreenNameEnum.AddBackburner)}
       >
         <Image
           source={imageIndex.AddLogo}
           style={{ height: 70, width: 70, resizeMode: "contain" }}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </SafeAreaView>
   );
 }
