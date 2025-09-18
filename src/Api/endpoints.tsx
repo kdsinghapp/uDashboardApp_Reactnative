@@ -51,6 +51,7 @@ export const endpointCustomer = {
 //Backburner
 GetBackburnerList :"backburner-tasks?page=1&limit=100",
 GetAssignedList :"assigned-tasks?page=1&limit=100",
+GetPriorityTaskList :"priority-tasks?page=1&limit=1000",
   //Clients
   GetClientsList :"clients?page=1&limit=100",
   GetClient :"clients",
@@ -58,7 +59,8 @@ GetAssignedList :"assigned-tasks?page=1&limit=100",
   DeleteClients:'clients/delete/',
   RestoreClients:'clients/restore/',
 
-
+//Membership
+GetPlanList :"membership/membership-plans/show-plans",
 
   // common
   Get_Status :"common/callback-statuses",

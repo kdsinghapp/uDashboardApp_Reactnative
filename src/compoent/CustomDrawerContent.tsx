@@ -9,7 +9,7 @@ import {
   FlatList,
 } from "react-native";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import imageIndex from "../assets/imageIndex"; 
+import imageIndex from "../assets/imageIndex";
 import ScreenNameEnum from "../routes/screenName.enum";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StatusBarComponent from "./StatusBarCompoent";
@@ -22,10 +22,12 @@ const menuItems = [
   { id: "1", title: "Dashboard", icon: imageIndex.dasboard, screen: "Dashboard" },
   { id: "2", title: "Profile", icon: imageIndex.ProfielPng, screen: ScreenNameEnum.EditProfile },
   { id: "3", title: "Backburner Task", icon: imageIndex.Bacxkbuer, screen: ScreenNameEnum.Backburner },
+  { id: "14", title: "Priority Task", icon: imageIndex.Bacxkbuer, screen: ScreenNameEnum.PriorityTasksScreen },
   { id: "4", title: "Callbacks", icon: imageIndex.MyAddress, screen: ScreenNameEnum.CallBack },
-  { id: "5", title: "Employees", icon: imageIndex.dasboard,
+  {
+    id: "5", title: "Employees", icon: imageIndex.dasboard,
     //  screen: ScreenNameEnum.EmployeeScreen 
-      children: [
+    children: [
       {
         id: '5-1',
         title: 'Employees',
@@ -39,23 +41,24 @@ const menuItems = [
         index: 0,
       },
     ]
-    },
-  { id: "7", title: "Notes", icon: imageIndex.Note, 
+  },
+  {
+    id: "7", title: "Notes", icon: imageIndex.Note,
     // screen: ScreenNameEnum.Note 
-  children: [
-    {
+    children: [
+      {
         id: '7-1',
         title: 'All Notes',
         screen: ScreenNameEnum.Note,
         index: 0,
       },
-       {
+      {
         id: '7-2',
         title: 'Categories',
         screen: ScreenNameEnum.Categories,
         index: 0,
       },
-       {
+      {
         id: '7-1',
         title: 'Tag',
         screen: ScreenNameEnum.Tag,
@@ -82,7 +85,7 @@ const menuItems = [
         screen: ScreenNameEnum.Budget,
         index: 0,
       },
-       {
+      {
         id: '12-3',
         title: 'Budget Categories',
         screen: ScreenNameEnum.BudgetCategories,
@@ -97,7 +100,8 @@ const menuItems = [
     ],
   },
   { id: "13", title: "Client", icon: imageIndex.Calendar, screen: ScreenNameEnum.AddclientsScreen },
-  { id: "15", title: "Logout", icon: imageIndex.Logout, screen: "Language" },
+  { id: "15", title: "Membership Plan", icon: imageIndex.Calendar, screen: ScreenNameEnum.MembershipPlan },
+  { id: "16", title: "Logout", icon: imageIndex.Logout, screen: "Language" },
 ];
 
 export default function CustomDrawerContent(props: DrawerContentComponentProps) {
@@ -198,7 +202,7 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: "#fff" }}>
       <StatusBarComponent />
       <Image
-        source={imageIndex.logo} 
+        source={imageIndex.logo}
         style={styles.profileImage}
         resizeMode="contain"
       />

@@ -24,6 +24,8 @@ import CategoriesScreen from '../screen/Categories/CategoriesScreen';
 import TagScreen from '../screen/Tag/TagScreen';
 import BudgetCategoriesScreen from '../screen/Financial/BudgetCategories/BudgetCategoriesScreen';
 import PosisionScreen from '../screen/Employee/Posision/PosisionScreen';
+import PriorityTasksScreen from '../screen/PriorityTask/PriorityTasksScreen';
+import PricingPage from '../screen/MemberShip';
 
 const Drawer = createDrawerNavigator();
 
@@ -54,6 +56,8 @@ export default function DrawerNavigation() {
       <Drawer.Screen name={ScreenNameEnum.BudgetCategories} component={BudgetCategoriesScreen} />
       <Drawer.Screen name={ScreenNameEnum.Tag} component={TagScreen} />
       <Drawer.Screen name={ScreenNameEnum.PosisionScreen} component={PosisionScreen} />
+      <Drawer.Screen name={ScreenNameEnum.PriorityTasksScreen} component={PriorityTasksScreen} />
+      <Drawer.Screen name={ScreenNameEnum.MembershipPlan} component={PricingPage} />
     </Drawer.Navigator>
   );
 }

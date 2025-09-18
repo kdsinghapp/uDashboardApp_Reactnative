@@ -19,10 +19,10 @@ export default function CalendarScreen() {
   const [selectedDate, setSelectedDate] = useState("");
 
   const markedDates = {
-    "2024-04-15": { selected: true, selectedColor: "#4f6cff" },
-    "2024-04-16": { selected: true, selectedColor: "#4f6cff" },
-    "2024-04-17": { selected: true, selectedColor: "#4f6cff" },
-    "2024-04-18": { selected: true, selectedColor: "#4f6cff" },
+    "2025-09-15": { selected: true, selectedColor: "#4f6cff" },
+    "2025-09-28": { selected: true, selectedColor: "#4f6cff" },
+    "2025-09-17": { selected: true, selectedColor: "#4f6cff" },
+    "2025-09-18": { selected: true, selectedColor: "#4f6cff" },
   };
 
   const renderTab = (tab) => (
@@ -99,7 +99,11 @@ export default function CalendarScreen() {
       <View style={styles.calendarContainer}>
         {selectedView === "Month" && (
           <Calendar
-            onDayPress={(day) => setSelectedDate(day.dateString)}
+            onDayPress={(day) => {
+              console.log(day.dateString)
+              setSelectedDate(day.dateString)
+            
+            }}
             markedDates={{
               ...markedDates,
               [selectedDate]: { selected: true, selectedColor: "#0D6EFD" },

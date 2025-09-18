@@ -18,38 +18,38 @@ const allData = [
   { id: "02", name: "Website Redesign", amount: "₹50,000.00", details: "Client payment for UI project", date: "20 Aug 2025", status: "Deleted" },
 ];
 
-  const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
+const formattedDate = (dateStr: any) => moment(dateStr).format("MMM DD, YYYY");
 
-export default function AssignedScreen() {
+export default function PriorityTasksScreen() {
   // const [activeTab, setActiveTab] = useState<"Active" | "Deleted">("Active");
   const isLogin = useSelector((state: any) => state.auth);
-const [loading, setLoading] = useState(false)
-const [callbackData, setCallbackData] = useState([])
-const [searchText, setSearchText] = useState("")
-   const nav = useNavigation()
-    useEffect(() => {
-      fetchCallback();
-    }, []);
-  
-    const filteredData = callbackData.filter((item: any) => {
-      const query = searchText.toLowerCase();
-      return (
-        item?.task_name?.toLowerCase().includes(query) 
+  const [loading, setLoading] = useState(false)
+  const [callbackData, setCallbackData] = useState([])
+  const [searchText, setSearchText] = useState("")
+  const nav = useNavigation()
+  useEffect(() => {
+    fetchCallback();
+  }, []);
+
+  const filteredData = callbackData.filter((item: any) => {
+    const query = searchText.toLowerCase();
+    return (
+      item?.task_name?.toLowerCase().includes(query)
       //  item?.status?.name?.toLowerCase().includes(query) ||
       //   item?.priority?.name?.toLowerCase().includes(query)
-      );
-    });
-   const fetchCallback = async () => {
+    );
+  });
+  const fetchCallback = async () => {
     const param = {
       token: isLogin?.token,
-      url: endpointCustomer?.GetAssignedList
+      url: endpointCustomer?.GetPriorityTaskList
     }
     const data = await GetApi(param, setLoading)
     setCallbackData(data?.data)
   }
   const renderCard = ({ item }: any) => (
     <TouchableOpacity
-      onPress={() => nav.navigate(ScreenNameEnum.AssignedDetail,{item:item})}
+      onPress={() => nav.navigate(ScreenNameEnum.PriorityTasksDetails, { item: item })}
       style={styles.card}>
       {/* Row 1: ID & Name */}
       <View style={styles.cardRow}>
@@ -78,47 +78,47 @@ const [searchText, setSearchText] = useState("")
         </View>
 
       </View> */}
-  <View style={styles.cardRow}>
-          {item?.employee?.first_name ?
-            <View style={styles.cardItem}>
-              <Text style={styles.label}>Client</Text>
-              <Text style={styles.value}>{item?.employee?.first_name} {item?.employee?.last_name}</Text>
-            </View>
-            :
-            <View style={[styles.cardItem]}>
-              <Text style={styles.label}>Create Date</Text>
-              <Text style={styles.value}>{formattedDate(item?.created_at)}</Text>
-            </View>
-          }
-          <View style={[styles.cardItem, styles.right]}>
-            <Text style={styles.label}>Status</Text>
-            <Text style={[styles.value, styles.tag]}>{item?.status?.name}</Text>
-          </View>
-
-
-        </View>
-        <View style={styles.cardRow}>
+      <View style={styles.cardRow}>
+        {item?.employee?.first_name ?
           <View style={styles.cardItem}>
-            <Text style={styles.label}>Priority</Text>
-            <Text style={[styles.value, styles.tag, { backgroundColor: item?.priority?.id == "1" ? '#4CAF50' : item?.priority?.id == "4" ? '#D32F2F' : item?.priority?.id == "3" ? "#FF5722" : "#0D6EFD", alignSelf: 'flex-start' }]}>{item?.priority?.name}</Text>
+            <Text style={styles.label}>Client</Text>
+            <Text style={styles.value}>{item?.employee?.first_name} {item?.employee?.last_name}</Text>
           </View>
-
-          <View style={[styles.cardItem, styles.right]}>
-            <Text style={styles.label}>Action</Text>
-          
-              <TouchableOpacity
-                onPress={() => {
-      nav.navigate(ScreenNameEnum.AssignedDetail,{item:item})
-
-                  // setSelectedItem(item);
-                  // setRestoreModalVisible(true)
-                }}
-              >
-                <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.eyeBlue} />
-              </TouchableOpacity>
-            
+          :
+          <View style={[styles.cardItem]}>
+            <Text style={styles.label}>Create Date</Text>
+            <Text style={styles.value}>{formattedDate(item?.created_at)}</Text>
           </View>
+        }
+        <View style={[styles.cardItem, styles.right]}>
+          <Text style={styles.label}>Status</Text>
+          <Text style={[styles.value, styles.tag]}>{item?.status?.name}</Text>
         </View>
+
+
+      </View>
+      <View style={styles.cardRow}>
+        <View style={styles.cardItem}>
+          <Text style={styles.label}>Priority</Text>
+          <Text style={[styles.value, styles.tag, { backgroundColor: item?.priority?.id == "1" ? '#4CAF50' : item?.priority?.id == "4" ? '#D32F2F' : item?.priority?.id == "3" ? "#FF5722" : "#0D6EFD", alignSelf: 'flex-start' }]}>{item?.priority?.name}</Text>
+        </View>
+
+        <View style={[styles.cardItem, styles.right]}>
+          <Text style={styles.label}>Action</Text>
+
+          <TouchableOpacity
+            onPress={() => {
+              nav.navigate(ScreenNameEnum.PriorityTasksDetails, { item: item })
+
+              // setSelectedItem(item);
+              // setRestoreModalVisible(true)
+            }}
+          >
+            <Image style={{ height: 22, width: 22, marginLeft: 10 }} source={imageIndex.eyeBlue} />
+          </TouchableOpacity>
+
+        </View>
+      </View>
 
 
 
@@ -127,20 +127,20 @@ const [searchText, setSearchText] = useState("")
 
   return (
     <SafeAreaView edges={['top']} style={styles.container}>
-      {loading && <LoadingModal/>}
+      {loading && <LoadingModal />}
       <StatusBarComponent />
       <CustomHeader />
-      <SearchBar 
-      value={searchText}
-      onSearchChange={setSearchText}
-      placeholder="Search Assigned Task"
+      <SearchBar
+        value={searchText}
+        onSearchChange={setSearchText}
+        placeholder="Search Priority Task"
       />
 
       {/* Tabs */}
-       {/* <Text style={styles.title}>
+      {/* <Text style={styles.title}>
         Backburner Task
       </Text> */}
-     
+
       {/* List */}
       <FlatList
         data={filteredData}
@@ -165,11 +165,11 @@ const [searchText, setSearchText] = useState("")
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", padding: 15 },
-  title:{
-        fontSize: 15,
-        color: "black",
-        fontWeight: "500"
-      },
+  title: {
+    fontSize: 15,
+    color: "black",
+    fontWeight: "500"
+  },
   fab: { position: "absolute", bottom: 35, right: 20, justifyContent: "center", alignItems: "center" },
   card: {
     backgroundColor: "#fff",

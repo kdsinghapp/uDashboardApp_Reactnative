@@ -9,6 +9,7 @@ enum ScreenNameEnum {
   CalendarScreen = "CalendarScreen",
   LoginScreen = "LoginScreen",
   AddclientsScreen = "AddclientsScreen",
+  MembershipPlan ="Membership Plan",
   AddclientsDetail = "AddclientsDetail",
   Addclients = "Addclients",
   RepliesScreen = "RepliesScreen",
@@ -105,6 +106,8 @@ enum ScreenNameEnum {
   AddContractWithType = "AddContractWithType",
   About = "About",
   Policy = "Policy",
+  PriorityTasksScreen = "PriorityTasksScreen",
+  PriorityTasksDetails = "PriorityTasksDetails"
 
 }
 

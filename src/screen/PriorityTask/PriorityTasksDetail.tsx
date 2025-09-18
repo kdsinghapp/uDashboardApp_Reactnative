@@ -6,7 +6,7 @@ import CustomBackHeader from "../../compoent/CustomBackHeader";
 import StatusBarComponent from "../../compoent/StatusBarCompoent";
 import { useRoute } from "@react-navigation/native";
 
-const AssignedDetail = () => {
+const PriorityTasksDetail = () => {
   const route = useRoute()
   const item = route?.params?.item
   return (
@@ -18,7 +18,7 @@ const AssignedDetail = () => {
       <View style={{
         marginHorizontal: 12
       }}>
-        <CustomBackHeader menuIcon={imageIndex.back} label={"Assigned Detail"} />
+        <CustomBackHeader menuIcon={imageIndex.back} label={"Priority Tasks Detail"} />
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -29,10 +29,10 @@ const AssignedDetail = () => {
           <Text style={styles.label}>Task Name</Text>
           <Text style={styles.value}>{item?.task_name}</Text>
         </View>
-        {/* <View style={styles.row}>
-        <Text style={styles.label}>Task Manager:</Text>
-        <Text style={styles.value}>rakesh dongre</Text>
-      </View> */}
+        <View style={styles.row}>
+        <Text style={styles.label}>Status:</Text>
+        <Text style={styles.value}>{item?.status?.name}</Text>
+      </View>
 
         {/* Due Date */}
         <View style={styles.row}>
@@ -99,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AssignedDetail;
+export default PriorityTasksDetail;

@@ -40,6 +40,7 @@ import BudgetCategoriesDetail from "../screen/Financial/BudgetCategories/BudgetC
 import BudgetCategoriesForm from "../screen/Financial/BudgetCategories/AddBudgetCategories";
 import PosisionDetail from "../screen/Employee/Posision/PosisionDetail";
 import AddPosision from "../screen/Employee/Posision/AddPosision";
+import PriorityTasksDetail from "../screen/PriorityTask/PriorityTasksDetail";
    
 const _routes: any = {
   REGISTRATION_ROUTE: [
@@ -169,6 +170,10 @@ const _routes: any = {
      {
       name: ScreenNameEnum.ExpensesDetail,
       Component: ExpensesDetailScreen,
+    },  
+     {
+      name: ScreenNameEnum.PriorityTasksDetails,
+      Component: PriorityTasksDetail,
     },  
      {
       name: ScreenNameEnum.PLSummaryDetail,
