@@ -20,25 +20,37 @@ import CustomButton from "../../compoent/CustomButton";
 import { useDispatch, useSelector } from "react-redux";
 import ImagePicker from "react-native-image-crop-picker";
 import ImagePickerModal from "../../compoent/ImagePickerModal";
-import { EditProfile_Api } from "../../Api/apiRequest";
+import { EditProfile_Api, GetUserApi } from "../../Api/apiRequest";
 import LoadingModal from "../../utils/Loader";
 import { useNavigation } from "@react-navigation/native";
+import CustomBackHeader from "../../compoent/CustomBackHeader";
 
 const EditProfile = () => {
-  const [fullName, setFullName] = useState('');
+  const [fName, setFName] = useState('');
+  const [lName, setLName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [image, setImage] = useState<any>("");
-  const isLogins = useSelector((state: any) => state?.feature?.userGetData);
   const isLogin = useSelector((state: any) => state?.auth);
+  console.log(isLogin)
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
   useEffect(() => {
-    setFullName(isLogins?.user_name?.toString());
-    setEmail(isLogins?.email);
+    const param ={
+      token: isLogin?.token
+    }
+    const data = GetUserApi(param, setLoading, dispatch)
+   
+
   }, []);
+  useEffect(()=>{
+ setFName(isLogin?.userData?.first_name?.toString());
+    setLName(isLogin?.userData?.last_name?.toString());
+    setEmail(isLogin?.userData?.email);
+  },[isLogin])
 
   const pickImageFromGallery = () => {
     ImagePicker.openPicker({ width: 300, height: 400 })
@@ -62,8 +74,11 @@ const EditProfile = () => {
   const handleSubmit = async () => {
     try {
       const params = {
-        name: fullName,
+        first_name: fName,
+        last_name: lName,
+        email,
         images: image,
+        token:isLogin?.token,
         userId: isLogin?.userData?.id,
       };
       await EditProfile_Api(params, setLoading, navigation);
@@ -86,12 +101,13 @@ const EditProfile = () => {
           >
             <View style={{   marginHorizontal:12 }}>
               <CustomHeader />
+              {/* <CustomBackHeader menuIcon={imageIndex.back} label={"Edit Profile"}/> */}
             </View>
 
             <View style={styles.container}>
               <View style={styles.profileContainer}>
                 <Image
-                  source={image?.path ? { uri: image.path } : imageIndex.dummy}
+                  source={image?.path ? { uri: image.path } : {uri:isLogin?.userData?.profile_image_url}}
                   style={styles.profileImage}
                   resizeMode="cover"
                 />
@@ -110,15 +126,14 @@ const EditProfile = () => {
 
               <View style={{ marginTop: 45, width: "90%" }}>
                 <TextInputField
-                  placeholder={"Full Name"}
-                  text={fullName}
-                  onChangeText={setFullName}
+                  placeholder={"First name"}
+                  text={fName}
+                  onChangeText={setFName}
                 />
                 <TextInputField
-                  placeholder={"Phone Number"}
-                  type="decimal-pad"
-                  text={fullName}
-                  onChangeText={setFullName}
+                  placeholder={"Last name"}
+                  text={lName}
+                  onChangeText={setLName}
                 />
                 <TextInputField
                   placeholder={"Email"}

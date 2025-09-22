@@ -20,7 +20,23 @@ import { useDispatch } from "react-redux";
 // -------- Menu Data --------
 const menuItems = [
   { id: "1", title: "Dashboard", icon: imageIndex.dasboard, screen: "Dashboard" },
-  { id: "2", title: "Profile", icon: imageIndex.ProfielPng, screen: ScreenNameEnum.EditProfile },
+  { id: "2", title: "Profile", icon: imageIndex.ProfielPng,
+     children: [
+      {
+        id: '2-1',
+        title: 'Edit profile',
+        screen: ScreenNameEnum.EditProfile,
+        index: 0,
+      },
+      {
+        id: '2-2',
+        title: 'Change Password',
+        screen: ScreenNameEnum.changePassword,
+        index: 0,
+      },
+    ],
+  },
+    // screen: ScreenNameEnum.EditProfile },
   { id: "3", title: "Backburner Task", icon: imageIndex.Bacxkbuer, screen: ScreenNameEnum.Backburner },
   { id: "14", title: "Priority Task", icon: imageIndex.Bacxkbuer, screen: ScreenNameEnum.PriorityTasksScreen },
   { id: "4", title: "Callbacks", icon: imageIndex.MyAddress, screen: ScreenNameEnum.CallBack },

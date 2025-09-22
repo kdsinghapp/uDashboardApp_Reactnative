@@ -41,19 +41,20 @@ const ChangePasswordScreen = () => {
 
     const handleSubmit = async () => {
         try {
-            let data = {
-                oldpassw: "1234567",
-                password: "1234567",
-                confirmPassword: "1234567"
-            }
             // let data = {
-            //     oldpassw: oldpass,
-            //     password: password,
-            //     confirmPassword: confirmPassword
+            //     oldpassw: "1234567",
+            //     password: "1234567",
+            //     confirmPassword: "1234567"
             // }
+            let data = {
+                oldpassw: oldpass,
+                password: password,
+                confirmPassword: confirmPassword
+            }
 
-            console.log("data", data)
-            const response = await ChangePass_Api(data, isLogin.userData.id, confirmPasswordVisible, setLoading);
+            // console.log("data", data)
+            const response = await ChangePass_Api(data, isLogin.token, setLoading);
+
         } catch (error) {
         }
     }
@@ -62,10 +63,9 @@ const ChangePasswordScreen = () => {
             {isLoading ? <Loading /> : null}
 
             <StatusBarComponent />
-            <CustomHeader
-
-                menuIcon={imageIndex.back} label="Change Password" />
-
+            <View style={{ marginHorizontal: 12 }}>
+                <CustomHeader />
+            </View>
             <View style={{ marginHorizontal: 12, flex: 1 }}>
                 <View style={{ marginTop: 35 }}>
 
@@ -79,9 +79,6 @@ const ChangePasswordScreen = () => {
                             value={oldpass}
                             onChangeText={setOldPass}
                         />
-
-
-
                     </View>
                     <View style={styles.inputContainer}>
                         <Image source={imageIndex.lock} style={styles.image} />
@@ -130,10 +127,10 @@ const ChangePasswordScreen = () => {
                     <CustomButton
                         title="Save"
                         onPress={() => validatePasswords()}
-                        buttonStyle={{
-                            alignSelf: 'center',
-                            width: "100%"
-                        }}
+                    // buttonStyle={{
+                    //     alignSelf: 'center',
+                    //     width: "100%"
+                    // }}
                     />
                 </View>
             </View>
@@ -166,7 +163,7 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         marginLeft: 10,
-        color: '#FF6F43',
+        // color: '#000',
     },
 
 });

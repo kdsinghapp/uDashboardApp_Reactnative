@@ -3549,11 +3549,12 @@ const EditProfile_Api = (
 ) => {
     try {
         setLoading(true)
-        const myHeaders = new Headers();
+     const myHeaders = new Headers();
         myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
         const formData = new FormData();
         if (param.images) {
-            formData.append("image", {
+            formData.append("profile_image", {
                 uri: param.images.path,          // Make sure param.image.path is a valid file URI
                 type: 'image/jpeg',
                 name: 'image.jpg'
@@ -3561,18 +3562,21 @@ const EditProfile_Api = (
         }
         formData.append("first_name", param?.first_name);
         formData.append("last_name", param?.last_name);
-        formData.append("user_id", param?.userId);
-        formData.append("license_date", param?.date ?? null);
+        formData.append("email", param?.email);
+        formData.append("_method", "PUT");
+        // formData.append("user_id", param?.userId);
+        // formData.append("license_date", param?.date ?? null);
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: formData,
         };
         console.log(formData)
-        const respons = fetch(`${base_url}/update_profile`, requestOptions)
+        const respons = fetch(`${base_url}user/profile/update`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res);
+                console.log(response)
                 if (response.status == '1') {
                     setLoading(false)
                     successToast(
@@ -3603,27 +3607,29 @@ const EditProfile_Api = (
     }
 };
 
-const GetUserApi = async (params: any, setLoading: (loading: boolean) => void) => {
+const GetUserApi = async (param: any, setLoading: (loading: boolean) => void, dispatch) => {
     // const dispatch = useDispatch()
     try {
         setLoading(true)
 
         const myHeaders = new Headers();
-        myHeaders.append("Accept", "application/json");
-        const formdata = new FormData();
-        formdata.append("user_id", params);
+             myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${param.token}`);
+        // const formdata = new FormData();
+        // formdata.append("user_id", param);
         const requestOptions = {
-            method: "POST",
+            method: "GET",
             headers: myHeaders,
-            body: formdata,
+            // body: formdata,
         };
-        const response = await fetch(`${base_url}/get_profile`, requestOptions);
+        const response = await fetch(`${base_url}user/profile/profile`, requestOptions);
         const resText = await response.text();
         const responseData = JSON.parse(resText);
         console.log(responseData)
-        if (responseData.status === '1') {
+        if (responseData.status) {
             setLoading(false)
-            return { userGetData: responseData.result, };
+ dispatch(loginSuccess({ userData: responseData?.data, token: param?.token, }));
+            return { userData: responseData.data, };
         } else {
             errorToast(responseData.message);
             setLoading(false)
@@ -3687,33 +3693,36 @@ const Support_Api = (
 };
 const ChangePass_Api = (
     data: any,
-    id: any,
+    token: any,
     setLoading: (loading: boolean) => void,
 ) => {
     try {
         setLoading(true)
-        const myHeaders = new Headers();
-        myHeaders.append("Accept", "application/json");
+            const myHeaders = new Headers();
+             myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", `Bearer ${token}`);
+    
         const formData = new FormData();
+        formData.append("_method", "PUT");
         formData.append("old_password", data?.oldpassw);
-        formData.append("password", data?.password);
-        formData.append("confirm_password", data?.confirmPassword);
-        formData.append("user_id", id);
+        formData.append("new_password", data?.password);
+        formData.append("new_password_confirmation", data?.confirmPassword);
+        // formData.append("user_id", id);
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: formData,
         };
-        const respons = fetch(`${base_url}change_password`, requestOptions)
+        const respons = fetch(`${base_url}user/profile/password`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res)
-                if (response?.status === "0") {
-                    errorToast(
-                        response.error,
-                    );
-                }
-                if (response?.status == '1') {
+                // if (response?.status === "0") {
+                //     errorToast(
+                //         response.error,
+                //     );
+                // }
+                if (response?.status) {
                     setLoading(false)
                     successToast(
                         response?.message
@@ -3722,7 +3731,7 @@ const ChangePass_Api = (
                 } else {
                     setLoading(false);
                     errorToast(
-                        response.error,
+                        response.message,
                     );
                     return response
                 }

@@ -15,6 +15,7 @@ enum ScreenNameEnum {
   RepliesScreen = "RepliesScreen",
   RepliesDetail = "RepliesDetail",
   Budget = "Budget",
+  ProfileScreen="ProfileScreen",
   AddBudget = "AddBudget",
   BudgetDetail = "BudgetDeail",
   PLSummary = "PLSummary",

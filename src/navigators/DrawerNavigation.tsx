@@ -26,6 +26,7 @@ import BudgetCategoriesScreen from '../screen/Financial/BudgetCategories/BudgetC
 import PosisionScreen from '../screen/Employee/Posision/PosisionScreen';
 import PriorityTasksScreen from '../screen/PriorityTask/PriorityTasksScreen';
 import PricingPage from '../screen/MemberShip';
+import ChangePasswordScreen from '../screen/Profile/ChangePassword';
 
 const Drawer = createDrawerNavigator();
 
@@ -39,6 +40,7 @@ export default function DrawerNavigation() {
     >
       <Drawer.Screen name="Dashboard" component={DashboardScreen} />
       <Drawer.Screen name={ScreenNameEnum.EditProfile} component={EditProfile} />
+      <Drawer.Screen name={ScreenNameEnum.changePassword} component={ChangePasswordScreen} />
       <Drawer.Screen name={ScreenNameEnum.ActiveScreen} component={ActiveScreen} />
       <Drawer.Screen name={ScreenNameEnum.CallBack} component={CallBack} />
       <Drawer.Screen name={ScreenNameEnum.Note} component={Note} />

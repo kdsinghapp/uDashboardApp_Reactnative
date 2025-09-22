@@ -221,7 +221,6 @@ const PricingCard = ({ plan, isSelected, onSelect, billingCycle }) => {
           <Text style={styles.popularText}>MOST POPULAR</Text>
         </View>
       )}
-      
       <View style={styles.cardContent}>
         <Text style={styles.cardTitle}>{plan.name}</Text>
         

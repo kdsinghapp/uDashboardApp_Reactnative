@@ -41,6 +41,8 @@ import BudgetCategoriesForm from "../screen/Financial/BudgetCategories/AddBudget
 import PosisionDetail from "../screen/Employee/Posision/PosisionDetail";
 import AddPosision from "../screen/Employee/Posision/AddPosision";
 import PriorityTasksDetail from "../screen/PriorityTask/PriorityTasksDetail";
+import ProfileScreen from "../screen/Profile/ProfileTab";
+import ChangePasswordScreen from "../screen/Profile/ChangePassword";
    
 const _routes: any = {
   REGISTRATION_ROUTE: [
@@ -218,6 +220,14 @@ const _routes: any = {
      {
       name: ScreenNameEnum.EditProfile,
       Component: EditProfile,
+    },
+     {
+      name: ScreenNameEnum.ProfileScreen,
+      Component: ProfileScreen,
+    },
+     {
+      name: ScreenNameEnum.changePassword,
+      Component: ChangePasswordScreen,
     },
    ],
 };
