@@ -1,46 +1,63 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { BarChart, Grid, XAxis } from "react-native-svg-charts";
+import { BarChart, XAxis } from "react-native-svg-charts";
 import { G, Rect } from "react-native-svg";
 
-const dataCompleted = [10, 7, 8, 6, 5, 4, 3];
-const dataProgress = [7, 4, 6, 4, 3, 3, 2];
-const labels = ["Gina", "Gina", "Gina", "Gina", "Gina", "Gina", "Gina"];
+export default function ActivitiesChart({ dashboardData }) {
+  const [barData, setBarData] = useState([]);
+  const [xAxisData, setXAxisData] = useState([]);
 
-export default function ActivitiesChart() {
-  const CUT_OFF = Math.max(...dataCompleted.concat(dataProgress));
+  useEffect(() => {
+    if (dashboardData?.topEmployees) {
+      // ✅ take only 5 employees
+      const formatted = dashboardData.topEmployees.slice(0, 5).map((item) => ({
+        completed: Number(item.completed),
+        // completed: 3,
+        progress: Number(item.in_progress),
+        label: item.name.split(" ")[0], // first name only
+      }));
+      setBarData(formatted);
 
-  // Custom bar rendering
+      // ✅ find max value
+      const allValues = [
+        ...formatted.map((d) => d.completed),
+        ...formatted.map((d) => d.progress),
+      ];
+      const maxValue = Math.max(...allValues, 0);
+
+      // ✅ create 5 steps for X axis
+      const step = Math.ceil(maxValue / 5) || 1;
+      const ticks = Array.from({ length: 6 }, (_, i) => i * step);
+      setXAxisData(ticks);
+    }
+  }, [dashboardData]);
+
+  // ✅ Custom Bars (horizontal stacked style)
   const CustomBars = ({ x, y, bandwidth }) => (
     <G>
-      {dataCompleted.map((value, index) => (
-        <Rect
-          key={`completed-${index}`}
-          x={x(0)}
-        //   y={y(index) + bandwidth / 4}
-          width={x(value) - x(0)}
-        //   height={bandwidth / 2}
-           y={y(index) + bandwidth / 8} // adjust so it doesn’t overlap
-  height={bandwidth / 2}
-          fill="#4a90e2" // blue
-          rx={4}
-          ry={4}
-        />
-      ))}
-
-      {dataProgress.map((value, index) => (
-        <Rect
-          key={`progress-${index}`}
-          x={x(0)}
-           y={y(index) + bandwidth / 1.8} // adjust so it doesn’t overlap
-  height={bandwidth / 2}
-        //   y={y(index) + (bandwidth / 4) * 2}
-          width={x(value) - x(0)}
-        //   height={bandwidth / 2}
-          fill="#7f8c8d" // gray
-          rx={4}
-          ry={4}
-        />
+      {barData.map((item, index) => (
+        <React.Fragment key={index}>
+          {/* Completed */}
+          <Rect
+            x={x(0)}
+            y={y(index) + bandwidth / 6}
+            width={x(item.completed) - x(0)}
+            height={bandwidth / 3}
+            fill="#4a90e2"
+            rx={4}
+            ry={4}
+          />
+          {/* In Progress */}
+          <Rect
+            x={x(0)}
+            y={y(index) + (bandwidth / 2)}
+            width={x(item.progress) - x(0)}
+            height={bandwidth / 3}
+            fill="#7f8c8d"
+            rx={4}
+            ry={4}
+          />
+        </React.Fragment>
       ))}
     </G>
   );
@@ -48,12 +65,12 @@ export default function ActivitiesChart() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Activities</Text>
-      <View style={{ flexDirection: "row", height: 300 }}>
-        {/* Y Axis Labels */}
-        <View style={{ justifyContent: "space-between", paddingRight: 8 }}>
-          {labels.map((label, index) => (
+      <View style={{ flexDirection: "row", height: 250 }}>
+        {/* Y Axis Names */}
+        <View style={{ justifyContent: "space-around", paddingRight: 8, height: 200 }}>
+          {barData.map((item, index) => (
             <Text key={index} style={styles.yLabel}>
-              {label}
+              {item.label}
             </Text>
           ))}
         </View>
@@ -62,24 +79,23 @@ export default function ActivitiesChart() {
         <View style={{ flex: 1 }}>
           <BarChart
             style={{ flex: 1 }}
-            data={dataCompleted}
+            data={xAxisData}
             horizontal={true}
             svg={{ fill: "transparent" }}
-            spacingInner={0.4}
-            contentInset={{ top: 20, bottom: 20 }}
+            spacingInner={0.5}
             gridMin={0}
+            yMax={barData.length}
           >
-            <Grid direction={Grid.Direction.VERTICAL} />
             <CustomBars />
           </BarChart>
 
           {/* X Axis */}
           <XAxis
-            style={{ marginHorizontal: -10, height: 20 }}
-            data={dataCompleted}
+            style={{ marginTop: 5 }}
+            data={xAxisData}
             formatLabel={(value) => `${value}`}
-            contentInset={{ left: 30, right: 30 }}
-            svg={{ fontSize: 10, fill: "white" }}
+            contentInset={{ left: 5, right: 20 }}
+            svg={{ fontSize: 10, fill: "#000" }}
           />
         </View>
       </View>
@@ -101,7 +117,7 @@ export default function ActivitiesChart() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff", // dark theme
+    backgroundColor: "#fff",
     padding: 10,
     borderRadius: 10,
   },
@@ -114,7 +130,7 @@ const styles = StyleSheet.create({
   yLabel: {
     color: "#000",
     fontSize: 12,
-    marginVertical: 10,
+    marginVertical: 5,
   },
   legend: {
     flexDirection: "row",

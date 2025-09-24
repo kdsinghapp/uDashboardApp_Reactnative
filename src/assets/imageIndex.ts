@@ -85,6 +85,7 @@ Check1: require('./images/Check1.png'),
 Avatar: require('./images/Avatar.png'),
 Menu: require('./images/Menu.png'),
 TotalProject: require('./images/TotalProject.png'),
+time: require('./images/time.png'),
 
 rating: require('./images/rating.png'),
 pending: require('./images/pending.png'),

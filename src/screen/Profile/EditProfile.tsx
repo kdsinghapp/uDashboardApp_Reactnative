@@ -39,18 +39,18 @@ const EditProfile = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    const param ={
+    const param = {
       token: isLogin?.token
     }
     const data = GetUserApi(param, setLoading, dispatch)
-   
+
 
   }, []);
-  useEffect(()=>{
- setFName(isLogin?.userData?.first_name?.toString());
+  useEffect(() => {
+    setFName(isLogin?.userData?.first_name?.toString());
     setLName(isLogin?.userData?.last_name?.toString());
     setEmail(isLogin?.userData?.email);
-  },[isLogin])
+  }, [isLogin])
 
   const pickImageFromGallery = () => {
     ImagePicker.openPicker({ width: 300, height: 400 })
@@ -70,7 +70,7 @@ const EditProfile = () => {
       Alert.alert("Error", error.message);
     }
   };
-
+  
   const handleSubmit = async () => {
     try {
       const params = {
@@ -78,11 +78,12 @@ const EditProfile = () => {
         last_name: lName,
         email,
         images: image,
-        token:isLogin?.token,
+        token: isLogin?.token,
         userId: isLogin?.userData?.id,
+        dispatch:dispatch
       };
       await EditProfile_Api(params, setLoading, navigation);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   return (
@@ -97,9 +98,9 @@ const EditProfile = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
-             showsVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
           >
-            <View style={{   marginHorizontal:12 }}>
+            <View style={{ marginHorizontal: 12 }}>
               <CustomHeader />
               {/* <CustomBackHeader menuIcon={imageIndex.back} label={"Edit Profile"}/> */}
             </View>
@@ -107,7 +108,7 @@ const EditProfile = () => {
             <View style={styles.container}>
               <View style={styles.profileContainer}>
                 <Image
-                  source={image?.path ? { uri: image.path } : {uri:isLogin?.userData?.profile_image_url}}
+                  source={image?.path ? { uri: image.path } : { uri: isLogin?.userData?.profile_image_url }}
                   style={styles.profileImage}
                   resizeMode="cover"
                 />

@@ -20,6 +20,7 @@ enum ScreenNameEnum {
   BudgetDetail = "BudgetDeail",
   PLSummary = "PLSummary",
   AddPLSummary = "AddPLSummary",
+  DayDetailsScreen ="DayDetailsScreen",
   PLSummaryDetail = "PLSummaryDetail",
   Expenses = "Expenses",
   AddExpenses = "AddExpenses",

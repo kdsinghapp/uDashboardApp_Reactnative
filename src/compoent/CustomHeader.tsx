@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
 import imageIndex from '../assets/imageIndex';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import ScreenNameEnum from '../routes/screenName.enum';
+import { useSelector } from 'react-redux';
 
 interface RightIcon {
   icon: any;
@@ -21,6 +22,7 @@ interface Props {
 
 const CustomHeader: React.FC<Props> = ({ isSearch,rightIcons = [], menuIcon, label, leftPress }) => {
   const navigation = useNavigation();
+const isLogin = useSelector((state)=>state?.auth)
 
   return (
     <View style={styles.header}>
@@ -48,7 +50,7 @@ const CustomHeader: React.FC<Props> = ({ isSearch,rightIcons = [], menuIcon, lab
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate(ScreenNameEnum.EditProfile)}>
-          <Image source={imageIndex.Avatar} style={styles.rightIconAvatar} resizeMode="contain" />
+          <Image source={isLogin?.userData?.profile_image_url ? {uri:isLogin?.userData?.profile_image_url} : imageIndex.Avatar} style={styles.rightIconAvatar} resizeMode="cover" />
         </TouchableOpacity>
       </View>
     </View>

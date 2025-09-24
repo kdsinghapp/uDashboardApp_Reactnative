@@ -43,6 +43,7 @@ import AddPosision from "../screen/Employee/Posision/AddPosision";
 import PriorityTasksDetail from "../screen/PriorityTask/PriorityTasksDetail";
 import ProfileScreen from "../screen/Profile/ProfileTab";
 import ChangePasswordScreen from "../screen/Profile/ChangePassword";
+import DayDetailsScreen from "../screen/Calendar/EventDetail";
    
 const _routes: any = {
   REGISTRATION_ROUTE: [
@@ -228,6 +229,10 @@ const _routes: any = {
      {
       name: ScreenNameEnum.changePassword,
       Component: ChangePasswordScreen,
+    },
+     {
+      name: ScreenNameEnum.DayDetailsScreen,
+      Component: DayDetailsScreen,
     },
    ],
 };

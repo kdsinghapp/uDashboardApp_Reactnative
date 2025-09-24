@@ -22,7 +22,8 @@ import imageIndex from "../../assets/imageIndex";
 import StatusBarComponent from "../../compoent/StatusBarCompoent";
 import DatePickerModal from "../../compoent/DatePickerModal";
 import { useSelector } from "react-redux";
-import { AddEmployApi, UpdateEmployApi } from "../../Api/apiRequest";
+import { AddEmployApi, GetApi, UpdateEmployApi } from "../../Api/apiRequest";
+import { endpointCustomer } from "../../Api/endpoints";
 
 const options = [
   {
@@ -46,15 +47,15 @@ const options = [
   { label: "🇨🇦 Canada (+1)", value: "+1" },
     ],
   },
-  {
-    key: "position",
-    label: "Position",
-    options: [
-      { label: "Manager", value: "manager" },
-      { label: "Developer", value: "developer" },
-      { label: "Designer", value: "designer" },
-    ],
-  },
+  // {
+  //   key: "position",
+  //   label: "Position",
+  //   options: [
+  //     { label: "Manager", value: "manager" },
+  //     { label: "Developer", value: "developer" },
+  //     { label: "Designer", value: "designer" },
+  //   ],
+  // },
   {
     key: "payType",
     label: "Pay Type",
@@ -82,7 +83,7 @@ const options = [
 ]
 export default function EmployeeForm({ route, navigation }) {
   const item = route?.params?.item; // data passed for update
-
+const [positionData, setPosisionData] = useState([])
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
@@ -94,6 +95,7 @@ export default function EmployeeForm({ route, navigation }) {
     employmentType: "",
     countryCode: "",
     position: "",
+    positionId: "",
     payType: "",
     terminationDate: new Date(),
     status: "",
@@ -106,6 +108,29 @@ export default function EmployeeForm({ route, navigation }) {
     field: "",
     visible: false,
   });
+ useEffect(() => {
+    fetchPosision();
+  }, []);
+
+
+  const fetchPosision = async () => {
+    const param = {
+      token: isLogin?.token,
+      url:  endpointCustomer?.GetPosisionList
+    }
+    const data = await GetApi(param, setLoading)
+
+const data1 = data?.data?.data
+    const options = data1.map(item => ({
+  label: item.title,
+  value: item.id
+}));
+    setPosisionData(options ?? [])
+    console.log(options)
+    // console.log(data?.data?.data, 'this is instide Posision')
+
+  }
+
 
   // Prefill form if editing
   useEffect(() => {
@@ -120,7 +145,8 @@ export default function EmployeeForm({ route, navigation }) {
         lastIncrementDate: item.last_increment_date ? new Date(item.last_increment_date) : new Date(),
         employmentType: item?.employment_type ?? '',
         countryCode: item?.country_phone_code ?? "",
-        position: item?.position_id ?? "",
+        position: item?.position ?? "",
+        positionId: item?.position_id ?? "",
         payType: item?.pay_type ?? "",
         terminationDate: item.termination_date ? new Date(item.termination_date) : new Date(),
         status: item?.status ?? "",
@@ -135,7 +161,7 @@ export default function EmployeeForm({ route, navigation }) {
      setForm((prev) => ({
       ...prev,
       [field]: value.label || value,
-      // ...(field === "callback" && { employeeId: value.value }), // add priorityId
+      ...(field === "position" && { positionId: value.value }), // add priorityId
       // ...(field === "priority" && { priorityId: value.value }), // add priorityId
       // ...(field === "status" && { statusId: value.value })      // add statusId
     }));
@@ -273,7 +299,14 @@ export default function EmployeeForm({ route, navigation }) {
                 </Text>
               </TouchableOpacity>
             ))}
-
+  <CustomDropdown
+                key={'position'}
+                label={'position'}
+                options={positionData}
+                value={form["position"]}
+                onSelect={(val) => handleInputChange('position', val)}
+                // onSelect={(val) => console.log(val)}
+              />
 
 
             {/* Dropdowns */}

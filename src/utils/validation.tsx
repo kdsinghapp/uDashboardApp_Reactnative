@@ -31,7 +31,7 @@ export const validateConfirmPassword = (password: string, confirmPassword: strin
 export const validateFirstName = (firstName: string): string => {
   const trimmed = firstName.trim();
   if (!trimmed) {
-    return localizationStrings.fnameReq;
+    return "First name is required";
   } 
   // else if (!/^[a-zA-Z\s'-]+$/.test(trimmed)) {
   //   return 'First name can only contain letters';

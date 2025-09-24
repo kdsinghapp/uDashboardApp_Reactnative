@@ -25,10 +25,11 @@ export const endpointCustomer = {
   paymentCash:"/bikedoctor/payment/cash",
   addshopdetails:"/bikedoctor/dealer/add-shop-details",
   adddocuments:"/bikedoctor/dealer/add-dealer-documents",
-
+dashboard:"dashboard",
   GetEmployeeList:"employees?page=1&limit=100",
   GetDeletedEmployeeList:"employees?page=1&limit=1000&employee=deleted",
-  DeleteEmployee:'employees/',
+  DeleteEmployee:'employees/delete/',
+  RestoreEmployee:'employees/restore/',
 
   // Employees Posision
   GetPosisionList :"employees/positions/all-positions?page=1&limit=100",

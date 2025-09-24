@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,19 +11,52 @@ import { Calendar, CalendarList, Agenda } from "react-native-calendars";
 import StatusBarComponent from "../../compoent/StatusBarCompoent";
 import CustomHeader from "../../compoent/CustomHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GetApi } from "../../Api/apiRequest";
+import { useSelector } from "react-redux";
+import { color } from "../../constant";
+import { useNavigation } from "@react-navigation/native";
+import ScreenNameEnum from "../../routes/screenName.enum";
+import LoadingModal from "../../utils/Loader";
 
 const screenWidth = Dimensions.get("window").width;
 
 export default function CalendarScreen() {
   const [selectedView, setSelectedView] = useState("Month"); // Month, Week, Day
   const [selectedDate, setSelectedDate] = useState("");
+  const [loading, setLoading] = useState(false)
+  const isLogin = useSelector((state) => state?.auth)
+  const [data, setData] = useState([])
+  // console.log(isLogin)
+  useEffect(() => {
+    getEvent()
+  }, [])
+  const getEvent = async (start, end) => {
+    const param = {
+      token: isLogin?.token,
+      url: start ? `calendar?start=${start}&end=${end}` : "calendar"
+    }
+    console.log(param)
 
-  const markedDates = {
-    "2025-09-15": { selected: true, selectedColor: "#4f6cff" },
-    "2025-09-28": { selected: true, selectedColor: "#4f6cff" },
-    "2025-09-17": { selected: true, selectedColor: "#4f6cff" },
-    "2025-09-18": { selected: true, selectedColor: "#4f6cff" },
-  };
+    const data = await GetApi(param, setLoading)
+
+    const markedDates = data.reduce((acc, event) => {
+      acc[event.start] = {
+        selected: true,
+        // selectedColor: event.backgroundColor || "#4f6cff",
+        selectedColor: color.primary,
+        event
+      };
+      return acc;
+    }, {});
+    console.log(markedDates)
+    setData(markedDates)
+  }
+  // const markedDates = {
+  //   "2025-09-15": { selected: true, selectedColor: "#4f6cff" },
+  //   "2025-09-28": { selected: true, selectedColor: "#4f6cff" },
+  //   "2025-09-17": { selected: true, selectedColor: "#4f6cff" },
+  //   "2025-09-18": { selected: true, selectedColor: "#4f6cff" },
+  // };
 
   const renderTab = (tab) => (
     <TouchableOpacity
@@ -79,33 +112,54 @@ export default function CalendarScreen() {
       <Text style={styles.dayContent}>Your schedule details go here...</Text>
     </View>
   );
+  const navigation = useNavigation();
 
+  const handleDayPress = (day) => {
+    const eventData = data[day.dateString]?.event;
+
+    if (eventData) {
+      // Only navigate if the date is marked
+      navigation.navigate(ScreenNameEnum.DayDetailsScreen, { event: eventData });
+    } else {
+      console.log("No events on this day");
+    }
+  };
   return (
     <SafeAreaView edges={['top']} style={styles.container}>
-            <StatusBarComponent/>
+      {loading && <LoadingModal/>}
+      <StatusBarComponent />
       <View style={{
         padding: 15,
       }}>
-
-
-      <CustomHeader  />
+        <CustomHeader />
       </View>
-      <View style={styles.tabContainer}>
+      {/* <View style={styles.tabContainer}>
         {renderTab("Month")}
         {renderTab("Week")}
         {renderTab("Day")}
-      </View>
+      </View> */}
 
       <View style={styles.calendarContainer}>
         {selectedView === "Month" && (
           <Calendar
-            onDayPress={(day) => {
-              console.log(day.dateString)
-              setSelectedDate(day.dateString)
-            
+            onDayPress={handleDayPress}
+            // onDayPress={(day) => {
+            //   console.log(day.dateString)
+            //   // setSelectedDate(day.dateString)
+
+            // }}
+
+            onMonthChange={(month) => {
+              console.log("New month:", month);
+              // month = {year: 2025, month: 9, day: 1}
+              const startDate = `${month.year}-${month.month.toString().padStart(2, '0')}-01`;
+              const endDate = `${month.year}-${month.month.toString().padStart(2, '0')}-${new Date(month.year, month.month, 0).getDate()}`;
+
+              // Call your API with start and end date
+              getEvent(startDate, endDate);
             }}
             markedDates={{
-              ...markedDates,
+              ...data,
               [selectedDate]: { selected: true, selectedColor: "#0D6EFD" },
             }}
             theme={{
@@ -125,7 +179,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-   },
+  },
   tabContainer: {
     flexDirection: "row",
     justifyContent: "space-around",

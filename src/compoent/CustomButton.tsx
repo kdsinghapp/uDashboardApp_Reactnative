@@ -33,7 +33,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   alignItm = 'center',
   style,
   textStyle,
-  height = 60,
+  height = 50,
   onPress,
 }) => {
   const alignment: Record<AlignType, 'flex-start' | 'center' | 'flex-end'> = {

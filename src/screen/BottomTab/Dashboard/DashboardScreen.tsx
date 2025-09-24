@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
 // import { LineChart, PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
@@ -12,17 +12,25 @@ import { wp } from '../../../utils/Constant';
 import ActivitiesChart from './ActivityChart';
 import GroupedBarChart from './SaleChart';
 import TaskCompleteProgressBar from './TaskCompleteChart';
+import { GetApi } from '../../../Api/apiRequest';
+import { useSelector } from 'react-redux';
+import LoadingModal from '../../../utils/Loader';
+import { endpointCustomer } from '../../../Api/endpoints';
 
 
 const stats = [
-  { id: 1, title: "Total Project", value: "89.9K", icon: "briefcase-outline", im: imageIndex.rating, active: true },
-  { id: 2, title: "Completed Projects", value: "78.5K", im: imageIndex.rating, icon: "checkmark-circle-outline", active: false },
-  { id: 3, title: "Ongoing Projects", value: "20.3K", im: imageIndex.rating, icon: "sync-outline", active: false },
-  { id: 4, title: "Pending Projects", value: "10.6K", im: imageIndex.rating, icon: "layers-outline", active: false },
+  { id: 1, title: "Due Task", value: "89.9K", icon: "briefcase-outline", im: imageIndex.TotalProject, active: true },
+  { id: 2, title: "Call Backs", value: "78.5K", im: imageIndex.time, icon: "checkmark-circle-outline", active: false },
+  { id: 3, title: "Revenue", value: "20.3K", im: imageIndex.rating, icon: "sync-outline", active: false },
+  { id: 4, title: "Total Profile", value: "10.6K", im: imageIndex.pending, icon: "layers-outline", active: false },
 ];
 
 export default function DashboardScreen() {
   const [selectedId, setSelectedId] = useState(null);
+  const [loading, setLoading] = useState(false)
+  const isLogin = useSelector((state) => state?.auth)
+  const [overView, setOverView] = useState(null)
+  const [dashboardData, setDashboardData] = useState(null)
   const initialTasks = [
     {
       id: "1",
@@ -74,24 +82,48 @@ export default function DashboardScreen() {
     { color: "#F79494", percent: 35, name: "Seo" },
   ];
   let offset = 0;
+
+  useEffect(() => {
+    getOverview()
+  }, [])
+  const getOverview = async () => {
+    const param1 = {
+      token: isLogin?.token,
+      url: endpointCustomer.dashboard,
+    };
+    const dashboard = await GetApi(param1, setLoading);
+    console.log(dashboard, 'this is dashboard')
+    setDashboardData(dashboard)
+    const param = {
+      token: isLogin?.token,
+      url: "overview-data?filter=this_year"
+    }
+    const overview = await GetApi(param, setLoading)
+    console.log(overview)
+    setOverView(overview)
+
+  }
   return (
     <SafeAreaView edges={['top']} style={{
       flex: 1,
-      backgroundColor: "white"
+      backgroundColor: "white",
     }}
-    edges={['top']}
+      edges={['top']}
     >
-      <StatusBarComponent />
-      <View style={{
-        padding: 15,
-      }}>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+
+        {loading && <LoadingModal />}
+
+        <StatusBarComponent />
+        <View style={{
+          padding: 15,
+        }}>
 
 
-        <CustomHeader isSearch={true} />
-      </View>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+          <CustomHeader isSearch={true} />
+        </View>
         <View style={styles.container1}>
-          {stats.map((item) => {
+          {stats.map((item, index) => {
             const isActive = selectedId === item.id;
 
             return (
@@ -109,7 +141,7 @@ export default function DashboardScreen() {
                   }}
                 />
                 <Text allowFontScaling={false} style={[styles.value, isActive && { color: "#fff", marginTop: 20 }]}>
-                  {item.value}
+                  {index == 0 ? overView?.dueTasks : index == 1 ? overView?.allCallbacks : index == 2 ? overView?.revenue : overView?.profit}
                 </Text>
                 <Text allowFontScaling={false} style={[styles.label, isActive && { color: "#fff" }]}>
                   {item.title}
@@ -129,7 +161,7 @@ export default function DashboardScreen() {
           marginTop: 15
 
         }}>
-          <GroupedBarChart />
+          <GroupedBarChart dashboardData={dashboardData} />
         </View>
         <View style={{
           flex: 1,
@@ -138,7 +170,8 @@ export default function DashboardScreen() {
           borderRadius: 10,
           alignItems: 'center',
           justifyContent: 'center',
-          marginTop: 15
+          marginTop: 15,
+          display: 'none'
         }}>
           <View style={styles.legend}>
             {segments.map(item =>
@@ -180,13 +213,15 @@ export default function DashboardScreen() {
           marginTop: 15
 
         }}>
-          <ActivitiesChart />
+          <ActivitiesChart dashboardData={dashboardData} />
         </View>
         <View style={{
           borderWidth: 1,
           borderColor: "#E3E3E3",
           borderRadius: 10,
-          marginTop: 15
+          marginTop: 15,
+          display: 'none'
+
 
         }}>
           <TaskCompleteProgressBar />
@@ -195,7 +230,8 @@ export default function DashboardScreen() {
           borderWidth: 1,
           borderColor: "#E3E3E3",
           marginTop: 10,
-          borderRadius: 10
+          borderRadius: 10,
+          display: 'none'
         }}>
           <View style={{
             marginHorizontal: 12,
@@ -226,7 +262,7 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 15, backgroundColor: 'white', },
+  container: { padding: 15, backgroundColor: 'white', paddingBottom: 50 },
   statsContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
   statCard: { width: '48%', backgroundColor: '#fff', padding: 16, borderRadius: 12, alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.1, shadowOffset: { width: 0, height: 2 }, shadowRadius: 8, elevation: 3 },
   chartTitle: { fontSize: 16, fontWeight: '600', marginTop: 16, marginBottom: 8 },

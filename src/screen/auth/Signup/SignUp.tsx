@@ -77,29 +77,29 @@ export default function Signup() {
                 <CustomInput
                   placeholder={"First Name"}
                   leftIcon={<Icon source={imageIndex.user} size={20} />}
-                value={fname}
-                // keyboardType='email-address'
+                  value={fname}
+                  // keyboardType='email-address'
 
-                onChangeText={handlefNameChange}
+                  onChangeText={handlefNameChange}
                 />
                 {fnameError ? <Text style={styles.errorText}>{fnameError}</Text> : null}
-  <CustomInput
+                <CustomInput
                   placeholder={"Last Name"}
                   leftIcon={<Icon source={imageIndex.user} size={20} />}
-                value={lName}
-                // keyboardType='email-address'
+                  value={lName}
+                  // keyboardType='email-address'
 
-                onChangeText={handleLNameChange}
+                  onChangeText={handleLNameChange}
                 />
                 {lNameError ? <Text style={styles.errorText}>{lNameError}</Text> : null}
 
                 <CustomInput
                   placeholder={"Email Address"}
                   leftIcon={<Icon source={imageIndex.email} size={18} />}
-                   value={email}
-                keyboardType='email-address'
+                  value={email}
+                  keyboardType='email-address'
 
-                onChangeText={handleEmailChange}
+                  onChangeText={handleEmailChange}
                 />
                 {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
@@ -133,7 +133,7 @@ export default function Signup() {
               <CustomButton
                 title={"Sign Up"}
                 onPress={handleSignup}
-                // onPress={() => navigation.navigate(ScreenNameEnum.LoginScreen)}
+              // onPress={() => navigation.navigate(ScreenNameEnum.LoginScreen)}
               />
 
               <View style={{ width: '100%', marginTop: 20, marginBottom: 20, flexDirection: 'row', }}>
@@ -145,9 +145,7 @@ export default function Signup() {
               <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => navigation.navigate(ScreenNameEnum.LoginScreen)}>
                 <Text allowFontScaling={false} style={styles.signupText}>Alrady have an account? <Text style={{ color: color.primary }}> Login</Text> </Text>
               </TouchableOpacity>
-
             </View>
-
           </ScrollView>
 
         </TouchableWithoutFeedback>

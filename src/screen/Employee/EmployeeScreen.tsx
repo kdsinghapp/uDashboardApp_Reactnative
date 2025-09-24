@@ -85,7 +85,7 @@ export default function EmployeeScreen() {
   if (!selectedItem)  return
     const param = {
       token: isLogin?.token,
-      url: endpointCustomer?.DeleteEmployee + selectedItem?.id + "/restore",
+      url: endpointCustomer?.RestoreEmployee + selectedItem?.id,
     }
     await RestoreApi(param, setLoading)
     fetchEmployee(activeTab)

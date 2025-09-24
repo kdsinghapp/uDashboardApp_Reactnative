@@ -73,12 +73,12 @@ const SinupCustomer = (params: any,
             headers: myHeaders,
             body: formdata,
         };
-        console.log(formdata)
+        // console.log(formdata)
         const respons = fetch(`${base_url}auth/signup`, requestOptions)
             .then((response) => response.text())
             .then((res) => {
                 const response = JSON.parse(res)
-                if (response.status == '1') {
+                if (response.status) {
                     successToast(
                         response?.message
                     );
@@ -87,7 +87,7 @@ const SinupCustomer = (params: any,
                     return response
                 } else {
                     errorToast(
-                        response.message,
+                        response.errors,
                     );
                     console.log(response)
 
@@ -490,7 +490,7 @@ const AddClientApi = (
         formdata.append("last_name", param?.last_name ?? "");
         formdata.append("start_date", param?.startDate.toISOString().split("T")[0]);
         formdata.append("start_time", moment(param?.startTime).format("HH:mm"));
-         formdata.append("end_time", moment(param?.endTime).format("HH:mm"));
+        formdata.append("end_time", moment(param?.endTime).format("HH:mm"));
         formdata.append("assigned_team", param?.callbackId ?? "1");
         formdata.append("status_id", param?.statusId ?? "1");
         formdata.append("priority_id", param?.priorityId ?? "1");
@@ -554,7 +554,7 @@ const AddPosisionApi = (
         const formdata = new FormData();
         formdata.append("title", param?.name);
         formdata.append("description", (param?.description) ?? "");
-       
+
         let url = `${base_url}employees/positions`;
         if (param?.id) {
             formdata.append("_method", "PUT");
@@ -610,7 +610,7 @@ const GetAllListApi = (
 
         myHeaders.append("Accept", "application/json");
         myHeaders.append("Authorization", `Bearer ${param.token}`);
-        
+
         const requestOptions = {
             method: "GET",
             headers: myHeaders,
@@ -664,7 +664,9 @@ const AddEmployApi = (
         formdata.append("email", param?.email ?? "");
         formdata.append("phone", param?.phone ?? "");
         formdata.append("country_phone_code", param?.countryCode ?? "");
-        formdata.append("position_id", "1");
+        // formdata.append("position_id", "1");
+        formdata.append("position_id", param?.positionId ??  "1");
+
         // formdata.append("position_id", param?.position ?? "");
         formdata.append("salary", param?.salary ?? "");
         formdata.append("pay_type", param?.payType ?? "monthly");
@@ -732,7 +734,7 @@ const UpdateEmployApi = (
         formdata.append("email", param?.email ?? "");
         formdata.append("phone", param?.phone ?? "");
         formdata.append("country_phone_code", param?.countryCode ?? "");
-        formdata.append("position_id", "1");
+        formdata.append("position_id", param?.positionId ??  "1");
         // formdata.append("position_id", param?.position ?? "");
         formdata.append("salary", param?.salary ?? "");
         formdata.append("pay_type", param?.payType ?? "monthly");
@@ -3549,7 +3551,7 @@ const EditProfile_Api = (
 ) => {
     try {
         setLoading(true)
-     const myHeaders = new Headers();
+        const myHeaders = new Headers();
         myHeaders.append("Accept", "application/json");
         myHeaders.append("Authorization", `Bearer ${param.token}`);
         const formData = new FormData();
@@ -3582,9 +3584,10 @@ const EditProfile_Api = (
                     successToast(
                         response?.message
                     );
-                    getSuccess({
-                        userGetData: response.result,
-                    })
+                     param?.dispatch(loginSuccess({ userData: response?.user, token: param?.token, }));
+                    // getSuccess({
+                    //     userGetData: response.result,
+                    // })
                     console.log(response)
 
                     return response
@@ -3613,7 +3616,7 @@ const GetUserApi = async (param: any, setLoading: (loading: boolean) => void, di
         setLoading(true)
 
         const myHeaders = new Headers();
-             myHeaders.append("Accept", "application/json");
+        myHeaders.append("Accept", "application/json");
         myHeaders.append("Authorization", `Bearer ${param.token}`);
         // const formdata = new FormData();
         // formdata.append("user_id", param);
@@ -3628,7 +3631,7 @@ const GetUserApi = async (param: any, setLoading: (loading: boolean) => void, di
         console.log(responseData)
         if (responseData.status) {
             setLoading(false)
- dispatch(loginSuccess({ userData: responseData?.data, token: param?.token, }));
+            dispatch(loginSuccess({ userData: responseData?.data, token: param?.token, }));
             return { userData: responseData.data, };
         } else {
             errorToast(responseData.message);
@@ -3698,10 +3701,10 @@ const ChangePass_Api = (
 ) => {
     try {
         setLoading(true)
-            const myHeaders = new Headers();
-             myHeaders.append("Accept", "application/json");
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
         myHeaders.append("Authorization", `Bearer ${token}`);
-    
+
         const formData = new FormData();
         formData.append("_method", "PUT");
         formData.append("old_password", data?.oldpassw);
